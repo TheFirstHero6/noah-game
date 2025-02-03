@@ -10,11 +10,14 @@
     "deploy": "next build && gh-pages -d .next"
   },
   "dependencies": {
+    "@clerk/nextjs": "^5.0.0",
     "geist": "^1.2.0",
     "next": "^14.2.23",
     "next.js": "^1.0.3",
+    "nextjs": "^0.0.3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "swr": "^2.2.5"
   },
   "devDependencies": {
     "@types/node": "^20",

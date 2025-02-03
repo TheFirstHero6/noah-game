@@ -11,6 +11,8 @@ function GameInfo() {
         This is a web app I (klaus) am making for Noah's new game. Functionality
         is limited, but I will add more as we go along. Current functionalities
         in development for release in first issue are:
+      </p>
+      <ul className="game-info-description">
         <li>
           <strong>User Authentication:</strong> Implement user functionality
         </li>
@@ -19,7 +21,7 @@ function GameInfo() {
           resources/money (send and recieve)
         </li>
         More features will be added as we go along.
-      </p>
+      </ul>
     </div>
   );
 }

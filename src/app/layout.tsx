@@ -1,4 +1,10 @@
-import { GeistSans } from "geist/font";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 import "./globals.css";
 
 export default function RootLayout({
@@ -7,8 +13,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={GeistSans.className}>
-      <body>{children}</body>
+    <html lang="en">
+      <body>
+        <ClerkProvider>
+          <div className="auth-container">
+            <SignedOut>
+              <SignInButton />
+            </SignedOut>
+            <SignedIn>
+              <UserButton afterSignOutUrl="/" />
+            </SignedIn>
+          </div>
+          {children}
+        </ClerkProvider>
+      </body>
     </html>
   );
 }

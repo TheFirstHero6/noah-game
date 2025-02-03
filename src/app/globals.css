@@ -63,3 +63,35 @@ body {
     border-color: black;
   }
 }
+
+.auth-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 50;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.auth-container button {
+  background-color: rgb(24, 48, 182);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.auth-container button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* Add new class for centering the sign-in form */
+.sign-in-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+}
