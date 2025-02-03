@@ -10,10 +10,11 @@
     "deploy": "next build && gh-pages -d .next"
   },
   "dependencies": {
+    "geist": "^1.2.0",
     "next": "^14.2.23",
+    "next.js": "^1.0.3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "geist": "^1.2.0"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/node": "^20",
