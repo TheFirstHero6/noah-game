@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is a strategy game built using React.js and TypeScript, with a backend powered by Next.js and MongoDB. It is currently in its early stages, with no functionality implemented yet. The game will feature mechanics such as family trees, town and army management, trading, and strategic battles.
+This project is a strategy game built using React.js and TypeScript, with a backend powered by Next.js. It is currently in its early stages, with no functionality implemented yet. The game will feature mechanics such as family trees, town and army management, trading, and strategic battles.
 
 ## Family Tree System
 
@@ -76,7 +76,6 @@ There are five main unit types: pikes, matchlocks, flintlocks, light cavalry, an
 ### Prerequisites
 
 - Node.js installed
-- MongoDB instance (local or cloud)
 
 ### Installation
 
