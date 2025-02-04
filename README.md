@@ -1,4 +1,4 @@
-# Noah's Game in React
+# Noah's Game in Next.js
 
 ## Overview
 
