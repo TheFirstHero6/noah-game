@@ -6,6 +6,7 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 import "./globals.css";
+import { dark } from "@clerk/themes";
 
 export default function RootLayout({
   children,
@@ -15,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ClerkProvider>
+        <ClerkProvider appearance={{ baseTheme: dark }}>
           <div className="auth-container">
             <SignedOut>
               <SignInButton />

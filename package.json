@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^5.0.0",
+    "@clerk/themes": "^2.2.16",
     "geist": "^1.2.0",
     "next": "^14.2.23",
     "next.js": "^1.0.3",
