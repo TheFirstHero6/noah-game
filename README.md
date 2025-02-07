@@ -1,3 +1,4 @@
+![logo](https://github.com/user-attachments/assets/e3f108ee-de71-4603-8138-6c903d570025)
 # War of the Elector in React and Next.js
 
 ## Overview
