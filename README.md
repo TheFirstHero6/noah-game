@@ -1,102 +1,103 @@
-# Noah's Game in Next.js
+# War of the Elector in React and Next.js
 
 ## Overview
 
-This project is a strategy game built using React.js and TypeScript, with a backend powered by Next.js. It is currently in its early stages, with no functionality implemented yet. The game will feature mechanics such as family trees, town and army management, trading, and strategic battles.
+War of the Elector is an online multiplayer strategy game where players manage noble families, oversee towns, build armies, and engage in trade and combat. The game is currently in development, with core features being gradually implemented.
 
-## Family Tree System
+The latest version of the web app can be found at [waroftheelector.space](https://waroftheelector.space).
 
-Family members play a crucial role in gaining an edge over opponents. They can:
+### **Core Gameplay Mechanics**
 
-- **Lead Armies** (age 18+)
-- **Govern Regions** (age 18+)
-- **Complete Missions** (age 18+)
+#### **Family Tree System**
 
-### Marriages & Growth
+Each player controls a noble house, where family members play a crucial role in gaining strategic advantages.
 
-Noble houses only allow marriages within their rank. There are two ways to obtain a spouse:
+- **Family Roles:**
+  - Lead armies (age 18+)
+  - Govern regions (age 18+)
+  - Complete missions (age 18+)
+- **Marriages & Growth:**
+  - Noble houses only marry within their rank.
+  - Two ways to obtain a spouse:
+    1. Pay \$1000 dowry to find a spouse from a minor noble house.
+    2. Arrange a marriage with another player's noble family, with dowry negotiation and potential alliance benefits.
+  - Families grow through adoption or childbirth, determined by seasonal rolls.
 
-1. Search minor noble houses (cost: $1000 dowry) for a spouse.
-2. Arrange a marriage with another player's character, involving a dowry and potential alliance.
+#### **Town & Population Management**
 
-Families grow through adoption or childbirth. Every four seasons, a roll determines if a married couple has children.
+Towns serve as the economic backbone of a noble house.
 
-## Town & Population Management
+- **Town Features:**
+  - Each town can support up to four buildings.
+  - Population is required for production and management.
+- **Population Usage:**
+  - **Armies:** Recruiting units consumes population.
+  - **Buildings:** Higher-tier buildings require more workers.
 
-Each town allows up to four buildings, requiring a population to maintain productivity. Population grows based on town size and can be allocated for:
+#### **Upgrading System**
 
-1. **Armies** – Population is consumed when recruiting units.
-2. **Buildings** – Higher-tier buildings require more population to operate.
+Players can enhance their towns and economy through resource-based upgrades.
 
-### Upgrading System
+- **Upgrade Requirements:**
+  - Resources: Wood, stone, and ducats.
+  - Buildings produce key resources: food, wood, stone, horses, and firearms.
 
-- **Burgh & Building Levels** require resources (wood, stone, ducats) for upgrades.
-- Various buildings produce essential resources such as food, wood, stone, horses, and firearms.
+#### **Army & Combat System**
 
-## Army & Combat System
+Players can build armies and engage in strategic battles.
 
-Armies are composed of **Battalia** (units grouped together) and can be formed by multiple players.
+- **Recruitment Requirements:**
+  - Must have a Muster Field.
+  - Pay population, resource, and ducat costs.
+- **Unit Types & Stats:**
+  - **Pikes, Matchlocks, Flintlocks, Light Cavalry, Heavy Cavalry**
+  - **Combat Stats:** Hand-to-hand ability, shooting value, morale save, stamina.
 
-### Recruitment Requirements:
+### **Development Roadmap**
 
-- Must have a **Muster Field**.
-- Pay the **population, resource, and ducat cost**.
+#### **Current State**
 
-### Unit Types & Stats
+- **User Authentication:** Implemented.
+- **Database Syncing:** In development.
+- **Version 1 (Upcoming Release):**
+  - **Resource Management:** Ability to view, send, and receive resources and money.
+  - **Future Updates:** Additional mechanics will be introduced in subsequent releases.
 
-There are five main unit types: pikes, matchlocks, flintlocks, light cavalry, and heavy cavalry. Each unit has distinct combat stats including:
+## **Tech Stack**
 
-- **Hand-to-Hand Combat Ability**
-- **Shooting Value**
-- **Morale Save**
-- **Stamina**
+This game is built with:
 
-## Implementation Plan
+- **React** (Frontend UI)
+- **Next.js** (Full-stack framework)
+- **Tailwind CSS** (Styling)
+- **Prisma** (ORM for database interactions)
+- **PostgreSQL** (Database)
+- **Neon** (Cloud-based database hosting)
 
-### First Phase:
+## **How to Download and Play**
 
-1. **User authentication and profiles**
-2. **Basic resource tracking**
-3. **Family tree visualization and management**
+To run War of the Elector locally:
 
-### Second Phase:
+### **Prerequisites**
 
-4. **Town management system**
-5. **Building construction mechanics**
-6. **Population management**
+Ensure that you have **Node.js** installed on your system.
 
-### Third Phase:
-
-7. **Army recruitment and management**
-8. **Combat system**
-9. **Trading system between players**
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js installed
-
-### Installation
+### **Installation Steps**
 
 1. Clone the repository:
-   ```sh
-   git clone https://github.com/your-repo/game-project.git
-   cd game-project
+   ```bash
+   git clone https://github.com/TheFirstHero6/noah-game.git
+   cd noah-game
    ```
 2. Install dependencies:
-   ```sh
+   ```bash
    npm install
    ```
-3. Start the Next.js server:
-   ```sh
+3. Start the development server:
+   ```bash
    npm run dev
    ```
+4. Open the game in your browser at `http://localhost:3000`
 
-## Contribution
+Stay tuned for updates and new features in upcoming releases!
 
-Feel free to submit issues and pull requests to improve the project. Happy coding!
-
-## License
-
-MIT License
