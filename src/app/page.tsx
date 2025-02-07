@@ -1,4 +1,4 @@
-import GameInfo from "./custom";
+import GameInfo from "../components/game-info";
 import prisma from "./lib/db";
 import { Prisma } from "@prisma/client";
 import { currentUser } from "@clerk/nextjs/server";
@@ -8,11 +8,13 @@ export default async function Home() {
     return null;
   }
   console.log("Connecting to:", process.env.DATABASE_URL);
-
+  const existingUser = await prisma.user.findUnique({
+    where: { email: user.emailAddresses[0].emailAddress },
+  });
   const loggedInUser = await prisma.user.findUnique({
     where: { clerkUserId: user.id },
   });
-  if (!loggedInUser) {
+  if (!loggedInUser && !existingUser) {
     await prisma.user.create({
       data: {
         clerkUserId: user.id,

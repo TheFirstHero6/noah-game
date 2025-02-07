@@ -7,6 +7,7 @@ import {
 } from "@clerk/nextjs";
 import "./globals.css";
 import { dark } from "@clerk/themes";
+import Navbar from "@/components/navbar";
 
 export default function RootLayout({
   children,
@@ -25,6 +26,7 @@ export default function RootLayout({
               <UserButton afterSignOutUrl="/" />
             </SignedIn>
           </div>
+          <Navbar />
           {children}
         </ClerkProvider>
       </body>
