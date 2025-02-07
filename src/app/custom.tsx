@@ -3,9 +3,10 @@ import logo from "./logo.png";
 
 function GameInfo() {
   return (
-    <div className="game-info-container">
+    <div className="">
       <Image src={logo} alt="Logo" className="game-info-img" />
       <h1 className="game-info-header">Welcome to the War of the Elector!</h1>
+
       <p className="game-info-description">
         {" "}
         This is a web app I (klaus) am making for Noah's new game. Functionality
