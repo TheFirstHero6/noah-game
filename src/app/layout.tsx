@@ -1,14 +1,8 @@
-import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { dark } from "@clerk/themes";
 import Navbar from "@/components/navbar";
-
+import GameInfo from "@/components/game-info";
 export default function RootLayout({
   children,
 }: {
@@ -18,14 +12,6 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ClerkProvider appearance={{ baseTheme: dark }}>
-          <div className="auth-container">
-            <SignedOut>
-              <SignInButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton afterSignOutUrl="/" />
-            </SignedIn>
-          </div>
           <Navbar />
           {children}
         </ClerkProvider>

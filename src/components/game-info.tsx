@@ -1,11 +1,19 @@
 import Image from "next/image";
 import logo from "./logo.png";
+import { currentUser, User } from "@clerk/nextjs/server";
 
-function GameInfo() {
+async function GameInfo() {
+  const user = await currentUser();
+  const username = user?.firstName;
+
+  const welcomeSuffix = username ? `, ${username}` : "";
+
   return (
-    <div className="">
+    <div className="game-info-container">
       <Image src={logo} alt="Logo" className="game-info-img" />
-      <h1 className="game-info-header">Welcome to the War of the Elector!</h1>
+      <h1 className="game-info-header">
+        Welcome to the War of the Elector{welcomeSuffix}!
+      </h1>
 
       <p className="game-info-description">
         {" "}
