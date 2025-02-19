@@ -15,7 +15,7 @@ export default function Navbar() {
           />
         </Link>
 
-        <Link href="/dashboard">
+        <Link href="/pages/dashboard">
           <h1 className="hover:text-gray-600 transition duration-300">
             Dashboard
           </h1>

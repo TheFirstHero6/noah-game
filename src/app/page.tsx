@@ -1,10 +1,6 @@
 import GameInfo from "../components/game-info";
 import prisma from "./lib/db";
-import { Prisma } from "@prisma/client";
 import { currentUser } from "@clerk/nextjs/server";
-import { RouterContext } from "next/dist/shared/lib/router-context.shared-runtime";
-import { SignedOut } from "@clerk/nextjs";
-import { transferResources } from "./lib/resources";
 
 export default async function Home() {
   const user = await currentUser();

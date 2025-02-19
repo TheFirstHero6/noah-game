@@ -49,10 +49,3 @@ export async function transferResources(
     throw new Error("Failed to transfer resources");
   }
 }
-
-transferResources(
-  "cm789oxxf0000jl03hiz4mg3m",
-  "cm78dos090000jy03kwdtfo3v",
-  "wood",
-  10,
-);
