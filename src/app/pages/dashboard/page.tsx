@@ -9,7 +9,7 @@ export default function Dashboard() {
     ducats: 0,
   });
   const [username, setUsername] = useState({
-    username: null,
+    username: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -53,17 +53,32 @@ export default function Dashboard() {
   }, []);
   const welcomePrefix = `${username}'s`;
   return (
-    <div>
-      <h1>{welcomePrefix} Dashboard</h1>
-
-      <p>Welcome to the dashboard!</p>
-      <p>you have: </p>
-      <u>
-        <p>{resources.wood} Wood</p>
-        <p>{resources.stone} stone</p>
-        <p>{resources.food} food</p>
-        <p>{resources.ducats} ducats</p>
-      </u>
+    <div className="min-h-screen bg-gray-900 text-white p-6 flex flex-col items-center">
+      <div className="w-full max-w-md bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h1 className="text-2xl font-bold text-center mb-4">
+          {welcomePrefix} Dashboard
+        </h1>
+        <p className="text-center text-gray-400 mb-6">
+          Welcome to the dashboard!
+        </p>
+        <div className="bg-gray-700 p-4 rounded-lg">
+          <h2 className="text-lg font-semibold mb-2">Resources:</h2>
+          <ul className="space-y-2">
+            <li className="bg-gray-600 p-2 rounded">
+              🌲 {resources.wood} Wood
+            </li>
+            <li className="bg-gray-600 p-2 rounded">
+              🪨 {resources.stone} Stone
+            </li>
+            <li className="bg-gray-600 p-2 rounded">
+              🌾 {resources.food} Food
+            </li>
+            <li className="bg-gray-600 p-2 rounded">
+              💰 {resources.ducats} Ducats
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }
