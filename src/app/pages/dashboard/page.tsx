@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 export default function Dashboard() {
   const [resources, setResources] = useState({
     wood: 0,
@@ -11,38 +11,46 @@ export default function Dashboard() {
   const [username, setUsername] = useState({
     username: null,
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [lastUpdate, setLastUpdate] = useState(0);
+
   const fetchResources = async () => {
+    const now = Date.now();
+    if (now - lastUpdate < 1000) return;
     try {
+      setLoading(true);
       const response = await fetch("/api/dashboard/resources");
       const data = await response.json();
-      if (response.ok) {
-        console.log(data);
-        setResources(data);
-      }
+      setResources(data);
+      setLastUpdate(now);
       if (!response.ok) throw new Error("Failed to fetch resources");
     } catch (error) {
       throw new Error("Failed to fetch resources");
+    } finally {
+      setLoading(false);
     }
   };
+
   const fetchUsername = async () => {
+    const now = Date.now();
+    if (now - lastUpdate < 1000) return;
     try {
+      setLoading(true);
       const response = await fetch("/api/dashboard/username");
       const data = await response.json();
-      if (response.ok) {
-        setUsername(data);
-      }
+      setUsername(data);
+      setLoading(false);
       if (!response.ok) throw new Error("Failed to fetch username");
     } catch (error) {
       throw new Error("Failed to fetch username");
     }
   };
 
-  if (resources) {
+  useEffect(() => {
     fetchResources();
-  }
-  if (username) {
     fetchUsername();
-  }
+  }, []);
   const welcomePrefix = `${username}'s`;
   return (
     <div>
