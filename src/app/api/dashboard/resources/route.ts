@@ -1,8 +1,7 @@
 // app/api/resources/route.ts
 import { currentUser } from "@clerk/nextjs/server";
-import prisma from "../../lib/db";
+import prisma from "../../../lib/db";
 import { NextResponse } from "next/server";
-import { stat } from "fs";
 
 export async function GET() {
   try {
