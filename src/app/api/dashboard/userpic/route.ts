@@ -12,13 +12,9 @@ export async function GET() {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const prismaUser = await prisma.user.findUnique({
-      where: { clerkUserId: clerkUser.id },
-      select: {
-        imageUrl: true,
-      },
-    });
-    const img = prismaUser?.imageUrl;
+    const img = clerkUser.imageUrl
+      ? clerkUser.imageUrl
+      : "https://img.clerk.com/eyJ0eXBlIjoiZGVmYXVsdCIsImlpZCI6Imluc18yc1lIekdxbW9QWnAxSE13SmZ0Q3FRTnk4bnciLCJyaWQiOiJ1c2VyXzJ0VnB1ajdGRFA4cEhWVzZ3cGFBd0RVMENNcyIsImluaXRpYWxzIjoiSCJ9";
     // Return the user's name
     return NextResponse.json(img);
   } catch (error) {
