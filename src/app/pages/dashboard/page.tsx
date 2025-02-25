@@ -159,12 +159,10 @@ export default function Dashboard() {
                 key={user.id}
                 className="flex items-center space-x-4 bg-gray-800 p-4 rounded-lg border border-gray-700"
               >
-                <Image
-                  src={user.imageUrl || "/default-profile.png"} // ✅ Use default if missing
+                <img
+                  src={user.imageUrl}
                   alt={user.name || "User"}
-                  width={50}
-                  height={50}
-                  className="rounded-full border-2 border-yellow-400"
+                  className="h-20 w-20 rounded-full border-2 border-yellow-400"
                 />
                 <span className="text-xl text-white">{user.name}</span>
               </li>
