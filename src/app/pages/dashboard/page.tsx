@@ -71,7 +71,7 @@ export default function Dashboard() {
     if (!fetchedUsername) fetchUsername();
   };
   const fetchResourcesOnce = async () => {
-    if (!fetchedUserpic) fetchUserPic();
+    if (!fetchedResources) fetchResources();
   };
   const fetchUserpicOnce = async () => {
     if (!fetchedUserpic) fetchUserPic();
