@@ -41,10 +41,13 @@ export default function Dashboard() {
       const response = await fetch("/api/dashboard/username");
       const data = await response.json();
       setUsername(data);
-      setLoading(false);
+      setLastUpdate(now);
+
       if (!response.ok) throw new Error("Failed to fetch username");
     } catch (error) {
       throw new Error("Failed to fetch username");
+    } finally {
+      setLoading(false);
     }
   };
   const fetchUserPic = async () => {
@@ -55,10 +58,12 @@ export default function Dashboard() {
       const response = await fetch("/api/dashboard/userpic");
       const data = await response.json();
       setUserpic(data);
-      setLoading(false);
+      setLastUpdate(now);
       if (!response.ok) throw new Error("Failed to fetch userpic");
     } catch (error) {
       throw new Error("Failed to fetch userpic");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -67,10 +72,10 @@ export default function Dashboard() {
     fetchUsername();
     fetchUserPic();
   }, []);
-  const welcomePrefix = `${username}'s`;
+  const welcomePrefix = username ? `${username}'s` : "";
   console.log(userpic);
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-800 to-black text-white p-8 flex flex-col items-center">
+    <div className="min-h-screen bg-gradient-to-br from-gray-800 to-black text-white p-8 flex flex-col items-center pt-24">
       <div className="w-full max-w-4xl bg-gray-900 p-8 rounded-lg shadow-2xl border-2 border-yellow-600">
         <img
           src={userpic}
