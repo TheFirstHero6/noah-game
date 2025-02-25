@@ -78,10 +78,9 @@ export default function Dashboard() {
       const data = await response.json();
       setUsers(data);
       setLastUpdate(now);
-      fetchedUsers = true;
-      if (!response.ok) throw new Error("Failed to fetch userpic");
+      if (!response.ok) throw new Error("Failed to fetch userbase");
     } catch (error) {
-      throw new Error("Failed to fetch userpic");
+      throw new Error("Failed to fetch userbase");
     } finally {
       setLoading(false);
     }
