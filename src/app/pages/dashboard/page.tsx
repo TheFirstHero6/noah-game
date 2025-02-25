@@ -12,87 +12,75 @@ export default function Dashboard() {
     ducats: 0,
   });
   const [username, setUsername] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [lastUpdate, setLastUpdate] = useState(0);
+
   const [userpic, setUserpic] = useState("");
   const [users, setUsers] = useState<User[]>([]);
   let fetchedUsers = false;
+  let fetchedResources = false;
+  let fetchedUsername = false;
+  let fetchedUserpic = false;
 
   const fetchResources = async () => {
-    const now = Date.now();
-    if (now - lastUpdate < 1000) return;
     try {
-      setLoading(true);
       const response = await fetch("/api/dashboard/resources");
       const data = await response.json();
       setResources(data);
-      setLastUpdate(now);
+      fetchedResources = true;
       if (!response.ok) throw new Error("Failed to fetch resources");
     } catch (error) {
       throw new Error("Failed to fetch resources");
-    } finally {
-      setLoading(false);
     }
   };
 
   const fetchUsername = async () => {
-    const now = Date.now();
-    if (now - lastUpdate < 1000) return;
     try {
-      setLoading(true);
       const response = await fetch("/api/dashboard/username");
       const data = await response.json();
       setUsername(data);
-      setLastUpdate(now);
-
+      fetchedUsername = true;
       if (!response.ok) throw new Error("Failed to fetch username");
     } catch (error) {
       throw new Error("Failed to fetch username");
-    } finally {
-      setLoading(false);
     }
   };
   const fetchUserPic = async () => {
-    const now = Date.now();
-    if (now - lastUpdate < 1000) return;
     try {
-      setLoading(true);
       const response = await fetch("/api/dashboard/userpic");
       const data = await response.json();
       setUserpic(data);
-      setLastUpdate(now);
+      fetchedUserpic = true;
       if (!response.ok) throw new Error("Failed to fetch userpic");
     } catch (error) {
       throw new Error("Failed to fetch userpic");
-    } finally {
-      setLoading(false);
     }
   };
   const fetchAllUsers = async () => {
-    const now = Date.now();
-    if (now - lastUpdate < 1000) return;
     try {
-      setLoading(true);
       const response = await fetch("/api/dashboard/all-users");
       const data = await response.json();
       setUsers(data);
-      setLastUpdate(now);
       if (!response.ok) throw new Error("Failed to fetch userbase");
     } catch (error) {
       throw new Error("Failed to fetch userbase");
-    } finally {
-      setLoading(false);
     }
   };
   const fetchUsersOnce = async () => {
     if (!fetchedUsers) fetchAllUsers();
   };
+  const fetchUsernameOnce = async () => {
+    if (!fetchedUsername) fetchUsername();
+  };
+  const fetchResourcesOnce = async () => {
+    if (!fetchedUserpic) fetchUserPic();
+  };
+  const fetchUserpicOnce = async () => {
+    if (!fetchedUserpic) fetchUserPic();
+  };
 
   useEffect(() => {
-    fetchResources();
-    fetchUsername();
-    fetchUserPic();
+    fetchUsernameOnce();
+    fetchResourcesOnce();
+    fetchUserpicOnce();
     fetchUsersOnce();
   }, []);
 
