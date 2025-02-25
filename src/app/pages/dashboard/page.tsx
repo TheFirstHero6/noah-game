@@ -16,7 +16,7 @@ export default function Dashboard() {
   const [error, setError] = useState("");
   const [lastUpdate, setLastUpdate] = useState(0);
   const [userpic, setUserpic] = useState("");
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState([]);
 
   const fetchResources = async () => {
     const now = Date.now();
@@ -77,9 +77,9 @@ export default function Dashboard() {
       const data = await response.json();
       setUsers(data);
       setLastUpdate(now);
-      if (!response.ok) throw new Error("Failed to fetch userpic");
+      if (!response.ok) throw new Error("Failed to fetch userbase");
     } catch (error) {
-      throw new Error("Failed to fetch userpic");
+      throw new Error("Failed to fetch userbase");
     } finally {
       setLoading(false);
     }
