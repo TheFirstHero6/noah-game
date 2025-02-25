@@ -16,7 +16,7 @@ export default function Dashboard() {
   const [error, setError] = useState("");
   const [lastUpdate, setLastUpdate] = useState(0);
   const [userpic, setUserpic] = useState("");
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   const fetchResources = async () => {
     const now = Date.now();
