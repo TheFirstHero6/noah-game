@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { User } from "@/types";
 import Image from "next/image";
 import { transferResources } from "@/app/lib/resources";
 export default function Dashboard() {
@@ -15,7 +16,7 @@ export default function Dashboard() {
   const [error, setError] = useState("");
   const [lastUpdate, setLastUpdate] = useState(0);
   const [userpic, setUserpic] = useState("");
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   const fetchResources = async () => {
     const now = Date.now();
@@ -160,12 +161,12 @@ export default function Dashboard() {
               >
                 <Image
                   src={user.imageUrl || "/default-profile.png"} // ✅ Use default if missing
-                  alt={user.username || "User"}
+                  alt={user.name || "User"}
                   width={50}
                   height={50}
                   className="rounded-full border-2 border-yellow-400"
                 />
-                <span className="text-xl text-white">{user.username}</span>
+                <span className="text-xl text-white">{user.name}</span>
               </li>
             ))}
           </ul>
