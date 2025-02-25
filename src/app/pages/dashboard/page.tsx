@@ -15,6 +15,7 @@ export default function Dashboard() {
   const [error, setError] = useState("");
   const [lastUpdate, setLastUpdate] = useState(0);
   const [userpic, setUserpic] = useState("");
+  const [users, setUsers] = useState([]);
 
   const fetchResources = async () => {
     const now = Date.now();
@@ -66,14 +67,32 @@ export default function Dashboard() {
       setLoading(false);
     }
   };
+  const fetchAllUsers = async () => {
+    const now = Date.now();
+    if (now - lastUpdate < 1000) return;
+    try {
+      setLoading(true);
+      const response = await fetch("/api/dashboard/all-users");
+      const data = await response.json();
+      setUsers(data);
+      setLastUpdate(now);
+      if (!response.ok) throw new Error("Failed to fetch userpic");
+    } catch (error) {
+      throw new Error("Failed to fetch userpic");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchResources();
     fetchUsername();
     fetchUserPic();
+    fetchAllUsers();
   }, []);
   const welcomePrefix = username ? `${username}'s` : "";
-  console.log(userpic);
+
+  console.log();
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-800 to-black text-white p-8 flex flex-col items-center pt-24">
       <div className="w-full max-w-4xl bg-gray-900 p-8 rounded-lg shadow-2xl border-2 border-yellow-600">
@@ -133,27 +152,23 @@ export default function Dashboard() {
           <h2 className="text-3xl font-semibold mb-6 border-b border-yellow-600 pb-2 text-yellow-300">
             Users
           </h2>
-          {/* {filteredUsers.length > 0 ? (
-            <ul className="space-y-6">
-              {filteredUsers.map((user) => (
-                <li
-                  key={user.id}
-                  className="flex items-center space-x-6 bg-gray-700 p-4 rounded-lg shadow-md"
-                >
-                  <img
-                    src={user.imageUrl || "/default-avatar.png"}
-                    alt={user.name || "User"}
-                    className="w-16 h-16 rounded-full border-2 border-yellow-600"
-                  />
-                  <span className="text-2xl font-semibold text-yellow-200">
-                    {user.name || "Unnamed User"}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-gray-400">No users found.</p>
-          )} */}
+          <ul className="space-y-4">
+            {users.map((user) => (
+              <li
+                key={user.id}
+                className="flex items-center space-x-4 bg-gray-800 p-4 rounded-lg border border-gray-700"
+              >
+                <Image
+                  src={user.imageUrl || "/default-profile.png"} // ✅ Use default if missing
+                  alt={user.username || "User"}
+                  width={50}
+                  height={50}
+                  className="rounded-full border-2 border-yellow-400"
+                />
+                <span className="text-xl text-white">{user.username}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>
