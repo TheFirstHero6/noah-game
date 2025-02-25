@@ -17,6 +17,7 @@ export default function Dashboard() {
   const [lastUpdate, setLastUpdate] = useState(0);
   const [userpic, setUserpic] = useState("");
   const [users, setUsers] = useState<User[]>([]);
+  let fetchedUsers = false;
 
   const fetchResources = async () => {
     const now = Date.now();
@@ -77,6 +78,7 @@ export default function Dashboard() {
       const data = await response.json();
       setUsers(data);
       setLastUpdate(now);
+      fetchedUsers = true;
       if (!response.ok) throw new Error("Failed to fetch userpic");
     } catch (error) {
       throw new Error("Failed to fetch userpic");
@@ -84,13 +86,17 @@ export default function Dashboard() {
       setLoading(false);
     }
   };
+  const fetchUsersOnce = async () => {
+    if (!fetchedUsers) fetchAllUsers();
+  };
 
   useEffect(() => {
     fetchResources();
     fetchUsername();
     fetchUserPic();
-    fetchAllUsers();
+    fetchUsersOnce();
   }, []);
+
   const welcomePrefix = username ? `${username}'s` : "";
 
   console.log();
