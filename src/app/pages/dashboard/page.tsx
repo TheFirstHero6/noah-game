@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { User } from "@/types";
 import Image from "next/image";
 import { transferResources } from "@/app/lib/resources";
+import logo from "@/app/pages/logo.gif";
 export default function Dashboard() {
   const [resources, setResources] = useState({
     wood: 0,
@@ -15,6 +16,12 @@ export default function Dashboard() {
 
   const [userpic, setUserpic] = useState("");
   const [users, setUsers] = useState<User[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [amount, setAmount] = useState(0);
+  const [selectedUserId, setSelectedUserId] = useState("");
+  const [resourceType, setResourceType] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUsername, setSelectedUsername] = useState("");
   let fetchedUsers = false;
   let fetchedResources = false;
   let fetchedUsername = false;
@@ -64,6 +71,52 @@ export default function Dashboard() {
       throw new Error("Failed to fetch userbase");
     }
   };
+
+  // const handleTransfer = async () => {
+  //   if (amount <= 0) {
+  //     throw new Error("Enter valid amount");
+  //   }
+
+  //   try {
+  //     const response = await fetch("/api/dashboard/transations", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         toUserId: selectedUserId,
+  //         amount: amount,
+  //         resource: resourceType,
+  //       }),
+  //     });
+
+  //     const data = await response.json();
+  //     if (!response.ok) {
+  //       throw (
+  //         (new Error(
+  //           `These horses aren't what they used to be, They couldn't send your resource`,
+  //         ),
+  //         alert(
+  //           `These horses aren't what they used to be, They couldn't send your resource`,
+  //         ))
+  //       );
+  //     }
+  //     alert(`Your resources have been sent, my lord`);
+  //   } catch (error) {
+  //     throw new Error(
+  //       `These horses aren't what they used to be, They couldn't send your resources`,
+  //     );
+  //   }
+  // };
+  const modalOpener = (userId: string, userName: string) => {
+    setSelectedUserId(userId);
+    setSelectedUsername(userName);
+    setIsModalOpen(true);
+  };
+  const modalCloser = () => {
+    setIsModalOpen(false);
+    setSelectedUserId("");
+    setSelectedUsername("");
+  };
+
   const fetchUsersOnce = async () => {
     if (!fetchedUsers) fetchAllUsers();
   };
@@ -85,6 +138,9 @@ export default function Dashboard() {
   }, []);
 
   const welcomePrefix = username ? `${username}'s` : "";
+  const filteredUsers = users.filter((user) =>
+    user.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
 
   console.log();
   return (
@@ -133,21 +189,21 @@ export default function Dashboard() {
         </div>
         {/* User Search Section */}
         <div className="mb-8">
-          {/* <input
+          <input
             type="text"
-            placeholder="Search for a user..."
+            placeholder="Search amongst the lords..."
             className="w-full p-4 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 placeholder-gray-400"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-          /> */}
+          />
         </div>
         {/* User List */}
         <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
           <h2 className="text-3xl font-semibold mb-6 border-b border-yellow-600 pb-2 text-yellow-300">
-            Users
+            lords
           </h2>
           <ul className="space-y-4">
-            {users.map((user) => (
+            {filteredUsers.map((user) => (
               <li
                 key={user.id}
                 className="flex items-center space-x-4 bg-gray-800 p-4 rounded-lg border border-gray-700"
@@ -158,6 +214,12 @@ export default function Dashboard() {
                   className="h-20 w-20 rounded-full border-2 border-yellow-400"
                 />
                 <span className="text-xl text-white">{user.name}</span>
+                {/* <button
+                  onClick={() => modalOpener(user.id, user.name)}
+                  className="active:translate-y-0.5 active:shadow-sm relative px-5 py-2 text-lg font-medium text-tan-300 bg-gradient-to-b from-red-900 to-red-700 border border-red-600 rounded-lg shadow-md hover:from-red-800 hover:to-red-600 hover:border-red-500 hover:text-tan-200 transition-all duration-200 ease-in-out active:scale-95 focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+                >
+                  Send Resources
+                </button> */}
               </li>
             ))}
           </ul>
