@@ -1,10 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { User } from "@/types";
 import Image from "next/image";
-import { transferResources } from "@/app/lib/resources";
-import logo from "@/app/pages/logo.gif";
 export default function Dashboard() {
   const [resources, setResources] = useState({
     wood: 0,
@@ -18,14 +16,19 @@ export default function Dashboard() {
   const [users, setUsers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [amount, setAmount] = useState(0);
-  const [selectedUserId, setSelectedUserId] = useState("");
-  const [resourceType, setResourceType] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedUsername, setSelectedUsername] = useState("");
+  const [toUser, setToUser] = useState("");
+  const [toUserId, setToUserId] = useState("");
+  const [resource, setResource] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [adminModalOpen, setAdminModalOpen] = useState(false);
+
+  const [role, setRole] = useState("");
+
   let fetchedUsers = false;
   let fetchedResources = false;
   let fetchedUsername = false;
   let fetchedUserpic = false;
+  let fetchedUserRole = false;
 
   const fetchResources = async () => {
     try {
@@ -71,52 +74,74 @@ export default function Dashboard() {
       throw new Error("Failed to fetch userbase");
     }
   };
-
-  // const handleTransfer = async () => {
-  //   if (amount <= 0) {
-  //     throw new Error("Enter valid amount");
-  //   }
-
-  //   try {
-  //     const response = await fetch("/api/dashboard/transations", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         toUserId: selectedUserId,
-  //         amount: amount,
-  //         resource: resourceType,
-  //       }),
-  //     });
-
-  //     const data = await response.json();
-  //     if (!response.ok) {
-  //       throw (
-  //         (new Error(
-  //           `These horses aren't what they used to be, They couldn't send your resource`,
-  //         ),
-  //         alert(
-  //           `These horses aren't what they used to be, They couldn't send your resource`,
-  //         ))
-  //       );
-  //     }
-  //     alert(`Your resources have been sent, my lord`);
-  //   } catch (error) {
-  //     throw new Error(
-  //       `These horses aren't what they used to be, They couldn't send your resources`,
-  //     );
-  //   }
-  // };
-  const modalOpener = (userId: string, userName: string) => {
-    setSelectedUserId(userId);
-    setSelectedUsername(userName);
-    setIsModalOpen(true);
-  };
-  const modalCloser = () => {
-    setIsModalOpen(false);
-    setSelectedUserId("");
-    setSelectedUsername("");
+  const fetchUserRole = async () => {
+    try {
+      const response = await fetch("/api/dashboard/roles");
+      const data = await response.json();
+      setRole(data);
+    } catch (error) {
+      throw new Error("Role cannot be fetched");
+    }
   };
 
+  const transferResources = async () => {
+    if (amount <= 0) {
+      throw new Error("Enter valid amount");
+    }
+    try {
+      const response = await fetch("/api/dashboard/transfering", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          toUserId: toUserId,
+          amount: amount,
+          resource: resource,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || response.status === 400) {
+        alert(`Sorry m'lord, I don't think you have enough for this one`);
+        throw new Error(`Insufficient resources`);
+      } else {
+        alert("Boon sent succesfully");
+        closeModal();
+      }
+    } catch (error) {
+      alert(
+        `These horses aren't what they used to be, we couldn't send your boon`,
+      );
+      throw new Error(
+        `These horses aren't what they used to be, we couldn't send your boon`,
+      );
+    }
+  };
+
+  const openModal = (user: any, userID: any) => {
+    setModalOpen(true);
+    setToUser(user);
+    setToUserId(userID);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setToUser("");
+    setToUserId("");
+  };
+  const openAdminModal = (user: any, userID: any) => {
+    setModalOpen(true);
+    setToUser(user);
+    setToUserId(userID);
+  };
+
+  const closeAdminModal = () => {
+    setModalOpen(false);
+    setToUser("");
+    setToUserId("");
+  };
   const fetchUsersOnce = async () => {
     if (!fetchedUsers) fetchAllUsers();
   };
@@ -129,12 +154,16 @@ export default function Dashboard() {
   const fetchUserpicOnce = async () => {
     if (!fetchedUserpic) fetchUserPic();
   };
+  const fetchRoleOnce = async () => {
+    if (!fetchedUserRole) fetchUserRole();
+  };
 
   useEffect(() => {
     fetchUsernameOnce();
     fetchResourcesOnce();
     fetchUserpicOnce();
     fetchUsersOnce();
+    fetchRoleOnce();
   }, []);
 
   const welcomePrefix = username ? `${username}'s` : "";
@@ -142,7 +171,6 @@ export default function Dashboard() {
     user.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  console.log();
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-800 to-black text-white p-8 flex flex-col items-center pt-24">
       <div className="w-full max-w-4xl bg-gray-900 p-8 rounded-lg shadow-2xl border-2 border-yellow-600">
@@ -191,7 +219,7 @@ export default function Dashboard() {
         <div className="mb-8">
           <input
             type="text"
-            placeholder="Search amongst the lords..."
+            placeholder="Search amongst the lords."
             className="w-full p-4 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 placeholder-gray-400"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -199,8 +227,8 @@ export default function Dashboard() {
         </div>
         {/* User List */}
         <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
-          <h2 className="text-3xl font-semibold mb-6 border-b border-yellow-600 pb-2 text-yellow-300">
-            lords
+          <h2 className="text-3xl font-serif font-semibold mb-6 border-b border-yellow-600 pb-2 text-yellow-300">
+            Users
           </h2>
           <ul className="space-y-4">
             {filteredUsers.map((user) => (
@@ -214,15 +242,134 @@ export default function Dashboard() {
                   className="h-20 w-20 rounded-full border-2 border-yellow-400"
                 />
                 <span className="text-xl text-white">{user.name}</span>
-                {/* <button
-                  onClick={() => modalOpener(user.id, user.name)}
-                  className="active:translate-y-0.5 active:shadow-sm relative px-5 py-2 text-lg font-medium text-tan-300 bg-gradient-to-b from-red-900 to-red-700 border border-red-600 rounded-lg shadow-md hover:from-red-800 hover:to-red-600 hover:border-red-500 hover:text-tan-200 transition-all duration-200 ease-in-out active:scale-95 focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+                <button
+                  onClick={() => openModal(user.name, user.id)}
+                  className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800"
                 >
-                  Send Resources
-                </button> */}
+                  Send Boon
+                </button>
+                {role === "ADMIN" && (
+                  <button
+                    onClick={() => openAdminModal(user.name, user.id)}
+                    className=""
+                  >
+                    Manage Resources
+                  </button>
+                )}
               </li>
             ))}
           </ul>
+          {/* Tranfer Modal */}
+          <div className="flex items-center justify-center min-h-screen bg-gray-900">
+            {modalOpen && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                <div className="relative bg-gray-800 text-yellow-300 p-6 rounded-lg shadow-xl border-4 border-yellow-700 max-w-lg w-full">
+                  <button
+                    className="absolute top-2 right-2 text-yellow-300 hover:text-red-500 text-2xl"
+                    onClick={() => setModalOpen(false)}
+                  >
+                    ×
+                  </button>
+                  <h2 className="text-3xl font-bold font-serif text-center border-b-2 border-yellow-600 pb-2 mb-4">
+                    Send your Boon to {toUser}
+                  </h2>
+                  <p className="text-lg font-serif text-center mb-4">
+                    Select the resource and amount
+                  </p>
+
+                  <div className="mb-4">
+                    <label className="block text-yellow-400 font-bold mb-2">
+                      Enter Amount
+                    </label>
+                    <input
+                      type="number"
+                      className="w-full p-2 rounded bg-gray-700 border border-yellow-600 text-yellow-300"
+                      value={amount}
+                      onChange={(e) => setAmount(Number(e.target.value))}
+                      placeholder="How many?"
+                    />
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="block text-yellow-400 font-bold mb-2">
+                      Choose the type of boon:
+                    </label>
+                    <select
+                      value={resource}
+                      onChange={(e) => setResource(e.target.value)}
+                      className="w-full p-2 rounded bg-gray-700 border border-yellow-600 text-yellow-300"
+                    >
+                      <option value="wood">Wood</option>
+                      <option value="stone">Stone</option>
+                      <option value="food">Food</option>
+                      <option value="ducats">Ducats</option>
+                    </select>
+
+                    <button
+                      onClick={transferResources}
+                      className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800"
+                    >
+                      Send your Resources!
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          {/* Admin Modal*/}
+          <div className="flex items-center justify-center min-h-screen bg-gray-900">
+            {adminModalOpen && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                <div className="relative bg-gray-800 text-yellow-300 p-6 rounded-lg shadow-xl border-4 border-yellow-700 max-w-lg w-full">
+                  <button
+                    className="absolute top-2 right-2 text-yellow-300 hover:text-red-500 text-2xl"
+                    onClick={() => closeAdminModal()}
+                  >
+                    ×
+                  </button>
+                  <h2 className="text-3xl font-bold font-serif text-center border-b-2 border-yellow-600 pb-2 mb-4">
+                    Manage {toUser}'s Resources
+                  </h2>
+                  <p className="text-lg font-serif text-center mb-4">
+                    Select the resource and amount you'd like to add or remove
+                  </p>
+
+                  <div className="mb-4">
+                    <label className="block text-yellow-400 font-bold mb-2">
+                      Enter Amount
+                    </label>
+                    <input
+                      type="number"
+                      className="w-full p-2 rounded bg-gray-700 border border-yellow-600 text-yellow-300"
+                      value={amount}
+                      onChange={(e) => setAmount(Number(e.target.value))}
+                      placeholder="How many?"
+                    />
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="block text-yellow-400 font-bold mb-2">
+                      Choose the type of boon:
+                    </label>
+                    <select
+                      value={resource}
+                      onChange={(e) => setResource(e.target.value)}
+                      className="w-full p-2 rounded bg-gray-700 border border-yellow-600 text-yellow-300"
+                    >
+                      <option value="wood">Wood</option>
+                      <option value="stone">Stone</option>
+                      <option value="food">Food</option>
+                      <option value="ducats">Ducats</option>
+                    </select>
+
+                    <button className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
+                      Send your Resources!
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
