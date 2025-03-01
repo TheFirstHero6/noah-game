@@ -28,6 +28,14 @@ export default async function Home() {
         name: `${user.firstName} ${user.lastName}`,
         imageUrl: user.imageUrl,
         email: user.emailAddresses[0].emailAddress,
+        resources: {
+          create: {
+            wood: 0,
+            stone: 0,
+            food: 0,
+            ducats: 0,
+          },
+        },
       },
     });
   }

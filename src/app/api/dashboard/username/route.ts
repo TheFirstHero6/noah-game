@@ -6,7 +6,9 @@ export async function GET() {
   try {
     // Get the authenticated user from Clerk
     const clerkUser = await currentUser();
-    const username = clerkUser?.username ? `${clerkUser.username}` : "";
+    const username = clerkUser?.username
+      ? `${clerkUser.username}`
+      : `${clerkUser?.firstName}`;
 
     // If no user is authenticated, return 401
     if (!clerkUser) {
