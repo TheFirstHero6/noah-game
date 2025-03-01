@@ -166,11 +166,10 @@ export default function Dashboard() {
     fetchRoleOnce();
   }, []);
 
+  const welcomePrefix = username ? `${username}'s` : "";
   const filteredUsers = users.filter((user) =>
     user.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
-
-  const welcomePrefix = username ? `${username}'s` : "";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-800 to-black text-white p-8 flex flex-col items-center pt-24">
