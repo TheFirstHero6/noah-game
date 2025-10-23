@@ -10,7 +10,13 @@ export default function SettingsPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
 
-  const themes = [
+  const themes: Array<{
+    id: "royal-court" | "forest-kingdom" | "mystical-wizard" | "dragons-lair";
+    name: string;
+    description: string;
+    colors: string[];
+    icon: string;
+  }> = [
     {
       id: "royal-court",
       name: "Royal Court",
@@ -50,7 +56,13 @@ export default function SettingsPage() {
     setSelectedTheme(theme);
   }, [theme]);
 
-  const handleThemeChange = (themeId: string) => {
+  const handleThemeChange = (
+    themeId:
+      | "royal-court"
+      | "forest-kingdom"
+      | "mystical-wizard"
+      | "dragons-lair"
+  ) => {
     setSelectedTheme(themeId);
     console.log("Theme selected:", themeId);
   };
