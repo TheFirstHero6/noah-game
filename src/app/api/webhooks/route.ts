@@ -1,15 +1,13 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
-import prisma from "@/app/lib/db";
-import { currentUser } from "@clerk/nextjs/server";
 
 export async function POST(req: Request) {
   const SIGNING_SECRET = process.env.SIGNING_SECRET;
 
   if (!SIGNING_SECRET) {
     throw new Error(
-      "Error: Please add SIGNING_SECRET from Clerk Dashboard to .env or .env.local",
+      "Error: Please add SIGNING_SECRET from Clerk Dashboard to .env or .env.local"
     );
   }
 
@@ -53,12 +51,14 @@ export async function POST(req: Request) {
   // For this guide, log payload to console
   const { id } = evt.data;
   const eventType = evt.type;
-  const user = currentUser();
   console.log(`Received webhook with ID ${id} and event type of ${eventType}`);
   console.log("Webhook payload:", body);
 
-  return new Response("Webhook received", { status: 200 });
+  // Handle specific webhook events
   if (evt.type === "user.created") {
-    console.log("a user was created!");
+    console.log("User created event received:", evt.data);
+    // You can add user creation logic here if needed
   }
+
+  return new Response("Webhook received", { status: 200 });
 }

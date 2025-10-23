@@ -11,7 +11,7 @@ export default function GameInfo() {
   const welcomeSuffix = username ? `, ${username}` : "";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-medieval-steel-900 via-medieval-steel-800 to-medieval-steel-900 flex items-center justify-center p-8">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-background flex items-center justify-center p-8">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-medieval-pattern opacity-5"></div>
 

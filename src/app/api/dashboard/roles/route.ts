@@ -1,4 +1,4 @@
-// app/api/resources/route.ts
+// app/api/dashboard/roles/route.ts
 import { currentUser } from "@clerk/nextjs/server";
 import prisma from "../../../lib/db";
 import { NextResponse } from "next/server";
@@ -27,7 +27,7 @@ export async function GET() {
     // Return the user's resources
     return NextResponse.json(user.role);
   } catch (error) {
-    console.error("Error fetching resources:", error);
+    console.error("Error fetching user role:", error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

@@ -1,4 +1,4 @@
-// app/api/resources/route.ts
+// app/api/dashboard/all-users/route.ts
 import { currentUser } from "@clerk/nextjs/server";
 import prisma from "../../../lib/db";
 import { NextResponse } from "next/server";

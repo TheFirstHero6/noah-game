@@ -3,6 +3,7 @@
 import { useState, useEffect, use } from "react";
 import { User } from "@/types";
 import Image from "next/image";
+import { useNotification } from "@/components/Notification";
 export default function Dashboard() {
   const [resources, setResources] = useState({
     wood: 0,
@@ -10,9 +11,9 @@ export default function Dashboard() {
     food: 0,
     ducats: 0,
   });
-  const [username, setUsername] = useState("");
 
   const [userpic, setUserpic] = useState("");
+  const [username, setUsername] = useState("");
   const [users, setUsers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [amount, setAmount] = useState(0);
@@ -23,71 +24,60 @@ export default function Dashboard() {
   const [adminModalOpen, setAdminModalOpen] = useState(false);
 
   const [role, setRole] = useState("");
+  const [isCleaningNames, setIsCleaningNames] = useState(false);
+  const [isTransferring, setIsTransferring] = useState(false);
+
+  // Notification system
+  const { addNotification, NotificationContainer } = useNotification();
 
   let fetchedUsers = false;
   let fetchedResources = false;
-  let fetchedUsername = false;
   let fetchedUserpic = false;
   let fetchedUserRole = false;
 
-  const fetchResources = async () => {
+  const fetchUserData = async () => {
     try {
-      const response = await fetch("/api/dashboard/resources");
+      const response = await fetch("/api/dashboard/user-data");
       const data = await response.json();
-      setResources(data);
-      fetchedResources = true;
-      if (!response.ok) throw new Error("Failed to fetch resources");
-    } catch (error) {
-      throw new Error("Failed to fetch resources");
-    }
-  };
 
-  const fetchUsername = async () => {
-    try {
-      const response = await fetch("/api/dashboard/username");
-      const data = await response.json();
-      setUsername(data);
-      fetchedUsername = true;
-      if (!response.ok) throw new Error("Failed to fetch username");
-    } catch (error) {
-      throw new Error("Failed to fetch username");
-    }
-  };
-  const fetchUserPic = async () => {
-    try {
-      const response = await fetch("/api/dashboard/userpic");
-      const data = await response.json();
-      setUserpic(data);
+      // Set all the data from the single API call
+      setResources(data.resources);
+      setUserpic(data.userpic);
+      setUsername(data.username);
+      setUsers(data.allUsers);
+      setRole(data.role);
+
+      // Mark all as fetched
+      fetchedResources = true;
       fetchedUserpic = true;
-      if (!response.ok) throw new Error("Failed to fetch userpic");
+      fetchedUsers = true;
+      fetchedUserRole = true;
+
+      if (!response.ok) throw new Error("Failed to fetch user data");
     } catch (error) {
-      throw new Error("Failed to fetch userpic");
-    }
-  };
-  const fetchAllUsers = async () => {
-    try {
-      const response = await fetch("/api/dashboard/all-users");
-      const data = await response.json();
-      setUsers(data);
-      if (!response.ok) throw new Error("Failed to fetch userbase");
-    } catch (error) {
-      throw new Error("Failed to fetch userbase");
-    }
-  };
-  const fetchUserRole = async () => {
-    try {
-      const response = await fetch("/api/dashboard/roles");
-      const data = await response.json();
-      setRole(data);
-    } catch (error) {
-      throw new Error("Role cannot be fetched");
+      throw new Error("Failed to fetch user data");
     }
   };
 
   const transferResources = async () => {
+    // Validate input
     if (amount <= 0) {
-      throw new Error("Enter valid amount");
+      addNotification("error", "Please enter a valid amount greater than 0.");
+      return;
     }
+
+    if (!resource) {
+      addNotification("error", "Please select a resource type.");
+      return;
+    }
+
+    if (!toUserId) {
+      addNotification("error", "Please select a recipient.");
+      return;
+    }
+
+    setIsTransferring(true);
+
     try {
       const response = await fetch("/api/dashboard/transfering", {
         method: "POST",
@@ -103,20 +93,67 @@ export default function Dashboard() {
 
       const data = await response.json();
 
-      if (!response.ok || response.status === 400) {
-        alert(`Sorry m'lord, I don't think you have enough for this one`);
-        throw new Error(`Insufficient resources`);
-      } else {
-        alert("Boon sent succesfully");
+      if (!response.ok) {
+        // Handle specific error cases
+        if (response.status === 400) {
+          if (data.currentAmount !== undefined) {
+            addNotification(
+              "error",
+              `Insufficient ${data.resource}. You have ${data.currentAmount} but need ${data.requestedAmount}.`,
+              "Please check your resources and try again."
+            );
+          } else {
+            addNotification(
+              "error",
+              data.error || "Transaction failed. Please try again."
+            );
+          }
+        } else if (response.status === 404) {
+          addNotification("error", "Recipient not found. Please try again.");
+        } else if (response.status === 401) {
+          addNotification(
+            "error",
+            "You are not authorized. Please log in again."
+          );
+        } else {
+          addNotification(
+            "error",
+            data.error || "Transaction failed. Please try again."
+          );
+        }
+        return;
+      }
+
+      // Success case
+      if (data.success) {
+        addNotification(
+          "success",
+          `Success: You sent ${data.amount} ${data.resource} to ${toUser}.`,
+          "Your boon has been delivered successfully!"
+        );
+
+        // Close modal and reset form
         closeModal();
+        setAmount(0);
+        setResource("");
+
+        // Refresh user data to show updated amounts
+        fetchUserData();
+      } else {
+        addNotification(
+          "error",
+          "Transaction completed but with unexpected results. Please check your resources."
+        );
       }
     } catch (error) {
-      alert(
-        `These horses aren't what they used to be, we couldn't send your boon`
+      console.error("Transfer error:", error);
+      addNotification(
+        "error",
+        "Connection lost. Please check your internet connection and try again.",
+        "If the problem persists, please contact support."
       );
-      throw new Error(
-        `These horses aren't what they used to be, we couldn't send your boon`
-      );
+    } finally {
+      setIsTransferring(false);
     }
   };
 
@@ -142,37 +179,62 @@ export default function Dashboard() {
     setToUser("");
     setToUserId("");
   };
-  const fetchUsersOnce = async () => {
-    if (!fetchedUsers) fetchAllUsers();
+
+  const cleanupUserNames = async () => {
+    if (role !== "ADMIN") return;
+
+    setIsCleaningNames(true);
+    try {
+      const response = await fetch("/api/dashboard/cleanup-names", {
+        method: "POST",
+      });
+      const result = await response.json();
+
+      if (response.ok) {
+        alert(`Successfully cleaned up ${result.updatedUsers} user names!`);
+        // Refresh the user data
+        fetchUserData();
+      } else {
+        alert("Failed to clean up names. You may not have admin privileges.");
+      }
+    } catch (error) {
+      alert("Error cleaning up names. Please try again.");
+    } finally {
+      setIsCleaningNames(false);
+    }
   };
-  const fetchUsernameOnce = async () => {
-    if (!fetchedUsername) fetchUsername();
-  };
-  const fetchResourcesOnce = async () => {
-    if (!fetchedResources) fetchResources();
-  };
-  const fetchUserpicOnce = async () => {
-    if (!fetchedUserpic) fetchUserPic();
-  };
-  const fetchRoleOnce = async () => {
-    if (!fetchedUserRole) fetchUserRole();
+  const fetchUserDataOnce = async () => {
+    if (
+      !fetchedUsers ||
+      !fetchedResources ||
+      !fetchedUserpic ||
+      !fetchedUserRole
+    ) {
+      fetchUserData();
+    }
   };
 
   useEffect(() => {
-    fetchUsernameOnce();
-    fetchResourcesOnce();
-    fetchUserpicOnce();
-    fetchUsersOnce();
-    fetchRoleOnce();
+    fetchUserDataOnce();
   }, []);
 
-  const welcomePrefix = username ? `${username}'s` : "";
-  const filteredUsers = users.filter((user) =>
-    user.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Clean up user names that might contain "null"
+  const cleanUserName = (name: string) => {
+    return name?.replace(/\s+null\s*$/, "").trim() || name;
+  };
+
+  const filteredUsers = users.filter((user) => {
+    const cleanName = cleanUserName(user.name);
+    return (
+      cleanName && cleanName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-medieval-steel-900 via-medieval-steel-800 to-medieval-steel-900 text-medieval-steel-100 p-8 flex flex-col items-center pt-8">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-background text-foreground p-8 flex flex-col items-center pt-8">
+      {/* Notification Container */}
+      <NotificationContainer />
+
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-medieval-pattern opacity-5"></div>
 
@@ -192,7 +254,7 @@ export default function Dashboard() {
 
             <div className="text-center lg:text-left">
               <h1 className="medieval-title mb-4 glow-text">
-                {welcomePrefix} Royal Court
+                {username}'s Royal Court
               </h1>
               <p className="medieval-subtitle italic">
                 "Make your decisions carefully, young lord... The realm depends
@@ -247,7 +309,7 @@ export default function Dashboard() {
 
               <div className="resource-card text-center group">
                 <div className="text-4xl mb-4 group-hover:animate-float">
-                  🪙
+                  💰
                 </div>
                 <span className="block text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
                   {resources.ducats}
@@ -281,9 +343,26 @@ export default function Dashboard() {
 
           {/* Noble Houses List */}
           <div className="medieval-card p-8">
-            <h2 className="font-medieval text-3xl text-medieval-gold-300 mb-8 glow-text text-center">
-              👑 Noble Houses of the Realm
-            </h2>
+            <div className="flex flex-col lg:flex-row justify-between items-center mb-8">
+              <h2 className="font-medieval text-3xl text-medieval-gold-300 glow-text text-center lg:text-left">
+                👑 Noble Houses of the Realm
+              </h2>
+
+              {role === "ADMIN" && (
+                <button
+                  onClick={cleanupUserNames}
+                  disabled={isCleaningNames}
+                  className="medieval-button-secondary group mt-4 lg:mt-0"
+                >
+                  <span className="flex items-center space-x-2">
+                    <span>{isCleaningNames ? "⏳" : "🧹"}</span>
+                    <span>
+                      {isCleaningNames ? "Cleaning..." : "Clean Names"}
+                    </span>
+                  </span>
+                </button>
+              )}
+            </div>
             <div className="grid gap-6">
               {filteredUsers.map((user) => (
                 <div key={user.id} className="user-card group">
@@ -299,7 +378,7 @@ export default function Dashboard() {
 
                     <div className="flex-1 text-center lg:text-left">
                       <h3 className="font-medieval text-2xl text-medieval-gold-300 mb-2">
-                        {user.name}
+                        {cleanUserName(user.name)}
                       </h3>
                       <p className="text-medieval-steel-300 italic">
                         "A noble house of great renown"
@@ -308,7 +387,9 @@ export default function Dashboard() {
 
                     <div className="flex flex-col sm:flex-row gap-3">
                       <button
-                        onClick={() => openModal(user.name, user.id)}
+                        onClick={() =>
+                          openModal(cleanUserName(user.name), user.id)
+                        }
                         className="medieval-button group"
                       >
                         <span className="flex items-center space-x-2">
@@ -319,7 +400,9 @@ export default function Dashboard() {
 
                       {role === "ADMIN" && (
                         <button
-                          onClick={() => openAdminModal(user.name, user.id)}
+                          onClick={() =>
+                            openAdminModal(cleanUserName(user.name), user.id)
+                          }
                           className="medieval-button-secondary group"
                         >
                           <span className="flex items-center space-x-2">
@@ -382,18 +465,21 @@ export default function Dashboard() {
                       <option value="wood">🌲 Wood</option>
                       <option value="stone">🗿 Stone</option>
                       <option value="food">🍞 Food</option>
-                      <option value="ducats">🪙 Ducats</option>
+                      <option value="ducats">💰 Ducats</option>
                     </select>
                   </div>
 
                   <div className="flex justify-center pt-4">
                     <button
                       onClick={transferResources}
-                      className="medieval-button group"
+                      disabled={isTransferring}
+                      className="medieval-button group disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <span className="flex items-center space-x-2">
-                        <span>⚔️</span>
-                        <span>Send Your Boon</span>
+                        <span>{isTransferring ? "⏳" : "⚔️"}</span>
+                        <span>
+                          {isTransferring ? "Sending..." : "Send Your Boon"}
+                        </span>
                       </span>
                     </button>
                   </div>
@@ -449,7 +535,7 @@ export default function Dashboard() {
                       <option value="wood">🌲 Wood</option>
                       <option value="stone">🗿 Stone</option>
                       <option value="food">🍞 Food</option>
-                      <option value="ducats">🪙 Ducats</option>
+                      <option value="ducats">💰 Ducats</option>
                     </select>
                   </div>
 

@@ -19,9 +19,12 @@ export default async function Home() {
     await prisma.user.create({
       data: {
         clerkUserId: user.id,
-        name: `${user.firstName} ${user.lastName}`,
+        name: user.lastName
+          ? `${user.firstName} ${user.lastName}`
+          : user.firstName,
         imageUrl: user.imageUrl,
         email: user.emailAddresses[0].emailAddress,
+        theme: "royal-court", // Set default theme
         resources: {
           create: {
             wood: 0,

@@ -18,7 +18,7 @@ export async function GET() {
     // Return the user's name
     return NextResponse.json(img);
   } catch (error) {
-    console.error("Error fetching resources:", error);
+    console.error("Error fetching user picture:", error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

@@ -5,7 +5,7 @@ import logo from "../../../components/logo.png";
 
 export default function RulesPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-medieval-steel-900 via-medieval-steel-800 to-medieval-steel-900 text-medieval-steel-100 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-background text-foreground p-8">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-medieval-pattern opacity-5"></div>
 
@@ -50,7 +50,7 @@ export default function RulesPage() {
               the realm.
             </p>
 
-            <div className="bg-gradient-to-r from-medieval-steel-800/50 to-medieval-steel-700/50 p-8 rounded-lg border-2 border-medieval-gold-600/30">
+            <div className="bg-gradient-to-r from-background/50 to-background/50 p-8 rounded-lg border-2 border-primary/30">
               <p className="medieval-text text-lg leading-relaxed">
                 <span className="font-medieval text-medieval-gold-300">
                   "In this realm, power flows through bloodlines, alliances, and
@@ -208,7 +208,7 @@ export default function RulesPage() {
                   to obtain a spouse:
                 </p>
                 <div className="space-y-4">
-                  <div className="bg-gradient-to-r from-medieval-steel-800/30 to-medieval-steel-700/30 p-6 rounded-lg border border-medieval-gold-600/30">
+                  <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30">
                     <h4 className="font-medieval text-lg text-medieval-gold-300 mb-2">
                       💰 Dowry Marriage
                     </h4>
@@ -216,7 +216,7 @@ export default function RulesPage() {
                       Pay $1000 dowry to find a spouse from a minor noble house.
                     </p>
                   </div>
-                  <div className="bg-gradient-to-r from-medieval-steel-800/30 to-medieval-steel-700/30 p-6 rounded-lg border border-medieval-gold-600/30">
+                  <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30">
                     <h4 className="font-medieval text-lg text-medieval-gold-300 mb-2">
                       🤝 Alliance Marriage
                     </h4>
@@ -239,7 +239,7 @@ export default function RulesPage() {
                   seasonal rolls. Strategic family planning is crucial for
                   maintaining your dynasty's strength.
                 </p>
-                <div className="bg-gradient-to-r from-medieval-steel-800/30 to-medieval-steel-700/30 p-6 rounded-lg border border-medieval-gold-600/30">
+                <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30">
                   <h4 className="font-medieval text-lg text-medieval-gold-300 mb-2">
                     📈 Dynasty Management
                   </h4>

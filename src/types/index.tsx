@@ -4,14 +4,3 @@ export type User = {
   name: string;
   imageUrl: string;
 };
-export interface ResourceUpdate {
-  userId: string;
-  resource: ResourceType;
-  amount: number;
-}
-
-export interface TransferRequest {
-  receiverId: string;
-  resource: ResourceType;
-  amount: number;
-}
