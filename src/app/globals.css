@@ -1,23 +1,41 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Uncial+Antiqua&family=Dancing+Script:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+  --medieval-gold: #eab308;
+  --medieval-bronze: #d946ef;
+  --medieval-steel: #64748b;
+  --medieval-crimson: #dc2626;
+  --medieval-emerald: #10b981;
+  --medieval-royal: #0ea5e9;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Playfair Display", serif;
+  background-image: radial-gradient(
+      circle at 20% 80%,
+      rgba(234, 179, 8, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(220, 38, 38, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 40% 40%,
+      rgba(16, 185, 129, 0.1) 0%,
+      transparent 50%
+    );
+  background-attachment: fixed;
+  min-height: 100vh;
 }
 
 .game-info-header {
@@ -97,4 +115,97 @@ body {
 }
 .typewriter {
   animation: typewriter;
+}
+
+/* Fantasy UI Components */
+@layer components {
+  .medieval-card {
+    @apply bg-gradient-to-br from-medieval-steel-800 to-medieval-steel-900 border-2 border-medieval-gold-600 rounded-lg shadow-medieval;
+  }
+
+  .medieval-button {
+    @apply bg-gradient-to-r from-medieval-gold-600 to-medieval-gold-700 text-medieval-steel-900 font-medieval font-semibold px-6 py-3 rounded-lg border-2 border-medieval-gold-500 shadow-medieval hover:from-medieval-gold-500 hover:to-medieval-gold-600 hover:shadow-glow-gold transition-all duration-300 transform hover:scale-105;
+  }
+
+  .medieval-button-secondary {
+    @apply bg-gradient-to-r from-medieval-steel-600 to-medieval-steel-700 text-medieval-gold-300 font-medieval font-semibold px-6 py-3 rounded-lg border-2 border-medieval-steel-500 shadow-medieval hover:from-medieval-steel-500 hover:to-medieval-steel-600 hover:shadow-glow-silver transition-all duration-300 transform hover:scale-105;
+  }
+
+  .medieval-input {
+    @apply bg-medieval-steel-800 border-2 border-medieval-gold-600 text-medieval-gold-100 placeholder-medieval-steel-400 rounded-lg px-4 py-3 focus:border-medieval-gold-400 focus:ring-2 focus:ring-medieval-gold-500 focus:outline-none transition-all duration-300;
+  }
+
+  .medieval-title {
+    @apply font-medieval text-4xl md:text-5xl text-medieval-gold-300 tracking-wider;
+  }
+
+  .medieval-subtitle {
+    @apply font-serif text-xl text-medieval-gold-200 tracking-wide;
+  }
+
+  .medieval-text {
+    @apply text-medieval-steel-200 leading-relaxed;
+  }
+
+  .resource-card {
+    @apply bg-gradient-to-br from-medieval-steel-800 to-medieval-steel-900 border-2 border-medieval-gold-600 rounded-lg p-6 shadow-medieval hover:shadow-glow-gold transition-all duration-300 transform hover:scale-105;
+  }
+
+  .user-card {
+    @apply bg-gradient-to-br from-medieval-steel-800 to-medieval-steel-900 border-2 border-medieval-steel-600 rounded-lg p-4 shadow-medieval hover:border-medieval-gold-500 hover:shadow-glow-gold transition-all duration-300;
+  }
+
+  .modal-overlay {
+    @apply fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50;
+  }
+
+  .modal-content {
+    @apply bg-gradient-to-br from-medieval-steel-800 to-medieval-steel-900 border-4 border-medieval-gold-600 rounded-lg shadow-2xl max-w-lg w-full mx-4;
+  }
+
+  .medieval-divider {
+    @apply border-t-2 border-medieval-gold-600 my-6;
+  }
+
+  .glow-text {
+    @apply text-medieval-gold-300 drop-shadow-lg;
+    text-shadow: 0 0 10px rgba(234, 179, 8, 0.5);
+  }
+
+  .ancient-border {
+    @apply border-4 border-double border-medieval-gold-600;
+    border-image: linear-gradient(45deg, #eab308, #facc15, #eab308) 1;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e293b;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #eab308, #ca8a04);
+  border-radius: 6px;
+  border: 2px solid #1e293b;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #facc15, #eab308);
+}
+
+/* Selection styling */
+::selection {
+  background: rgba(234, 179, 8, 0.3);
+  color: #f1f5f9;
+}
+
+/* Focus styles */
+*:focus {
+  outline: 2px solid #eab308;
+  outline-offset: 2px;
 }

@@ -112,10 +112,10 @@ export default function Dashboard() {
       }
     } catch (error) {
       alert(
-        `These horses aren't what they used to be, we couldn't send your boon`,
+        `These horses aren't what they used to be, we couldn't send your boon`
       );
       throw new Error(
-        `These horses aren't what they used to be, we couldn't send your boon`,
+        `These horses aren't what they used to be, we couldn't send your boon`
       );
     }
   };
@@ -168,208 +168,303 @@ export default function Dashboard() {
 
   const welcomePrefix = username ? `${username}'s` : "";
   const filteredUsers = users.filter((user) =>
-    user.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    user.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-800 to-black text-white p-8 flex flex-col items-center pt-24">
-      <div className="w-full max-w-4xl bg-gray-900 p-8 rounded-lg shadow-2xl border-2 border-yellow-600">
-        <img
-          src={userpic}
-          alt="userpic"
-          className="h-20 w-20 rounded-full border-2 border-yellow-400"
-        />
+    <div className="min-h-screen bg-gradient-to-br from-medieval-steel-900 via-medieval-steel-800 to-medieval-steel-900 text-medieval-steel-100 p-8 flex flex-col items-center pt-8">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-medieval-pattern opacity-5"></div>
 
-        <h1 className="text-5xl font-bold text-center mb-6 font-serif tracking-wider text-yellow-300">
-          {welcomePrefix} Dashboard
-        </h1>
-        <p className="text-center text-yellow-400 mb-8 italic">
-          Make your decisions carefully young lord...
-        </p>
+      <div className="relative w-full max-w-6xl">
+        {/* Main Dashboard Card */}
+        <div className="medieval-card p-12 animate-fade-in">
+          {/* Header Section */}
+          <div className="flex flex-col lg:flex-row items-center justify-center space-y-8 lg:space-y-0 lg:space-x-12 mb-12">
+            <div className="relative group">
+              <img
+                src={userpic}
+                alt="Noble Portrait"
+                className="h-32 w-32 rounded-full border-4 border-medieval-gold-600 shadow-glow-gold transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-3"
+              />
+              <div className="absolute -inset-2 bg-gradient-to-r from-medieval-gold-400 to-medieval-gold-600 rounded-full opacity-0 group-hover:opacity-30 blur-lg transition-opacity duration-500"></div>
+            </div>
 
-        {/* Resources Section */}
-        <div className="bg-gray-800 p-6 rounded-lg mb-8 border border-gray-700">
-          <h2 className="text-3xl font-semibold mb-6 border-b border-yellow-600 pb-2 text-yellow-300">
-            Your Resources
-          </h2>
-          <ul className="grid grid-cols-2 gap-6">
-            <li className="p-4 rounded text-center bg-orange-700 shadow-md">
-              <span className="block text-3xl font-bold">{resources.wood}</span>
-              <span className="text-xl">Wood</span>
-            </li>
-            <li className="p-4 rounded text-center bg-gray-600 shadow-md">
-              <span className="block text-3xl font-bold">
-                {resources.stone}
-              </span>
-              <span className="text-xl">Stone</span>
-            </li>
-            <li className="p-4 rounded text-center bg-green-700 shadow-md">
-              <span className="block text-3xl font-bold">{resources.food}</span>
-              <span className="text-xl">Food</span>
-            </li>
-            <li className="p-4 rounded text-center bg-yellow-600 shadow-md">
-              <span className="block text-3xl font-bold">
-                {resources.ducats}
-              </span>
-              <span className="text-xl">Ducats</span>
-            </li>
-          </ul>
-        </div>
-        {/* User Search Section */}
-        <div className="mb-8">
-          <input
-            type="text"
-            placeholder="Search amongst the lords."
-            className="w-full p-4 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 placeholder-gray-400"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-        {/* User List */}
-        <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
-          <h2 className="text-3xl font-serif font-semibold mb-6 border-b border-yellow-600 pb-2 text-yellow-300">
-            Users
-          </h2>
-          <ul className="space-y-4">
-            {filteredUsers.map((user) => (
-              <li
-                key={user.id}
-                className="flex items-center space-x-4 bg-gray-800 p-4 rounded-lg border border-gray-700"
-              >
-                <img
-                  src={user.imageUrl}
-                  alt={user.name || "User"}
-                  className="h-20 w-20 rounded-full border-2 border-yellow-400"
-                />
-                <span className="text-xl text-white">{user.name}</span>
+            <div className="text-center lg:text-left">
+              <h1 className="medieval-title mb-4 glow-text">
+                {welcomePrefix} Royal Court
+              </h1>
+              <p className="medieval-subtitle italic">
+                "Make your decisions carefully, young lord... The realm depends
+                on your wisdom."
+              </p>
+            </div>
+          </div>
+
+          <div className="medieval-divider"></div>
+
+          {/* Resources Section */}
+          <div className="mb-12">
+            <h2 className="font-medieval text-3xl text-medieval-gold-300 mb-8 glow-text text-center">
+              💰 Royal Treasury
+            </h2>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="resource-card text-center group">
+                <div className="text-4xl mb-4 group-hover:animate-float">
+                  🌲
+                </div>
+                <span className="block text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
+                  {resources.wood}
+                </span>
+                <span className="text-lg text-medieval-steel-300 font-serif">
+                  Wood
+                </span>
+              </div>
+
+              <div className="resource-card text-center group">
+                <div className="text-4xl mb-4 group-hover:animate-float">
+                  🗿
+                </div>
+                <span className="block text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
+                  {resources.stone}
+                </span>
+                <span className="text-lg text-medieval-steel-300 font-serif">
+                  Stone
+                </span>
+              </div>
+
+              <div className="resource-card text-center group">
+                <div className="text-4xl mb-4 group-hover:animate-float">
+                  🍞
+                </div>
+                <span className="block text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
+                  {resources.food}
+                </span>
+                <span className="text-lg text-medieval-steel-300 font-serif">
+                  Food
+                </span>
+              </div>
+
+              <div className="resource-card text-center group">
+                <div className="text-4xl mb-4 group-hover:animate-float">
+                  🪙
+                </div>
+                <span className="block text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
+                  {resources.ducats}
+                </span>
+                <span className="text-lg text-medieval-steel-300 font-serif">
+                  Ducats
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="medieval-divider"></div>
+
+          {/* Noble Search Section */}
+          <div className="mb-12">
+            <h2 className="font-medieval text-2xl text-medieval-gold-300 mb-6 glow-text text-center">
+              🔍 Search Amongst the Noble Houses
+            </h2>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Seek out your allies and rivals..."
+                className="medieval-input w-full text-lg"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-medieval-gold-400">
+                🔍
+              </div>
+            </div>
+          </div>
+
+          {/* Noble Houses List */}
+          <div className="medieval-card p-8">
+            <h2 className="font-medieval text-3xl text-medieval-gold-300 mb-8 glow-text text-center">
+              👑 Noble Houses of the Realm
+            </h2>
+            <div className="grid gap-6">
+              {filteredUsers.map((user) => (
+                <div key={user.id} className="user-card group">
+                  <div className="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-6">
+                    <div className="relative group/avatar">
+                      <img
+                        src={user.imageUrl}
+                        alt={user.name || "Noble"}
+                        className="h-24 w-24 rounded-full border-4 border-medieval-gold-600 shadow-glow-gold transform transition-all duration-300 group-hover/avatar:scale-110 group-hover/avatar:rotate-3"
+                      />
+                      <div className="absolute -inset-1 bg-gradient-to-r from-medieval-gold-400 to-medieval-gold-600 rounded-full opacity-0 group-hover/avatar:opacity-20 blur-lg transition-opacity duration-300"></div>
+                    </div>
+
+                    <div className="flex-1 text-center lg:text-left">
+                      <h3 className="font-medieval text-2xl text-medieval-gold-300 mb-2">
+                        {user.name}
+                      </h3>
+                      <p className="text-medieval-steel-300 italic">
+                        "A noble house of great renown"
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <button
+                        onClick={() => openModal(user.name, user.id)}
+                        className="medieval-button group"
+                      >
+                        <span className="flex items-center space-x-2">
+                          <span>🎁</span>
+                          <span>Send Boon</span>
+                        </span>
+                      </button>
+
+                      {role === "ADMIN" && (
+                        <button
+                          onClick={() => openAdminModal(user.name, user.id)}
+                          className="medieval-button-secondary group"
+                        >
+                          <span className="flex items-center space-x-2">
+                            <span>⚡</span>
+                            <span>Manage Resources</span>
+                          </span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Transfer Modal */}
+          {modalOpen && (
+            <div className="modal-overlay">
+              <div className="modal-content p-8 animate-slide-up">
                 <button
-                  onClick={() => openModal(user.name, user.id)}
-                  className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800"
+                  className="absolute top-4 right-4 text-medieval-gold-300 hover:text-medieval-crimson-400 text-3xl transition-colors duration-300"
+                  onClick={() => setModalOpen(false)}
                 >
-                  Send Boon
+                  ✕
                 </button>
-                {role === "ADMIN" && (
-                  <button
-                    onClick={() => openAdminModal(user.name, user.id)}
-                    className=""
-                  >
-                    Manage Resources
-                  </button>
-                )}
-              </li>
-            ))}
-          </ul>
-          {/* Tranfer Modal */}
-          <div className="flex items-center justify-center min-h-screen bg-gray-900">
-            {modalOpen && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                <div className="relative bg-gray-800 text-yellow-300 p-6 rounded-lg shadow-xl border-4 border-yellow-700 max-w-lg w-full">
-                  <button
-                    className="absolute top-2 right-2 text-yellow-300 hover:text-red-500 text-2xl"
-                    onClick={() => setModalOpen(false)}
-                  >
-                    ×
-                  </button>
-                  <h2 className="text-3xl font-bold font-serif text-center border-b-2 border-yellow-600 pb-2 mb-4">
-                    Send your Boon to {toUser}
-                  </h2>
-                  <p className="text-lg font-serif text-center mb-4">
-                    Select the resource and amount
-                  </p>
 
-                  <div className="mb-4">
-                    <label className="block text-yellow-400 font-bold mb-2">
-                      Enter Amount
+                <div className="text-center mb-8">
+                  <h2 className="font-medieval text-3xl text-medieval-gold-300 mb-4 glow-text">
+                    🎁 Send Your Boon to {toUser}
+                  </h2>
+                  <p className="medieval-text text-lg italic">
+                    "A gift from one noble house to another strengthens the
+                    bonds of the realm"
+                  </p>
+                </div>
+
+                <div className="space-y-6">
+                  <div>
+                    <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
+                      💰 Enter the Amount
                     </label>
                     <input
                       type="number"
-                      className="w-full p-2 rounded bg-gray-700 border border-yellow-600 text-yellow-300"
+                      className="medieval-input w-full text-lg"
                       value={amount}
                       onChange={(e) => setAmount(Number(e.target.value))}
-                      placeholder="How many?"
+                      placeholder="How many shall you bestow?"
                     />
                   </div>
 
-                  <div className="mb-4">
-                    <label className="block text-yellow-400 font-bold mb-2">
-                      Choose the type of boon:
+                  <div>
+                    <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
+                      🏺 Choose the Type of Boon
                     </label>
                     <select
                       value={resource}
                       onChange={(e) => setResource(e.target.value)}
-                      className="w-full p-2 rounded bg-gray-700 border border-yellow-600 text-yellow-300"
+                      className="medieval-input w-full text-lg"
                     >
-                      <option value="wood">Wood</option>
-                      <option value="stone">Stone</option>
-                      <option value="food">Food</option>
-                      <option value="ducats">Ducats</option>
+                      <option value="">Select a resource...</option>
+                      <option value="wood">🌲 Wood</option>
+                      <option value="stone">🗿 Stone</option>
+                      <option value="food">🍞 Food</option>
+                      <option value="ducats">🪙 Ducats</option>
                     </select>
+                  </div>
 
+                  <div className="flex justify-center pt-4">
                     <button
                       onClick={transferResources}
-                      className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800"
+                      className="medieval-button group"
                     >
-                      Send your Resources!
+                      <span className="flex items-center space-x-2">
+                        <span>⚔️</span>
+                        <span>Send Your Boon</span>
+                      </span>
                     </button>
                   </div>
                 </div>
               </div>
-            )}
-          </div>
-          {/* Admin Modal*/}
-          <div className="flex items-center justify-center min-h-screen bg-gray-900">
-            {adminModalOpen && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                <div className="relative bg-gray-800 text-yellow-300 p-6 rounded-lg shadow-xl border-4 border-yellow-700 max-w-lg w-full">
-                  <button
-                    className="absolute top-2 right-2 text-yellow-300 hover:text-red-500 text-2xl"
-                    onClick={() => closeAdminModal()}
-                  >
-                    ×
-                  </button>
-                  <h2 className="text-3xl font-bold font-serif text-center border-b-2 border-yellow-600 pb-2 mb-4">
-                    Manage {toUser}'s Resources
-                  </h2>
-                  <p className="text-lg font-serif text-center mb-4">
-                    Select the resource and amount you'd like to add or remove
-                  </p>
+            </div>
+          )}
+          {/* Admin Modal */}
+          {adminModalOpen && (
+            <div className="modal-overlay">
+              <div className="modal-content p-8 animate-slide-up">
+                <button
+                  className="absolute top-4 right-4 text-medieval-gold-300 hover:text-medieval-crimson-400 text-3xl transition-colors duration-300"
+                  onClick={() => closeAdminModal()}
+                >
+                  ✕
+                </button>
 
-                  <div className="mb-4">
-                    <label className="block text-yellow-400 font-bold mb-2">
-                      Enter Amount
+                <div className="text-center mb-8">
+                  <h2 className="font-medieval text-3xl text-medieval-gold-300 mb-4 glow-text">
+                    ⚡ Manage {toUser}'s Resources
+                  </h2>
+                  <p className="medieval-text text-lg italic">
+                    "As the realm's overseer, you hold the power to shape the
+                    fortunes of noble houses"
+                  </p>
+                </div>
+
+                <div className="space-y-6">
+                  <div>
+                    <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
+                      💰 Enter the Amount
                     </label>
                     <input
                       type="number"
-                      className="w-full p-2 rounded bg-gray-700 border border-yellow-600 text-yellow-300"
+                      className="medieval-input w-full text-lg"
                       value={amount}
                       onChange={(e) => setAmount(Number(e.target.value))}
-                      placeholder="How many?"
+                      placeholder="How many shall you bestow or remove?"
                     />
                   </div>
 
-                  <div className="mb-4">
-                    <label className="block text-yellow-400 font-bold mb-2">
-                      Choose the type of boon:
+                  <div>
+                    <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
+                      🏺 Choose the Resource Type
                     </label>
                     <select
                       value={resource}
                       onChange={(e) => setResource(e.target.value)}
-                      className="w-full p-2 rounded bg-gray-700 border border-yellow-600 text-yellow-300"
+                      className="medieval-input w-full text-lg"
                     >
-                      <option value="wood">Wood</option>
-                      <option value="stone">Stone</option>
-                      <option value="food">Food</option>
-                      <option value="ducats">Ducats</option>
+                      <option value="">Select a resource...</option>
+                      <option value="wood">🌲 Wood</option>
+                      <option value="stone">🗿 Stone</option>
+                      <option value="food">🍞 Food</option>
+                      <option value="ducats">🪙 Ducats</option>
                     </select>
+                  </div>
 
-                    <button className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
-                      Send your Resources!
+                  <div className="flex justify-center pt-4">
+                    <button className="medieval-button-secondary group">
+                      <span className="flex items-center space-x-2">
+                        <span>👑</span>
+                        <span>Execute Administrative Action</span>
+                      </span>
                     </button>
                   </div>
                 </div>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
