@@ -8,71 +8,73 @@ A medieval fantasy strategy game built with Next.js, featuring noble house manag
 
 War of the Elector is an online multiplayer strategy game where players manage noble families, oversee resources, and engage in diplomatic trade. Built with modern web technologies, the game features a rich medieval fantasy theme with customizable visual experiences.
 
-**Live Demo:** [waroftheelector.space](https://waroftheelector.space)
+**🌐 Live Demo:** [waroftheelector.space](https://waroftheelector.space)
 
-## ✨ Current Features
+## ✨ Latest Features (Recently Added)
 
-### 🎨 **Dynamic Theme System**
+### 🎨 **Dynamic Theme System** ⭐ _NEW_
 
-- **Four Distinct Themes:**
-  - 🏰 **Royal Court** - Majestic golden halls with regal crimson banners
-  - 🌲 **Forest Kingdom** - Vibrant emerald forests with golden sunlight
-  - 🔮 **Mystical Wizard** - Enchanted purple mists with shimmering cyan magic
-  - 🐉 **Dragon's Lair** - Blazing crimson flames with molten orange embers
+Experience the realm in four distinct visual styles:
+
+- **🏰 Royal Court** - Majestic golden halls with regal crimson banners and polished steel armor
+- **🌲 Forest Kingdom** - Vibrant emerald forests with golden sunlight filtering through ancient trees
+- **🔮 Mystical Wizard** - Enchanted purple mists with shimmering cyan magic and ethereal lavender glows
+- **🐉 Dragon's Lair** - Blazing crimson flames with molten orange embers and deep volcanic shadows
+
+_Screenshot placeholder: Theme selection interface showing all four theme options_
+
+**Key Features:**
+
 - **Persistent Theme Selection** - Your theme choice is saved to your profile
 - **Seamless Switching** - Change themes instantly without page reload
+- **Immersive Backgrounds** - Each theme features unique gradient patterns and atmospheric effects
 
-### 👑 **Noble House Management**
+### 💰 **Resource Trading System** ⭐ _NEW_
 
-- **User Authentication** - Secure login with Clerk integration
-- **Profile Management** - Customizable user profiles with avatars
-- **Role-Based Access** - Admin and basic user roles with different permissions
+Engage in diplomatic resource exchange with other noble houses:
 
-### 💰 **Resource Trading System**
+_Screenshot placeholder: Resource trading interface showing boon sending modal_
 
-- **Four Resource Types:**
-  - 🌲 **Wood** - For construction and crafting
-  - 🗿 **Stone** - For building and fortification
-  - 🍞 **Food** - For population sustenance
-  - 💰 **Ducats** - The realm's currency
-- **Boon Sending** - Send resources to other noble houses
+**Four Resource Types:**
+
+- 🌲 **Wood** - For construction and crafting
+- 🗿 **Stone** - For building and fortification
+- 🍞 **Food** - For population sustenance
+- 💰 **Ducats** - The realm's currency
+
+**Trading Features:**
+
+- **Boon Sending** - Send resources to other noble houses with validation
 - **Real-time Validation** - Prevents insufficient resource transactions
+- **Custom Notifications** - Themed success/error messages
 - **Transaction History** - Track all resource movements
 
-### 🎯 **User Interface**
+_Screenshot placeholder: Dashboard showing resource amounts and trading interface_
 
-- **Responsive Design** - Works on desktop, tablet, and mobile
-- **Medieval Fantasy Aesthetic** - Immersive UI with custom fonts and animations
-- **Custom Notifications** - Themed success/error messages
-- **Search & Discovery** - Find other noble houses easily
+## 🛠️ Technology Stack
 
-### ⚙️ **Administrative Features**
+### **Frontend Development**
 
-- **User Management** - Admin tools for user oversight
-- **Resource Administration** - Direct resource management capabilities
-- **Name Cleanup** - Automated user name formatting
+- **Next.js 14** - Full-stack React framework with App Router
+- **TypeScript** - Type-safe development and better IDE support
+- **Tailwind CSS** - Utility-first CSS framework for rapid styling
+- **Custom Design System** - Medieval fantasy components with CSS variables
 
-## 🛠️ Tech Stack
+### **Backend & Database**
 
-### **Frontend**
+- **Next.js API Routes** - Serverless backend with TypeScript
+- **Prisma ORM** - Type-safe database management and migrations
+- **PostgreSQL** - Primary relational database
+- **Neon** - Cloud PostgreSQL database hosting with connection pooling
 
-- **Next.js 14** - Full-stack React framework
-- **TypeScript** - Type-safe development
-- **Tailwind CSS** - Utility-first styling
-- **Custom Design System** - Medieval fantasy components
+### **Authentication & User Management**
 
-### **Backend**
+- **Clerk** - Complete authentication solution with user management
 
-- **Next.js API Routes** - Serverless backend
-- **Prisma ORM** - Database management
-- **PostgreSQL** - Primary database
-- **Clerk** - Authentication & user management
+### **Deployment & Hosting**
 
-### **Deployment**
-
-- **Vercel** - Hosting and deployment
-- **Neon** - Cloud PostgreSQL database
-- **GitHub** - Version control and CI/CD
+- **Vercel** - Serverless hosting and deployment platform
+- **GitHub**
 
 ## 🚀 Getting Started
 
@@ -80,6 +82,7 @@ War of the Elector is an online multiplayer strategy game where players manage n
 
 - Node.js 18+ installed
 - Git for version control
+- PostgreSQL database (or Neon account)
 
 ### **Installation**
 
@@ -126,18 +129,22 @@ War of the Elector is an online multiplayer strategy game where players manage n
 
 ### **Getting Started**
 
-1. **Sign Up** - Create your noble house account
+1. **Sign Up** - Create your noble house account at [waroftheelector.space](https://waroftheelector.space)
 2. **Choose Your Theme** - Select from four medieval themes in Settings
 3. **Explore the Dashboard** - View your resources and noble house
 4. **Find Allies** - Search for other players in the realm
 5. **Send Boons** - Trade resources with other noble houses
 
+_Screenshot placeholder: User registration and first login experience_
+
 ### **Resource Management**
 
 - **View Resources** - Check your current wood, stone, food, and ducats
-- **Send Boons** - Transfer resources to other players
+- **Send Boons** - Transfer resources to other players with validation
 - **Receive Resources** - Accept gifts from other noble houses
 - **Track Transactions** - Monitor all resource movements
+
+_Screenshot placeholder: Resource management dashboard with current amounts_
 
 ### **Theme Customization**
 
@@ -145,6 +152,8 @@ War of the Elector is an online multiplayer strategy game where players manage n
 2. Choose your preferred theme from the four options
 3. Click **Save Theme** to persist your choice
 4. Enjoy your personalized medieval experience!
+
+_Screenshot placeholder: Settings page showing theme selection interface_
 
 ## 🏗️ Development
 
@@ -155,26 +164,26 @@ src/
 ├── app/                    # Next.js app directory
 │   ├── api/               # API routes
 │   ├── pages/             # Page components
-│   └── globals.css        # Global styles
+│   └── globals.css        # Global styles with theme variables
 ├── components/            # Reusable components
-├── contexts/              # React contexts
+├── contexts/              # React contexts (Theme management)
 ├── types/                 # TypeScript definitions
 └── middleware.ts          # Clerk middleware
 ```
 
 ### **Key Components**
 
-- **Dashboard** - Main game interface
-- **Settings** - Theme selection and preferences
+- **Dashboard** - Main game interface with resource display
+- **Settings** - Theme selection and user preferences
 - **Rules** - Game rules and information
 - **Navbar** - Navigation with theme integration
 
 ### **API Endpoints**
 
 - `/api/dashboard/user-data` - Consolidated user information
-- `/api/dashboard/theme` - Theme management
-- `/api/dashboard/transfering` - Resource transfers
-- `/api/dashboard/cleanup-names` - Admin name cleanup
+- `/api/dashboard/theme` - Theme management and persistence
+- `/api/dashboard/transfering` - Resource transfers with validation
+- `/api/dashboard/cleanup-names` - Admin name cleanup utilities
 
 ## 🎨 Customization
 
@@ -196,6 +205,8 @@ src/
 
 ### **Production Deployment**
 
+The live application is hosted at [waroftheelector.space](https://waroftheelector.space) using:
+
 1. **Database Setup:**
 
    ```bash
@@ -203,7 +214,7 @@ src/
    ```
 
 2. **Environment Variables:**
-   Set up production environment variables in your hosting platform
+   Set up production environment variables in Vercel dashboard
 
 3. **Build & Deploy:**
    ```bash
@@ -252,11 +263,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 For questions, issues, or feature requests:
 
 - **GitHub Issues** - Report bugs and request features
-- **Discord** - Join our community discussions
-- **Email** - Contact the development team
 
 ---
 
-**Built with ❤️ for medieval strategy enthusiasts**
-
-_May your house prosper and your realm flourish!_
+**🌐 Play Now:** [waroftheelector.space](https://waroftheelector.space)
