@@ -1,104 +1,262 @@
 ![logo](https://github.com/user-attachments/assets/e3f108ee-de71-4603-8138-6c903d570025)
-# War of the Elector in React and Next.js
 
-## Overview
+# War of the Elector
 
-War of the Elector is an online multiplayer strategy game where players manage noble families, oversee towns, build armies, and engage in trade and combat. The game is currently in development, with core features being gradually implemented.
+A medieval fantasy strategy game built with Next.js, featuring noble house management, resource trading, and immersive theming.
 
-The latest version of the web app can be found at [waroftheelector.space](https://waroftheelector.space).
+## 🏰 Overview
 
-### **Core Gameplay Mechanics**
+War of the Elector is an online multiplayer strategy game where players manage noble families, oversee resources, and engage in diplomatic trade. Built with modern web technologies, the game features a rich medieval fantasy theme with customizable visual experiences.
 
-#### **Family Tree System**
+**Live Demo:** [waroftheelector.space](https://waroftheelector.space)
 
-Each player controls a noble house, where family members play a crucial role in gaining strategic advantages.
+## ✨ Current Features
 
-- **Family Roles:**
-  - Lead armies (age 18+)
-  - Govern regions (age 18+)
-  - Complete missions (age 18+)
-- **Marriages & Growth:**
-  - Noble houses only marry within their rank.
-  - Two ways to obtain a spouse:
-    1. Pay \$1000 dowry to find a spouse from a minor noble house.
-    2. Arrange a marriage with another player's noble family, with dowry negotiation and potential alliance benefits.
-  - Families grow through adoption or childbirth, determined by seasonal rolls.
+### 🎨 **Dynamic Theme System**
 
-#### **Town & Population Management**
+- **Four Distinct Themes:**
+  - 🏰 **Royal Court** - Majestic golden halls with regal crimson banners
+  - 🌲 **Forest Kingdom** - Vibrant emerald forests with golden sunlight
+  - 🔮 **Mystical Wizard** - Enchanted purple mists with shimmering cyan magic
+  - 🐉 **Dragon's Lair** - Blazing crimson flames with molten orange embers
+- **Persistent Theme Selection** - Your theme choice is saved to your profile
+- **Seamless Switching** - Change themes instantly without page reload
 
-Towns serve as the economic backbone of a noble house.
+### 👑 **Noble House Management**
 
-- **Town Features:**
-  - Each town can support up to four buildings.
-  - Population is required for production and management.
-- **Population Usage:**
-  - **Armies:** Recruiting units consumes population.
-  - **Buildings:** Higher-tier buildings require more workers.
+- **User Authentication** - Secure login with Clerk integration
+- **Profile Management** - Customizable user profiles with avatars
+- **Role-Based Access** - Admin and basic user roles with different permissions
 
-#### **Upgrading System**
+### 💰 **Resource Trading System**
 
-Players can enhance their towns and economy through resource-based upgrades.
+- **Four Resource Types:**
+  - 🌲 **Wood** - For construction and crafting
+  - 🗿 **Stone** - For building and fortification
+  - 🍞 **Food** - For population sustenance
+  - 💰 **Ducats** - The realm's currency
+- **Boon Sending** - Send resources to other noble houses
+- **Real-time Validation** - Prevents insufficient resource transactions
+- **Transaction History** - Track all resource movements
 
-- **Upgrade Requirements:**
-  - Resources: Wood, stone, and ducats.
-  - Buildings produce key resources: food, wood, stone, horses, and firearms.
+### 🎯 **User Interface**
 
-#### **Army & Combat System**
+- **Responsive Design** - Works on desktop, tablet, and mobile
+- **Medieval Fantasy Aesthetic** - Immersive UI with custom fonts and animations
+- **Custom Notifications** - Themed success/error messages
+- **Search & Discovery** - Find other noble houses easily
 
-Players can build armies and engage in strategic battles.
+### ⚙️ **Administrative Features**
 
-- **Recruitment Requirements:**
-  - Must have a Muster Field.
-  - Pay population, resource, and ducat costs.
-- **Unit Types & Stats:**
-  - **Pikes, Matchlocks, Flintlocks, Light Cavalry, Heavy Cavalry**
-  - **Combat Stats:** Hand-to-hand ability, shooting value, morale save, stamina.
+- **User Management** - Admin tools for user oversight
+- **Resource Administration** - Direct resource management capabilities
+- **Name Cleanup** - Automated user name formatting
 
-### **Development Roadmap**
+## 🛠️ Tech Stack
 
-#### **Current State**
+### **Frontend**
 
-- **User Authentication:** Implemented.
-- **Database Syncing:** In development.
-- **Version 1 (Upcoming Release):**
-  - **Resource Management:** Ability to view, send, and receive resources and money.
-  - **Future Updates:** Additional mechanics will be introduced in subsequent releases.
+- **Next.js 14** - Full-stack React framework
+- **TypeScript** - Type-safe development
+- **Tailwind CSS** - Utility-first styling
+- **Custom Design System** - Medieval fantasy components
 
-## **Tech Stack**
+### **Backend**
 
-This game is built with:
+- **Next.js API Routes** - Serverless backend
+- **Prisma ORM** - Database management
+- **PostgreSQL** - Primary database
+- **Clerk** - Authentication & user management
 
-- **React** (Frontend UI)
-- **Next.js** (Full-stack framework)
-- **Tailwind CSS** (Styling)
-- **Prisma** (ORM for database interactions)
-- **PostgreSQL** (Database)
-- **Neon** (Cloud-based database hosting)
+### **Deployment**
 
-## **How to Download and Play**
+- **Vercel** - Hosting and deployment
+- **Neon** - Cloud PostgreSQL database
+- **GitHub** - Version control and CI/CD
 
-To run War of the Elector locally:
+## 🚀 Getting Started
 
 ### **Prerequisites**
 
-Ensure that you have **Node.js** installed on your system.
+- Node.js 18+ installed
+- Git for version control
 
-### **Installation Steps**
+### **Installation**
 
-1. Clone the repository:
+1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/TheFirstHero6/noah-game.git
    cd noah-game
    ```
-2. Install dependencies:
+
+2. **Install dependencies:**
+
    ```bash
    npm install
    ```
-3. Start the development server:
+
+3. **Set up environment variables:**
+   Create a `.env.local` file with:
+
+   ```env
+   DATABASE_URL="your_postgresql_connection_string"
+   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="your_clerk_publishable_key"
+   CLERK_SECRET_KEY="your_clerk_secret_key"
+   SIGNING_SECRET="your_clerk_signing_secret"
+   ```
+
+4. **Set up the database:**
+
+   ```bash
+   npx prisma generate
+   npx prisma db push
+   ```
+
+5. **Start the development server:**
+
    ```bash
    npm run dev
    ```
-4. Open the game in your browser at `http://localhost:3000`
 
-Stay tuned for updates and new features in upcoming releases!
+6. **Open your browser:**
+   Navigate to `http://localhost:3000`
 
+## 🎮 How to Play
+
+### **Getting Started**
+
+1. **Sign Up** - Create your noble house account
+2. **Choose Your Theme** - Select from four medieval themes in Settings
+3. **Explore the Dashboard** - View your resources and noble house
+4. **Find Allies** - Search for other players in the realm
+5. **Send Boons** - Trade resources with other noble houses
+
+### **Resource Management**
+
+- **View Resources** - Check your current wood, stone, food, and ducats
+- **Send Boons** - Transfer resources to other players
+- **Receive Resources** - Accept gifts from other noble houses
+- **Track Transactions** - Monitor all resource movements
+
+### **Theme Customization**
+
+1. Navigate to **Settings** from the main menu
+2. Choose your preferred theme from the four options
+3. Click **Save Theme** to persist your choice
+4. Enjoy your personalized medieval experience!
+
+## 🏗️ Development
+
+### **Project Structure**
+
+```
+src/
+├── app/                    # Next.js app directory
+│   ├── api/               # API routes
+│   ├── pages/             # Page components
+│   └── globals.css        # Global styles
+├── components/            # Reusable components
+├── contexts/              # React contexts
+├── types/                 # TypeScript definitions
+└── middleware.ts          # Clerk middleware
+```
+
+### **Key Components**
+
+- **Dashboard** - Main game interface
+- **Settings** - Theme selection and preferences
+- **Rules** - Game rules and information
+- **Navbar** - Navigation with theme integration
+
+### **API Endpoints**
+
+- `/api/dashboard/user-data` - Consolidated user information
+- `/api/dashboard/theme` - Theme management
+- `/api/dashboard/transfering` - Resource transfers
+- `/api/dashboard/cleanup-names` - Admin name cleanup
+
+## 🎨 Customization
+
+### **Adding New Themes**
+
+1. Update `src/contexts/ThemeContext.tsx` with new theme type
+2. Add CSS variables in `src/app/globals.css`
+3. Update theme options in `src/app/pages/settings/page.tsx`
+4. Add theme to Prisma schema if needed
+
+### **Styling Guidelines**
+
+- Use CSS variables for theme colors
+- Follow the medieval fantasy design system
+- Maintain responsive design principles
+- Use Tailwind utility classes
+
+## 🚀 Deployment
+
+### **Production Deployment**
+
+1. **Database Setup:**
+
+   ```bash
+   npx prisma migrate deploy
+   ```
+
+2. **Environment Variables:**
+   Set up production environment variables in your hosting platform
+
+3. **Build & Deploy:**
+   ```bash
+   npm run build
+   ```
+
+### **Database Management**
+
+- **Migrations:** `npx prisma migrate dev`
+- **Schema Push:** `npx prisma db push`
+- **Generate Client:** `npx prisma generate`
+
+## 🤝 Contributing
+
+We welcome contributions! Please:
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🔮 Roadmap
+
+### **Upcoming Features**
+
+- **Combat System** - Strategic battles between noble houses
+- **Family Trees** - Noble lineage management
+- **Town Building** - Construct and upgrade settlements
+- **Diplomatic Relations** - Alliances and treaties
+- **Seasonal Events** - Dynamic game events
+
+### **Current Development Focus**
+
+- Enhanced user experience
+- Performance optimizations
+- Mobile responsiveness
+- Additional theme options
+
+## 📞 Support
+
+For questions, issues, or feature requests:
+
+- **GitHub Issues** - Report bugs and request features
+- **Discord** - Join our community discussions
+- **Email** - Contact the development team
+
+---
+
+**Built with ❤️ for medieval strategy enthusiasts**
+
+_May your house prosper and your realm flourish!_
