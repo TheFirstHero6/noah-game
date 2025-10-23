@@ -21,7 +21,8 @@ Experience the realm in four distinct visual styles:
 - **🔮 Mystical Wizard** - Enchanted purple mists with shimmering cyan magic and ethereal lavender glows
 - **🐉 Dragon's Lair** - Blazing crimson flames with molten orange embers and deep volcanic shadows
 
-_Screenshot placeholder: Theme selection interface showing all four theme options_
+<img width="970" height="989" alt="image" src="https://github.com/user-attachments/assets/ae9217b5-4687-461e-8a0e-56d58e09a0a3" />
+
 
 **Key Features:**
 
@@ -33,7 +34,7 @@ _Screenshot placeholder: Theme selection interface showing all four theme option
 
 Engage in diplomatic resource exchange with other noble houses:
 
-_Screenshot placeholder: Resource trading interface showing boon sending modal_
+<img width="1178" height="1042" alt="image" src="https://github.com/user-attachments/assets/a6b629ca-1391-40e6-9d14-3362bf0dcaed" />
 
 **Four Resource Types:**
 
@@ -49,7 +50,7 @@ _Screenshot placeholder: Resource trading interface showing boon sending modal_
 - **Custom Notifications** - Themed success/error messages
 - **Transaction History** - Track all resource movements
 
-_Screenshot placeholder: Dashboard showing resource amounts and trading interface_
+<img width="1171" height="561" alt="image" src="https://github.com/user-attachments/assets/8f21082b-3b4e-4808-a63d-612199c84712" />
 
 ## 🛠️ Technology Stack
 
@@ -135,7 +136,8 @@ _Screenshot placeholder: Dashboard showing resource amounts and trading interfac
 4. **Find Allies** - Search for other players in the realm
 5. **Send Boons** - Trade resources with other noble houses
 
-_Screenshot placeholder: User registration and first login experience_
+<img width="2549" height="1275" alt="image" src="https://github.com/user-attachments/assets/8971f32b-701f-46aa-9ec4-fb5017501014" />
+
 
 ### **Resource Management**
 
@@ -144,8 +146,6 @@ _Screenshot placeholder: User registration and first login experience_
 - **Receive Resources** - Accept gifts from other noble houses
 - **Track Transactions** - Monitor all resource movements
 
-_Screenshot placeholder: Resource management dashboard with current amounts_
-
 ### **Theme Customization**
 
 1. Navigate to **Settings** from the main menu
@@ -153,7 +153,6 @@ _Screenshot placeholder: Resource management dashboard with current amounts_
 3. Click **Save Theme** to persist your choice
 4. Enjoy your personalized medieval experience!
 
-_Screenshot placeholder: Settings page showing theme selection interface_
 
 ## 🏗️ Development
 
