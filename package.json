@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "postinstall": "prisma generate && prisma migrate deploy",
+    "postinstall": "prisma generate",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "next build && gh-pages -d .next"
+    "deploy": "next build && gh-pages -d .next",
+    "migrate": "prisma migrate deploy"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.7.5",
