@@ -56,10 +56,15 @@ export async function POST() {
         // Iterate through all buildings in each city
         for (const building of city.buildings) {
           // Look up building production rates by tier
-          const buildingProduction = BUILDING_PRODUCTION_RATES[building.name];
+          const buildingProduction =
+            BUILDING_PRODUCTION_RATES[
+              building.name as keyof typeof BUILDING_PRODUCTION_RATES
+            ];
           if (buildingProduction) {
             const production =
-              buildingProduction[building.tier] || buildingProduction[1]; // Default to tier 1
+              buildingProduction[
+                building.tier as keyof typeof buildingProduction
+              ] || buildingProduction[1]; // Default to tier 1
             if (production) {
               resourceGains.food += production.food || 0;
               resourceGains.wood += production.wood || 0;
