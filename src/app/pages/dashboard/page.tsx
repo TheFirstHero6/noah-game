@@ -58,15 +58,37 @@ export default function Dashboard() {
 
   const fetchUserData = async () => {
     try {
+      console.log("Dashboard: Fetching user data...");
       const response = await fetch("/api/dashboard/user-data");
+      console.log("Dashboard: Response status:", response.status);
+
+      if (!response.ok) {
+        console.error(
+          "Dashboard: API response not OK:",
+          response.status,
+          response.statusText
+        );
+        throw new Error(`API Error: ${response.status} ${response.statusText}`);
+      }
+
       const data = await response.json();
+      console.log("Dashboard: Received data:", data);
 
       // Set all the data from the single API call
-      setResources(data.resources);
-      setUserpic(data.userpic);
-      setUsername(data.username);
-      setUsers(data.allUsers);
-      setRole(data.role);
+      setResources(
+        data.resources || {
+          wood: 0,
+          stone: 0,
+          food: 0,
+          currency: 0,
+          metal: 0,
+          livestock: 0,
+        }
+      );
+      setUserpic(data.userpic || "");
+      setUsername(data.username || "Noble");
+      setUsers(data.allUsers || []);
+      setRole(data.role || "BASIC");
 
       // Mark all as fetched
       fetchedResources = true;
@@ -74,9 +96,13 @@ export default function Dashboard() {
       fetchedUsers = true;
       fetchedUserRole = true;
 
-      if (!response.ok) throw new Error("Failed to fetch user data");
+      console.log("Dashboard: Data set successfully");
     } catch (error) {
       console.error("Error fetching user data:", error);
+      addNotification(
+        "error",
+        "Failed to load dashboard data. Please refresh the page."
+      );
       throw new Error("Failed to fetch user data");
     }
   };
@@ -363,9 +389,15 @@ export default function Dashboard() {
       !fetchedUserRole
     ) {
       try {
+        console.log("Dashboard: Attempting to fetch user data...");
         await fetchUserData();
+        console.log("Dashboard: User data fetched successfully");
       } catch (error) {
         console.error("Dashboard: Failed to fetch user data:", error);
+        addNotification(
+          "error",
+          "Failed to load dashboard data. Please check your connection and try again."
+        );
       }
     }
   };

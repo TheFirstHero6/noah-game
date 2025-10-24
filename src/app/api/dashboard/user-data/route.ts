@@ -4,24 +4,31 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
+    console.log("API: Starting user-data fetch...");
+
     // Get the authenticated user from Clerk
     const clerkUser = await currentUser();
+    console.log("API: Clerk user:", clerkUser ? "Found" : "Not found");
 
     // If no user is authenticated, return 401
     if (!clerkUser) {
+      console.log("API: No clerk user, returning 401");
       return new Response("Unauthorized", { status: 401 });
     }
 
     // Find the user in our database using their Clerk ID
+    console.log("API: Looking up user with clerkUserId:", clerkUser.id);
     const user = await prisma.user.findUnique({
       where: { clerkUserId: clerkUser.id },
       include: {
         resources: true,
       },
     });
+    console.log("API: Database user found:", user ? "Yes" : "No");
 
     // If user doesn't exist in our database, return 404
     if (!user) {
+      console.log("API: User not found in database, returning 404");
       return new Response("User not found", { status: 404 });
     }
 
