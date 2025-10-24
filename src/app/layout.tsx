@@ -26,7 +26,7 @@ export default function RootLayout({
         />
         <meta name="apple-mobile-web-app-title" content="War of the Elector" />
         <link rel="apple-touch-icon" href="/favicon-196.png" />
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="manifest" href="/manifest.webmanifest" />
       </head>
       <body>
         <ThemeProvider>
