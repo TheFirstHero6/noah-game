@@ -392,8 +392,9 @@ export default function Dashboard() {
                 {username}'s Royal Court
               </h1>
               <p className="medieval-subtitle italic">
-                "Make your decisions carefully, young lord... The realm depends
-                on your wisdom."
+                {role === "ADMIN"
+                  ? "Your Majesty, the realm bows to your royal authority... Command your subjects with wisdom and justice."
+                  : "Make your decisions carefully, young lord... The realm depends on your wisdom."}
               </p>
             </div>
           </div>
