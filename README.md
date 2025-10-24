@@ -2,17 +2,73 @@
 
 # War of the Elector
 
-A medieval fantasy strategy game built with Next.js, featuring noble house management, resource trading, and immersive theming.
-
-## 🏰 Overview
-
-War of the Elector is an online multiplayer strategy game where players manage noble families, oversee resources, and engage in diplomatic trade. Built with modern web technologies, the game features a rich medieval fantasy theme with customizable visual experiences.
+A medieval fantasy strategy game built with Next.js, featuring city management, resource production, building construction, and turn-based economics based on the **Imperium Fragmentum (2nd Edition)** ruleset.
 
 **🌐 Live Demo:** [waroftheelector.space](https://waroftheelector.space)
 
-## ✨ Latest Features (Recently Added)
+## 🏰 Overview
 
-### 🎨 **Dynamic Theme System** ⭐ _NEW_
+War of the Elector is an online multiplayer strategy game where players manage noble families, oversee cities, construct buildings, and engage in turn-based economics. Built with modern web technologies, the game features a rich medieval fantasy theme with customizable visual experiences and comprehensive city management systems.
+
+## ✨ Core Game Features
+
+### 🏘️ **City Management System** ⭐ _CORE FEATURE_
+
+Manage your cities with comprehensive control over every aspect:
+
+- **City Creation** - Admins can grant cities to players
+- **City Upgrades** - Upgrade cities through 5 tiers with increasing costs and benefits
+- **Tax Management** - Set flexible tax rates (0-100%) for each city
+- **Local Wealth** - Cities maintain their own wealth pools separate from player resources
+- **City Renaming** - Customize your cities with personalized names
+
+_[Screenshot placeholder: City management interface showing city details, upgrade options, and tax controls]_
+
+### 🏗️ **Building Construction & Upgrades** ⭐ _CORE FEATURE_
+
+Construct and upgrade buildings to generate resources:
+
+**Building Types:**
+
+- **Sawmill** - Produces Wood (T1: 1, T2: 2, T3: 4 per turn)
+- **Quarry** - Produces Stone (T1: 1, T2: 2, T3: 3 per turn)
+- **Forge** - Produces Metal (T1: 1, T2: 2, T3: 3 per turn)
+- **Farm** - Produces Food (T1: 2, T2: 4, T3: 6 per turn)
+- **Market** - Produces Currency (T1: 5, T2: 10, T3: 15 per turn)
+
+**Building System:**
+
+- **Fixed Building Limit** - Each city can have exactly 4 buildings (regardless of tier)
+- **Tier Upgrades** - Upgrade buildings from Tier 1 → 2 → 3 for increased production
+- **Upgrade Costs** - T2: 50 currency, 20 wood, 10 stone | T3: 100 currency, 20 wood, 20 stone
+- **Resource Production** - Buildings generate resources every turn based on their tier
+
+_[Screenshot placeholder: Building construction interface showing available buildings, costs, and upgrade options]_
+
+### 💰 **Turn-Based Economy** ⭐ _CORE FEATURE_
+
+Experience a sophisticated economic system:
+
+**Resource Types:**
+
+- 🌲 **Wood** - For construction and building upgrades
+- 🗿 **Stone** - For construction and building upgrades
+- 🍞 **Food** - For population sustenance
+- ⚔️ **Metal** - For advanced construction and weapons
+- 🐄 **Livestock** - For trade and production
+- 💰 **Currency** - The realm's primary currency (supports decimals)
+
+**Economic Mechanics:**
+
+- **Turn Advancement** - Admins advance turns to trigger resource generation
+- **Building Production** - Each building generates resources based on its tier
+- **City Income** - Cities generate Local Trade income based on their upgrade tier
+- **Taxation System** - Players receive a percentage of city income based on tax rates
+- **Local Wealth** - Cities retain untaxed income for future development
+
+_[Screenshot placeholder: Turn advancement interface showing resource generation and city income calculations]_
+
+### 🎨 **Dynamic Theme System** ⭐ _ENHANCED_
 
 Experience the realm in four distinct visual styles:
 
@@ -21,26 +77,11 @@ Experience the realm in four distinct visual styles:
 - **🔮 Mystical Wizard** - Enchanted purple mists with shimmering cyan magic and ethereal lavender glows
 - **🐉 Dragon's Lair** - Blazing crimson flames with molten orange embers and deep volcanic shadows
 
-<img width="970" height="989" alt="image" src="https://github.com/user-attachments/assets/ae9217b5-4687-461e-8a0e-56d58e09a0a3" />
+_[Screenshot placeholder: Theme selection interface showing all four theme options]_
 
-**Key Features:**
-
-- **Persistent Theme Selection** - Your theme choice is saved to your profile
-- **Seamless Switching** - Change themes instantly without page reload
-- **Immersive Backgrounds** - Each theme features unique gradient patterns and atmospheric effects
-
-### 💰 **Resource Trading System** ⭐ _NEW_
+### 💱 **Resource Trading System** ⭐ \_ENHANCED\*
 
 Engage in diplomatic resource exchange with other noble houses:
-
-<img width="1178" height="1042" alt="image" src="https://github.com/user-attachments/assets/a6b629ca-1391-40e6-9d14-3362bf0dcaed" />
-
-**Four Resource Types:**
-
-- 🌲 **Wood** - For construction and crafting
-- 🗿 **Stone** - For building and fortification
-- 🍞 **Food** - For population sustenance
-- 💰 **Ducats** - The realm's currency
 
 **Trading Features:**
 
@@ -48,8 +89,54 @@ Engage in diplomatic resource exchange with other noble houses:
 - **Real-time Validation** - Prevents insufficient resource transactions
 - **Custom Notifications** - Themed success/error messages
 - **Transaction History** - Track all resource movements
+- **Decimal Currency Support** - Precise financial transactions
 
-<img width="1171" height="561" alt="image" src="https://github.com/user-attachments/assets/8f21082b-3b4e-4808-a63d-612199c84712" />
+_[Screenshot placeholder: Resource trading interface showing transfer options and validation]_
+
+### 👑 **Admin Panel** ⭐ \_ADMIN FEATURE\*
+
+Comprehensive administrative tools for game management:
+
+**Admin Functions:**
+
+- **User Management** - View all players and their resources
+- **City Granting** - Create and assign cities to players
+- **Turn Advancement** - Trigger resource generation and city income
+- **Resource Management** - Add/subtract resources for any player
+- **Role Management** - Assign admin privileges
+
+_[Screenshot placeholder: Admin panel interface showing user management and turn advancement controls]_
+
+## 🎮 How to Play
+
+### **Getting Started**
+
+1. **Sign Up** - Create your noble house account at [waroftheelector.space](https://waroftheelector.space)
+2. **Choose Your Theme** - Select from four medieval themes in Settings
+3. **Explore the Dashboard** - View your resources and current status
+4. **Request Cities** - Contact an admin to grant you your first city
+5. **Start Building** - Construct buildings to generate resources
+
+### **City Management**
+
+1. **Access Your Cities** - Navigate to the Cities page to see all your settlements
+2. **Manage City Details** - Rename cities and adjust tax rates
+3. **Upgrade Cities** - Invest resources to increase city tiers and income
+4. **Construct Buildings** - Build up to 4 buildings per city for resource production
+
+### **Building Strategy**
+
+1. **Plan Your Buildings** - Choose buildings that complement your strategy
+2. **Upgrade Buildings** - Invest in tier upgrades for increased production
+3. **Balance Resources** - Ensure you have the right mix of resource-generating buildings
+4. **Maximize Efficiency** - Use all 4 building slots in each city
+
+### **Economic Management**
+
+1. **Monitor Resources** - Keep track of your resource stockpiles
+2. **Set Tax Rates** - Balance between immediate income and city growth
+3. **Trade Resources** - Exchange resources with other players
+4. **Plan for Upgrades** - Save resources for city and building improvements
 
 ## 🛠️ Technology Stack
 
@@ -64,17 +151,18 @@ Engage in diplomatic resource exchange with other noble houses:
 
 - **Next.js API Routes** - Serverless backend with TypeScript
 - **Prisma ORM** - Type-safe database management and migrations
-- **PostgreSQL** - Primary relational database
+- **PostgreSQL** - Primary relational database with decimal support
 - **Neon** - Cloud PostgreSQL database hosting with connection pooling
 
 ### **Authentication & User Management**
 
 - **Clerk** - Complete authentication solution with user management
+- **Role-based Access Control** - Admin and Basic user roles
 
 ### **Deployment & Hosting**
 
 - **Vercel** - Serverless hosting and deployment platform
-- **GitHub**
+- **GitHub** - Version control and CI/CD
 
 ## 🚀 Getting Started
 
@@ -83,6 +171,7 @@ Engage in diplomatic resource exchange with other noble houses:
 - Node.js 18+ installed
 - Git for version control
 - PostgreSQL database (or Neon account)
+- Clerk account for authentication
 
 ### **Installation**
 
@@ -125,32 +214,6 @@ Engage in diplomatic resource exchange with other noble houses:
 6. **Open your browser:**
    Navigate to `http://localhost:3000`
 
-## 🎮 How to Play
-
-### **Getting Started**
-
-1. **Sign Up** - Create your noble house account at [waroftheelector.space](https://waroftheelector.space)
-2. **Choose Your Theme** - Select from four medieval themes in Settings
-3. **Explore the Dashboard** - View your resources and noble house
-4. **Find Allies** - Search for other players in the realm
-5. **Send Boons** - Trade resources with other noble houses
-
-<img width="2549" height="1275" alt="image" src="https://github.com/user-attachments/assets/8971f32b-701f-46aa-9ec4-fb5017501014" />
-
-### **Resource Management**
-
-- **View Resources** - Check your current wood, stone, food, and ducats
-- **Send Boons** - Transfer resources to other players with validation
-- **Receive Resources** - Accept gifts from other noble houses
-- **Track Transactions** - Monitor all resource movements
-
-### **Theme Customization**
-
-1. Navigate to **Settings** from the main menu
-2. Choose your preferred theme from the four options
-3. Click **Save Theme** to persist your choice
-4. Enjoy your personalized medieval experience!
-
 ## 🏗️ Development
 
 ### **Project Structure**
@@ -159,8 +222,14 @@ Engage in diplomatic resource exchange with other noble houses:
 src/
 ├── app/                    # Next.js app directory
 │   ├── api/               # API routes
+│   │   ├── admin/         # Admin panel APIs
+│   │   ├── cities/        # City management APIs
+│   │   └── dashboard/     # Dashboard APIs
 │   ├── pages/             # Page components
-│   └── globals.css        # Global styles with theme variables
+│   │   ├── cities/        # City management pages
+│   │   ├── admin/         # Admin panel
+│   │   └── dashboard/     # Main dashboard
+│   └── lib/               # Game configuration and utilities
 ├── components/            # Reusable components
 ├── contexts/              # React contexts (Theme management)
 ├── types/                 # TypeScript definitions
@@ -170,32 +239,58 @@ src/
 ### **Key Components**
 
 - **Dashboard** - Main game interface with resource display
+- **Cities** - City management and building construction
+- **Admin Panel** - Administrative tools and game management
 - **Settings** - Theme selection and user preferences
 - **Rules** - Game rules and information
 - **Navbar** - Navigation with theme integration
 
 ### **API Endpoints**
 
-- `/api/dashboard/user-data` - Consolidated user information
-- `/api/dashboard/theme` - Theme management and persistence
-- `/api/dashboard/transfering` - Resource transfers with validation
-- `/api/dashboard/cleanup-names` - Admin name cleanup utilities
+**City Management:**
 
-## 🎨 Customization
+- `/api/cities` - Fetch user's cities
+- `/api/cities/[id]` - Individual city management
+- `/api/cities/[id]/build` - Building construction
+- `/api/cities/[id]/upgrade` - City upgrades
+- `/api/cities/[id]/buildings/[buildingId]/upgrade` - Building upgrades
 
-### **Adding New Themes**
+**Admin Functions:**
 
-1. Update `src/contexts/ThemeContext.tsx` with new theme type
-2. Add CSS variables in `src/app/globals.css`
-3. Update theme options in `src/app/pages/settings/page.tsx`
-4. Add theme to Prisma schema if needed
+- `/api/admin/users` - User management
+- `/api/admin/cities` - City granting
+- `/api/admin/advance-turn` - Turn advancement
+- `/api/admin/resources` - Resource management
 
-### **Styling Guidelines**
+**Dashboard:**
 
-- Use CSS variables for theme colors
-- Follow the medieval fantasy design system
-- Maintain responsive design principles
-- Use Tailwind utility classes
+- `/api/dashboard/user-data` - User information
+- `/api/dashboard/resources` - Resource management
+- `/api/dashboard/transfering` - Resource transfers
+
+## 🎨 Game Rules (Imperium Fragmentum 2nd Edition)
+
+### **City System**
+
+- **City Tiers** - Cities can be upgraded from 1-5 with increasing costs and benefits
+- **Local Trade Income** - T1: 10, T2: 15, T3: 40, T4: 55, T5: 70 currency per turn
+- **Tax Rates** - Players can set any tax rate from 0-100% (overrides 5% increment rule)
+- **Local Wealth** - Cities maintain separate wealth pools from player resources
+
+### **Building System**
+
+- **Building Limit** - Each city can have exactly 4 buildings (fixed, not tier-based)
+- **Building Tiers** - Buildings can be upgraded from 1-3 for increased production
+- **Production Rates** - Each building type has tier-based production rates
+- **Upgrade Costs** - Standardized costs for building tier upgrades
+
+### **Economic System**
+
+- **Turn-based** - Resources generate when admin advances turns
+- **Building Production** - Each building generates resources based on tier
+- **City Income** - Cities generate Local Trade income based on tier
+- **Taxation** - Players receive percentage of city income based on tax rate
+- **Decimal Currency** - Supports precise financial calculations
 
 ## 🚀 Deployment
 
@@ -239,20 +334,30 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 🔮 Roadmap
 
+### **Current Features**
+
+- ✅ City management system
+- ✅ Building construction and upgrades
+- ✅ Turn-based economy
+- ✅ Resource trading
+- ✅ Admin panel
+- ✅ Theme system
+
 ### **Upcoming Features**
 
 - **Combat System** - Strategic battles between noble houses
 - **Family Trees** - Noble lineage management
-- **Town Building** - Construct and upgrade settlements
 - **Diplomatic Relations** - Alliances and treaties
 - **Seasonal Events** - Dynamic game events
+- **Army Management** - Military unit recruitment and management
 
 ### **Current Development Focus**
 
 - Enhanced user experience
 - Performance optimizations
 - Mobile responsiveness
-- Additional theme options
+- Additional building types
+- Advanced economic features
 
 ## 📞 Support
 
