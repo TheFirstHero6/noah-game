@@ -63,7 +63,8 @@ export async function POST(
     }
 
     // Get upgrade costs
-    const costs = CITY_UPGRADE_COSTS[targetTier];
+    const costs =
+      CITY_UPGRADE_COSTS[targetTier as keyof typeof CITY_UPGRADE_COSTS];
     if (!costs) {
       return NextResponse.json(
         { error: "Invalid upgrade tier" },

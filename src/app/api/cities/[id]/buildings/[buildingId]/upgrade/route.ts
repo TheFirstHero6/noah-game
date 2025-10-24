@@ -55,7 +55,8 @@ export async function POST(
 
     // Get upgrade cost for next tier
     const nextTier = building.tier + 1;
-    const upgradeCost = BUILDING_UPGRADE_COSTS[nextTier];
+    const upgradeCost =
+      BUILDING_UPGRADE_COSTS[nextTier as keyof typeof BUILDING_UPGRADE_COSTS];
 
     if (!upgradeCost) {
       return NextResponse.json(

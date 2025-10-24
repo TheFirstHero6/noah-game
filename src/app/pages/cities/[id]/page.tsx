@@ -210,6 +210,11 @@ export default function CityDetailsPage() {
   };
 
   const upgradeCity = async () => {
+    if (!city) {
+      addNotification("error", "City not found");
+      return;
+    }
+
     if (city.upgradeTier >= 5) {
       addNotification("error", "City is already at maximum tier (5)");
       return;
@@ -223,7 +228,7 @@ export default function CityDetailsPage() {
       5: { currency: 2700, wood: 180, stone: 180 },
     };
 
-    const costs = upgradeCosts[nextTier];
+    const costs = upgradeCosts[nextTier as keyof typeof upgradeCosts];
     if (!costs) {
       addNotification("error", "Invalid upgrade tier");
       return;
