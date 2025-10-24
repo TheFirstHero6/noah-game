@@ -9,7 +9,9 @@ export default function Dashboard() {
     wood: 0,
     stone: 0,
     food: 0,
-    ducats: 0,
+    currency: 0,
+    metal: 0,
+    livestock: 0,
   });
 
   const [userpic, setUserpic] = useState("");
@@ -27,13 +29,17 @@ export default function Dashboard() {
     wood: 0,
     stone: 0,
     food: 0,
-    ducats: 0,
+    currency: 0,
+    metal: 0,
+    livestock: 0,
   });
   const [targetUserResources, setTargetUserResources] = useState({
     wood: 0,
     stone: 0,
     food: 0,
-    ducats: 0,
+    currency: 0,
+    metal: 0,
+    livestock: 0,
   });
   const [isUpdatingResources, setIsUpdatingResources] = useState(false);
   const [isLoadingUserResources, setIsLoadingUserResources] = useState(false);
@@ -70,6 +76,7 @@ export default function Dashboard() {
 
       if (!response.ok) throw new Error("Failed to fetch user data");
     } catch (error) {
+      console.error("Error fetching user data:", error);
       throw new Error("Failed to fetch user data");
     }
   };
@@ -211,13 +218,27 @@ export default function Dashboard() {
         setAdminResourceValues(data.resources);
       } else {
         // If user has no resources, set defaults
-        const defaultResources = { wood: 0, stone: 0, food: 0, ducats: 0 };
+        const defaultResources = {
+          wood: 0,
+          stone: 0,
+          food: 0,
+          currency: 0,
+          metal: 0,
+          livestock: 0,
+        };
         setTargetUserResources(defaultResources);
         setAdminResourceValues(defaultResources);
       }
     } catch (error) {
       console.error("Error fetching user resources:", error);
-      const defaultResources = { wood: 0, stone: 0, food: 0, ducats: 0 };
+      const defaultResources = {
+        wood: 0,
+        stone: 0,
+        food: 0,
+        currency: 0,
+        metal: 0,
+        livestock: 0,
+      };
       setTargetUserResources(defaultResources);
       setAdminResourceValues(defaultResources);
     } finally {
@@ -240,7 +261,9 @@ export default function Dashboard() {
       wood: 0,
       stone: 0,
       food: 0,
-      ducats: 0,
+      currency: 0,
+      metal: 0,
+      livestock: 0,
     });
   };
 
@@ -339,7 +362,11 @@ export default function Dashboard() {
       !fetchedUserpic ||
       !fetchedUserRole
     ) {
-      fetchUserData();
+      try {
+        await fetchUserData();
+      } catch (error) {
+        console.error("Dashboard: Failed to fetch user data:", error);
+      }
     }
   };
 
@@ -355,7 +382,10 @@ export default function Dashboard() {
 
   // Clean up user names that might contain "null"
   const cleanUserName = (name: string) => {
-    return name?.replace(/\s+null\s*$/, "").trim() || name;
+    if (!name || name === "null" || name.trim() === "") {
+      return "Noble";
+    }
+    return name.replace(/\s+null\s*$/, "").trim();
   };
 
   const filteredUsers = users.filter((user) => {
@@ -389,7 +419,7 @@ export default function Dashboard() {
 
             <div className="text-center lg:text-left">
               <h1 className="medieval-title mb-4 glow-text">
-                {username}'s Royal Court
+                {username || "Noble"}'s Royal Court
               </h1>
               <p className="medieval-subtitle italic">
                 {role === "ADMIN"
@@ -406,7 +436,7 @@ export default function Dashboard() {
             <h2 className="font-medieval text-3xl text-medieval-gold-300 mb-8 glow-text text-center">
               💰 Royal Treasury
             </h2>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               <div className="resource-card text-center group">
                 <div className="text-4xl mb-4 group-hover:animate-float">
                   🌲
@@ -448,10 +478,34 @@ export default function Dashboard() {
                   💰
                 </div>
                 <span className="block text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
-                  {resources.ducats}
+                  {(resources.currency || 0).toFixed(1)}
                 </span>
                 <span className="text-lg text-medieval-steel-300 font-serif">
-                  Ducats
+                  Currency
+                </span>
+              </div>
+
+              <div className="resource-card text-center group">
+                <div className="text-4xl mb-4 group-hover:animate-float">
+                  ⚒️
+                </div>
+                <span className="block text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
+                  {resources.metal}
+                </span>
+                <span className="text-lg text-medieval-steel-300 font-serif">
+                  Metal
+                </span>
+              </div>
+
+              <div className="resource-card text-center group">
+                <div className="text-4xl mb-4 group-hover:animate-float">
+                  🐄
+                </div>
+                <span className="block text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
+                  {resources.livestock}
+                </span>
+                <span className="text-lg text-medieval-steel-300 font-serif">
+                  Livestock
                 </span>
               </div>
             </div>
@@ -532,7 +586,7 @@ export default function Dashboard() {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-3 mb-4">
+                      <div className="grid grid-cols-3 gap-3 mb-4">
                         <div className="text-center">
                           <div className="text-2xl mb-1">🌲</div>
                           <div className="text-sm font-medieval text-medieval-gold-300">
@@ -563,10 +617,28 @@ export default function Dashboard() {
                         <div className="text-center">
                           <div className="text-2xl mb-1">💰</div>
                           <div className="text-sm font-medieval text-medieval-gold-300">
-                            {user.resources.ducats}
+                            {(user.resources.currency || 0).toFixed(1)}
                           </div>
                           <div className="text-xs text-medieval-steel-400">
-                            Ducats
+                            Currency
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl mb-1">⚒️</div>
+                          <div className="text-sm font-medieval text-medieval-gold-300">
+                            {user.resources.metal}
+                          </div>
+                          <div className="text-xs text-medieval-steel-400">
+                            Metal
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl mb-1">🐄</div>
+                          <div className="text-sm font-medieval text-medieval-gold-300">
+                            {user.resources.livestock}
+                          </div>
+                          <div className="text-xs text-medieval-steel-400">
+                            Livestock
                           </div>
                         </div>
                       </div>
@@ -720,7 +792,9 @@ export default function Dashboard() {
                       <option value="wood">🌲 Wood</option>
                       <option value="stone">🗿 Stone</option>
                       <option value="food">🍞 Food</option>
-                      <option value="ducats">💰 Ducats</option>
+                      <option value="currency">💰 Currency</option>
+                      <option value="metal">⚒️ Metal</option>
+                      <option value="livestock">🐄 Livestock</option>
                     </select>
                   </div>
 
@@ -772,7 +846,7 @@ export default function Dashboard() {
                       <p className="text-medieval-gold-300 font-medieval text-lg mb-2">
                         Current Resources:
                       </p>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                      <div className="grid grid-cols-3 md:grid-cols-6 gap-4 text-sm">
                         <div className="text-center">
                           <span className="text-medieval-gold-300">🌲</span>
                           <div className="text-medieval-steel-300">
@@ -794,7 +868,19 @@ export default function Dashboard() {
                         <div className="text-center">
                           <span className="text-medieval-gold-300">💰</span>
                           <div className="text-medieval-steel-300">
-                            {targetUserResources.ducats}
+                            {(targetUserResources.currency || 0).toFixed(1)}
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <span className="text-medieval-gold-300">⚒️</span>
+                          <div className="text-medieval-steel-300">
+                            {targetUserResources.metal}
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <span className="text-medieval-gold-300">🐄</span>
+                          <div className="text-medieval-steel-300">
+                            {targetUserResources.livestock}
                           </div>
                         </div>
                       </div>
@@ -803,7 +889,7 @@ export default function Dashboard() {
                 </div>
 
                 <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div>
                       <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
                         🌲 Wood
@@ -863,20 +949,58 @@ export default function Dashboard() {
 
                     <div>
                       <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
-                        💰 Ducats
+                        💰 Currency
                       </label>
                       <input
                         type="number"
                         min="0"
                         className="medieval-input w-full text-lg"
-                        value={adminResourceValues.ducats}
+                        value={adminResourceValues.currency}
                         onChange={(e) =>
                           setAdminResourceValues((prev) => ({
                             ...prev,
-                            ducats: Number(e.target.value) || 0,
+                            currency: Number(e.target.value) || 0,
                           }))
                         }
-                        placeholder="Set ducats amount"
+                        placeholder="Set currency amount"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
+                        ⚒️ Metal
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        className="medieval-input w-full text-lg"
+                        value={adminResourceValues.metal}
+                        onChange={(e) =>
+                          setAdminResourceValues((prev) => ({
+                            ...prev,
+                            metal: Number(e.target.value) || 0,
+                          }))
+                        }
+                        placeholder="Set metal amount"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
+                        🐄 Livestock
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        className="medieval-input w-full text-lg"
+                        value={adminResourceValues.livestock}
+                        onChange={(e) =>
+                          setAdminResourceValues((prev) => ({
+                            ...prev,
+                            livestock: Number(e.target.value) || 0,
+                          }))
+                        }
+                        placeholder="Set livestock amount"
                       />
                     </div>
                   </div>

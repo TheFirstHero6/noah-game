@@ -1,12 +1,41 @@
-import { SignedOut, SignInButton, SignedIn, UserButton } from "@clerk/nextjs";
+"use client";
+
+import {
+  SignedOut,
+  SignInButton,
+  SignedIn,
+  UserButton,
+  useUser,
+} from "@clerk/nextjs";
 import Image from "next/image";
 import logo from "./logo.png";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
 export default function Navbar() {
+  const { user, isLoaded } = useUser();
+  const [userRole, setUserRole] = useState<string>("");
+
+  useEffect(() => {
+    if (isLoaded && user) {
+      fetchUserRole();
+    }
+  }, [isLoaded, user]);
+
+  const fetchUserRole = async () => {
+    try {
+      const response = await fetch("/api/dashboard/user-data");
+      if (response.ok) {
+        const data = await response.json();
+        setUserRole(data.role);
+      }
+    } catch (error) {
+      console.error("Error fetching user role:", error);
+    }
+  };
   return (
     <nav className="sticky top-0 z-50 bg-gradient-to-r from-background via-background to-background border-b-4 border-primary shadow-2xl backdrop-blur-sm">
-      <div className="flex items-center justify-between mx-auto max-w-6xl h-24 px-6">
+      <div className="flex items-center justify-between mx-auto max-w-7xl h-24 px-6">
         {/* Logo Section */}
         <Link href="/" className="group flex items-center space-x-4">
           <div className="relative">
@@ -28,10 +57,10 @@ export default function Navbar() {
         </Link>
 
         {/* Navigation Links */}
-        <div className="hidden md:flex items-center space-x-8">
+        <div className="hidden lg:flex items-center space-x-4">
           <Link href="/pages/dashboard" className="group">
-            <div className="relative px-6 py-3 rounded-lg border-2 border-transparent hover:border-medieval-gold-500 transition-all duration-300">
-              <span className="font-medieval text-lg text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300">
+            <div className="relative px-4 py-2 rounded-lg border-2 border-transparent hover:border-medieval-gold-500 transition-all duration-300">
+              <span className="font-medieval text-base text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300">
                 🏰 Dashboard
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/10 to-medieval-gold-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -39,26 +68,46 @@ export default function Navbar() {
           </Link>
 
           <Link href="/pages/rules" className="group">
-            <div className="relative px-6 py-3 rounded-lg border-2 border-transparent hover:border-medieval-gold-500 transition-all duration-300">
-              <span className="font-medieval text-lg text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300">
+            <div className="relative px-4 py-2 rounded-lg border-2 border-transparent hover:border-medieval-gold-500 transition-all duration-300">
+              <span className="font-medieval text-base text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300">
                 📜 Rules
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/10 to-medieval-gold-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>
           </Link>
 
+          <Link href="/pages/cities" className="group">
+            <div className="relative px-4 py-2 rounded-lg border-2 border-transparent hover:border-medieval-gold-500 transition-all duration-300">
+              <span className="font-medieval text-base text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300">
+                🏘️ Cities
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/10 to-medieval-gold-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+          </Link>
+
           <Link href="/pages/settings" className="group">
-            <div className="relative px-6 py-3 rounded-lg border-2 border-transparent hover:border-medieval-gold-500 transition-all duration-300">
-              <span className="font-medieval text-lg text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300">
+            <div className="relative px-4 py-2 rounded-lg border-2 border-transparent hover:border-medieval-gold-500 transition-all duration-300">
+              <span className="font-medieval text-base text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300">
                 ⚙️ Settings
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/10 to-medieval-gold-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>
           </Link>
 
+          {userRole === "ADMIN" && (
+            <Link href="/pages/admin" className="group">
+              <div className="relative px-4 py-2 rounded-lg border-2 border-transparent hover:border-medieval-gold-500 transition-all duration-300">
+                <span className="font-medieval text-base text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300">
+                  👑 Admin
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/10 to-medieval-gold-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
+            </Link>
+          )}
+
           <Link href="/" className="group">
-            <div className="relative px-6 py-3 rounded-lg border-2 border-transparent hover:border-medieval-gold-500 transition-all duration-300">
-              <span className="font-medieval text-lg text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300">
+            <div className="relative px-4 py-2 rounded-lg border-2 border-transparent hover:border-medieval-gold-500 transition-all duration-300">
+              <span className="font-medieval text-base text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300">
                 🏠 Home
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/10 to-medieval-gold-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>

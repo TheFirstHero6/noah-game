@@ -7,7 +7,13 @@ export async function POST(req: Request) {
   try {
     // Parse JSON body
     const { toUserId, amount, resource } = await req.json();
-    type ResourceType = "wood" | "stone" | "food" | "ducats";
+    type ResourceType =
+      | "wood"
+      | "stone"
+      | "food"
+      | "currency"
+      | "metal"
+      | "livestock";
     const resourceKey = resource as ResourceType;
 
     // Validate input

@@ -40,12 +40,23 @@ export async function GET() {
       name: user.name,
       imageUrl: user.imageUrl,
       role: user.role,
-      resources: user.resources || {
-        wood: 0,
-        stone: 0,
-        food: 0,
-        ducats: 0,
-      },
+      resources: user.resources
+        ? {
+            wood: user.resources.wood || 0,
+            stone: user.resources.stone || 0,
+            food: user.resources.food || 0,
+            currency: user.resources.currency || 0.0,
+            metal: user.resources.metal || 0,
+            livestock: user.resources.livestock || 0,
+          }
+        : {
+            wood: 0,
+            stone: 0,
+            food: 0,
+            currency: 0.0,
+            metal: 0,
+            livestock: 0,
+          },
     }));
 
     return NextResponse.json({

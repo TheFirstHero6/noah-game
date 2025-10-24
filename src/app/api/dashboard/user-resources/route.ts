@@ -45,13 +45,24 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Return the user's resources (default to 0 if no resources exist)
-    const resources = targetUser.resources || {
-      wood: 0,
-      stone: 0,
-      food: 0,
-      ducats: 0,
-    };
+    // Return the user's resources (default to 0 if no resources exist, handle null values)
+    const resources = targetUser.resources
+      ? {
+          wood: targetUser.resources.wood || 0,
+          stone: targetUser.resources.stone || 0,
+          food: targetUser.resources.food || 0,
+          currency: targetUser.resources.currency || 0.0,
+          metal: targetUser.resources.metal || 0,
+          livestock: targetUser.resources.livestock || 0,
+        }
+      : {
+          wood: 0,
+          stone: 0,
+          food: 0,
+          currency: 0.0,
+          metal: 0,
+          livestock: 0,
+        };
 
     return NextResponse.json({
       success: true,
@@ -59,7 +70,9 @@ export async function GET(req: Request) {
         wood: resources.wood,
         stone: resources.stone,
         food: resources.food,
-        ducats: resources.ducats,
+        currency: resources.currency,
+        metal: resources.metal,
+        livestock: resources.livestock,
       },
     });
   } catch (error) {

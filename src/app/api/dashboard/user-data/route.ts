@@ -25,6 +25,12 @@ export async function GET() {
       return new Response("User not found", { status: 404 });
     }
 
+    console.log("API: User from database:", {
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    });
+
     // Get all users for the user list
     const allUsers = await prisma.user.findMany({
       select: {
@@ -39,16 +45,27 @@ export async function GET() {
       ? clerkUser.imageUrl
       : "https://img.clerk.com/eyJ0eXBlIjoiZGVmYXVsdCIsImlpZCI6Imluc18yc1lIekdxbW9QWnAxSE13SmZ0Q3FRTnk4bnciLCJyaWQiOiJ1c2VyXzJ0VnB1ajdGRFA4cEhWVzZ3cGFBd0RVMENNcyIsImluaXRpYWxzIjoiSCJ9";
 
-    // Prepare resources (default to 0 if not available)
-    const userResources = user.resources || {
-      wood: 0,
-      stone: 0,
-      food: 0,
-      ducats: 0,
-    };
+    // Prepare resources (default to 0 if not available, handle null values)
+    const userResources = user.resources
+      ? {
+          wood: user.resources.wood || 0,
+          stone: user.resources.stone || 0,
+          food: user.resources.food || 0,
+          currency: user.resources.currency || 0.0,
+          metal: user.resources.metal || 0,
+          livestock: user.resources.livestock || 0,
+        }
+      : {
+          wood: 0,
+          stone: 0,
+          food: 0,
+          currency: 0.0,
+          metal: 0,
+          livestock: 0,
+        };
 
     // Return all user data in one response
-    return NextResponse.json({
+    const responseData = {
       // User profile data
       userpic: userImageUrl,
       username: user.name,
@@ -59,7 +76,16 @@ export async function GET() {
 
       // All users for the user list
       allUsers: allUsers,
+    };
+
+    console.log("API: Returning response data:", {
+      username: responseData.username,
+      role: responseData.role,
+      resourcesCount: Object.keys(responseData.resources).length,
+      allUsersCount: responseData.allUsers.length,
     });
+
+    return NextResponse.json(responseData);
   } catch (error) {
     console.error("Error fetching user data:", error);
     return new Response("Internal Server Error", { status: 500 });

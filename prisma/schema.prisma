@@ -17,7 +17,8 @@ model User {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   role        Role     @default(BASIC)
-  resources Resource?
+  resources   Resource?
+  cities      City[]
 }
 
 enum Role {
@@ -32,5 +33,30 @@ model Resource {
   wood      Int      @default(0)
   stone     Int      @default(0)
   food      Int      @default(0)
-  ducats    Int      @default(0)
+  currency  Float    @default(0)
+  metal     Int      @default(0)
+  livestock Int      @default(0)
+}
+
+model City {
+  id            String     @id @default(cuid())
+  name          String
+  ownerId       String
+  owner         User       @relation(fields: [ownerId], references: [id])
+  upgradeTier     Int        @default(1)
+  localWealth   Float      @default(0)
+  taxRate       Int        @default(5)
+  buildings     Building[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model Building {
+  id          String   @id @default(cuid())
+  name        String
+  rarity      String   // "Common" or "Rare"
+  tier        Int      @default(1)  // Building tier (1-3)
+  cityId      String
+  city        City     @relation(fields: [cityId], references: [id])
+  createdAt   DateTime @default(now())
 }

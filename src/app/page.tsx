@@ -21,7 +21,7 @@ export default async function Home() {
         clerkUserId: user.id,
         name: user.lastName
           ? `${user.firstName} ${user.lastName}`
-          : user.firstName,
+          : user.firstName || user.emailAddresses[0].emailAddress.split("@")[0],
         imageUrl: user.imageUrl,
         email: user.emailAddresses[0].emailAddress,
         theme: "royal-court", // Set default theme
@@ -30,7 +30,9 @@ export default async function Home() {
             wood: 0,
             stone: 0,
             food: 0,
-            ducats: 0,
+            currency: 0,
+            metal: 0,
+            livestock: 0,
           },
         },
       },

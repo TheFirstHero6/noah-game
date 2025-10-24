@@ -50,26 +50,25 @@ export default function GameInfo() {
           <div className="grid lg:grid-cols-2 gap-12">
             <div className="space-y-6">
               <h3 className="font-medieval text-2xl text-medieval-gold-300 mb-4">
-                ⚔️ Strategic Multiplayer Warfare
+                🏰 City Management & Building
               </h3>
               <p className="medieval-text text-lg leading-relaxed">
-                War of the Elector is an online multiplayer strategy game where
-                players manage noble families, oversee towns, build armies, and
-                engage in trade and combat. Command your noble house and forge
-                alliances in a world where every decision shapes the fate of
-                your dynasty.
+                War of the Elector features comprehensive city management where
+                you can construct buildings, set tax rates, and manage local
+                wealth. Build sawmills, quarries, forges, farms, and markets to
+                generate resources and grow your economy.
               </p>
             </div>
 
             <div className="space-y-6">
               <h3 className="font-medieval text-2xl text-medieval-gold-300 mb-4">
-                👑 Noble House Management
+                💰 Turn-Based Economy
               </h3>
               <p className="medieval-text text-lg leading-relaxed">
-                Each player controls a noble house where family members play
-                crucial roles. Lead armies, govern regions, and complete
-                missions. Manage marriages, alliances, and the growth of your
-                dynasty through strategic decisions and diplomatic negotiations.
+                Experience a dynamic turn-based economy with seven core
+                resources: Wood, Stone, Food, Currency, Metal, and Livestock.
+                Manage your cities' local wealth, set tax rates, and watch your
+                realm prosper through strategic resource management.
               </p>
             </div>
           </div>
@@ -78,42 +77,42 @@ export default function GameInfo() {
         {/* Core Gameplay Features */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           <div className="resource-card text-center group">
-            <div className="text-5xl mb-4 group-hover:animate-float">🌳</div>
-            <h3 className="font-medieval text-xl text-medieval-gold-300 mb-3">
-              Family Trees
-            </h3>
-            <p className="medieval-text">
-              Manage noble bloodlines and strategic marriages
-            </p>
-          </div>
-
-          <div className="resource-card text-center group">
             <div className="text-5xl mb-4 group-hover:animate-float">🏘️</div>
             <h3 className="font-medieval text-xl text-medieval-gold-300 mb-3">
-              Town Management
+              City Management
             </h3>
             <p className="medieval-text">
-              Build and upgrade settlements with up to four buildings
+              Build and manage cities with customizable names and tax rates
             </p>
           </div>
 
           <div className="resource-card text-center group">
-            <div className="text-5xl mb-4 group-hover:animate-float">⚔️</div>
+            <div className="text-5xl mb-4 group-hover:animate-float">🏗️</div>
             <h3 className="font-medieval text-xl text-medieval-gold-300 mb-3">
-              Army & Combat
+              Building Construction
             </h3>
             <p className="medieval-text">
-              Recruit units and engage in strategic battles
+              Construct sawmills, quarries, forges, farms, and markets
             </p>
           </div>
 
           <div className="resource-card text-center group">
             <div className="text-5xl mb-4 group-hover:animate-float">💰</div>
             <h3 className="font-medieval text-xl text-medieval-gold-300 mb-3">
-              Resource Trade
+              Resource Management
             </h3>
             <p className="medieval-text">
-              Manage wood, stone, food, and ducats
+              Manage Wood, Stone, Food, Currency, Metal, and Livestock
+            </p>
+          </div>
+
+          <div className="resource-card text-center group">
+            <div className="text-5xl mb-4 group-hover:animate-float">👑</div>
+            <h3 className="font-medieval text-xl text-medieval-gold-300 mb-3">
+              Turn-Based Income
+            </h3>
+            <p className="medieval-text">
+              Experience turn-based economy with income and taxation
             </p>
           </div>
         </div>
@@ -126,22 +125,22 @@ export default function GameInfo() {
 
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             <div className="space-y-4">
-              <div className="text-4xl mb-4">🔐</div>
+              <div className="text-4xl mb-4">🏘️</div>
               <h3 className="font-medieval text-xl text-medieval-gold-300">
-                Secure Authentication
+                City Management
               </h3>
               <p className="medieval-text">
-                Robust user management and noble house security
+                Build cities, construct buildings, and manage local wealth
               </p>
             </div>
 
             <div className="space-y-4">
-              <div className="text-4xl mb-4">💎</div>
+              <div className="text-4xl mb-4">💰</div>
               <h3 className="font-medieval text-xl text-medieval-gold-300">
-                Resource Management
+                Turn-Based Economy
               </h3>
               <p className="medieval-text">
-                View, send, and receive resources and wealth
+                Experience income generation and taxation systems
               </p>
             </div>
 
@@ -151,7 +150,7 @@ export default function GameInfo() {
                 Admin Controls
               </h3>
               <p className="medieval-text">
-                Exclusive administrative powers for realm oversight
+                Grant cities and advance turns for all players
               </p>
             </div>
           </div>

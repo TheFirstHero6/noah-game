@@ -23,7 +23,6 @@ Experience the realm in four distinct visual styles:
 
 <img width="970" height="989" alt="image" src="https://github.com/user-attachments/assets/ae9217b5-4687-461e-8a0e-56d58e09a0a3" />
 
-
 **Key Features:**
 
 - **Persistent Theme Selection** - Your theme choice is saved to your profile
@@ -138,7 +137,6 @@ Engage in diplomatic resource exchange with other noble houses:
 
 <img width="2549" height="1275" alt="image" src="https://github.com/user-attachments/assets/8971f32b-701f-46aa-9ec4-fb5017501014" />
 
-
 ### **Resource Management**
 
 - **View Resources** - Check your current wood, stone, food, and ducats
@@ -152,7 +150,6 @@ Engage in diplomatic resource exchange with other noble houses:
 2. Choose your preferred theme from the four options
 3. Click **Save Theme** to persist your choice
 4. Enjoy your personalized medieval experience!
-
 
 ## 🏗️ Development
 

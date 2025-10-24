@@ -25,7 +25,8 @@ export async function POST(req: Request) {
     }
 
     // Parse JSON body
-    const { targetUserId, wood, stone, food, ducats } = await req.json();
+    const { targetUserId, wood, stone, food, currency, metal, livestock } =
+      await req.json();
 
     // Validate input
     if (!targetUserId) {
@@ -35,12 +36,23 @@ export async function POST(req: Request) {
       );
     }
 
-    // Validate resource values (must be non-negative integers)
-    const resourceValues = { wood, stone, food, ducats };
+    // Validate resource values (must be non-negative numbers, currency can be float)
+    const resourceValues = { wood, stone, food, currency, metal, livestock };
     for (const [resource, value] of Object.entries(resourceValues)) {
-      if (value !== undefined && (value < 0 || !Number.isInteger(value))) {
+      if (value !== undefined && value < 0) {
         return NextResponse.json(
-          { error: `${resource} must be a non-negative integer` },
+          { error: `${resource} must be a non-negative number` },
+          { status: 400 }
+        );
+      }
+      // For non-currency resources, ensure they are integers
+      if (
+        value !== undefined &&
+        resource !== "currency" &&
+        !Number.isInteger(value)
+      ) {
+        return NextResponse.json(
+          { error: `${resource} must be a whole number` },
           { status: 400 }
         );
       }
@@ -64,7 +76,9 @@ export async function POST(req: Request) {
     if (wood !== undefined) updateData.wood = wood;
     if (stone !== undefined) updateData.stone = stone;
     if (food !== undefined) updateData.food = food;
-    if (ducats !== undefined) updateData.ducats = ducats;
+    if (currency !== undefined) updateData.currency = currency;
+    if (metal !== undefined) updateData.metal = metal;
+    if (livestock !== undefined) updateData.livestock = livestock;
 
     // If no resources are provided, return error
     if (Object.keys(updateData).length === 0) {
