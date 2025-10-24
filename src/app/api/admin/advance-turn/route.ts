@@ -78,7 +78,9 @@ export async function POST() {
 
         // B. Income & Tax Calculation (New Logic)
         // Calculate Local Trade income based on City Upgrade Tier
-        const localTradeGain = CITY_TIER_INCOME[city.upgradeTier] || 0;
+        const localTradeGain =
+          CITY_TIER_INCOME[city.upgradeTier as keyof typeof CITY_TIER_INCOME] ||
+          0;
 
         // Calculate tax amount (portion player takes) - preserve decimal values
         const taxAmount = (city.taxRate / 100) * localTradeGain;
