@@ -309,6 +309,10 @@ body {
     @apply bg-gradient-to-br from-medieval-steel-800 to-medieval-steel-900 border-2 border-medieval-steel-600 rounded-lg p-4 shadow-medieval hover:border-medieval-gold-500 hover:shadow-glow-gold transition-all duration-300;
   }
 
+  .admin-resource-card {
+    @apply bg-gradient-to-br from-medieval-steel-800 to-medieval-steel-900 border-2 border-medieval-gold-600 rounded-lg p-4 shadow-medieval hover:shadow-glow-gold transition-all duration-300 transform hover:scale-105;
+  }
+
   .modal-overlay {
     @apply fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50;
   }

@@ -15,6 +15,7 @@ export default function Dashboard() {
   const [userpic, setUserpic] = useState("");
   const [username, setUsername] = useState("");
   const [users, setUsers] = useState<User[]>([]);
+  const [allUsersWithResources, setAllUsersWithResources] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [amount, setAmount] = useState(0);
   const [toUser, setToUser] = useState("");
@@ -70,6 +71,21 @@ export default function Dashboard() {
       if (!response.ok) throw new Error("Failed to fetch user data");
     } catch (error) {
       throw new Error("Failed to fetch user data");
+    }
+  };
+
+  const fetchAllUsersWithResources = async () => {
+    if (role !== "ADMIN") return;
+
+    try {
+      const response = await fetch("/api/dashboard/all-users-resources");
+      const data = await response.json();
+
+      if (response.ok) {
+        setAllUsersWithResources(data.users);
+      }
+    } catch (error) {
+      console.error("Error fetching all users with resources:", error);
     }
   };
 
@@ -277,6 +293,10 @@ export default function Dashboard() {
 
       // Refresh user data to show updated amounts
       fetchUserData();
+      // Refresh admin dashboard if user is admin
+      if (role === "ADMIN") {
+        fetchAllUsersWithResources();
+      }
     } catch (error) {
       console.error("Admin resource update error:", error);
       addNotification(
@@ -326,6 +346,12 @@ export default function Dashboard() {
   useEffect(() => {
     fetchUserDataOnce();
   }, []);
+
+  useEffect(() => {
+    if (role === "ADMIN") {
+      fetchAllUsersWithResources();
+    }
+  }, [role]);
 
   // Clean up user names that might contain "null"
   const cleanUserName = (name: string) => {
@@ -431,33 +457,14 @@ export default function Dashboard() {
           </div>
           <div className="medieval-divider"></div>
 
-          {/* Noble Search Section */}
-          <div className="mb-12">
-            <h2 className="font-medieval text-2xl text-medieval-gold-300 mb-6 glow-text text-center">
-              🔍 Search Amongst the Noble Houses
-            </h2>
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Seek out your allies and rivals..."
-                className="medieval-input w-full text-lg"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-medieval-gold-400">
-                🔍
-              </div>
-            </div>
-          </div>
+          {/* Admin Dashboard - Replace normal list for admins */}
+          {role === "ADMIN" ? (
+            <div className="medieval-card p-8">
+              <div className="flex flex-col lg:flex-row justify-between items-center mb-8">
+                <h2 className="font-medieval text-3xl text-medieval-gold-300 glow-text text-center lg:text-left">
+                  👑 Noble Houses of the Realm
+                </h2>
 
-          {/* Noble Houses List */}
-          <div className="medieval-card p-8">
-            <div className="flex flex-col lg:flex-row justify-between items-center mb-8">
-              <h2 className="font-medieval text-3xl text-medieval-gold-300 glow-text text-center lg:text-left">
-                👑 Noble Houses of the Realm
-              </h2>
-
-              {role === "ADMIN" && (
                 <button
                   onClick={cleanupUserNames}
                   disabled={isCleaningNames}
@@ -470,62 +477,200 @@ export default function Dashboard() {
                     </span>
                   </span>
                 </button>
-              )}
-            </div>
-            <div className="grid gap-6">
-              {filteredUsers.map((user) => (
-                <div key={user.id} className="user-card group">
-                  <div className="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-6">
-                    <div className="relative group/avatar">
-                      <img
-                        src={user.imageUrl}
-                        alt={user.name || "Noble"}
-                        className="h-24 w-24 rounded-full border-4 border-medieval-gold-600 shadow-glow-gold transform transition-all duration-300 group-hover/avatar:scale-110 group-hover/avatar:rotate-3"
-                      />
-                      <div className="absolute -inset-1 bg-gradient-to-r from-medieval-gold-400 to-medieval-gold-600 rounded-full opacity-0 group-hover/avatar:opacity-20 blur-lg transition-opacity duration-300"></div>
-                    </div>
+              </div>
 
-                    <div className="flex-1 text-center lg:text-left">
-                      <h3 className="font-medieval text-2xl text-medieval-gold-300 mb-2">
-                        {cleanUserName(user.name)}
-                      </h3>
-                      <p className="text-medieval-steel-300 italic">
-                        "A noble house of great renown"
-                      </p>
-                    </div>
+              {/* Admin Search Section */}
+              <div className="mb-8">
+                <h3 className="font-medieval text-2xl text-medieval-gold-300 mb-6 glow-text text-center">
+                  🔍 Search Amongst the Noble Houses
+                </h3>
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Seek out your allies and rivals..."
+                    className="medieval-input w-full text-lg"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-medieval-gold-400">
+                    🔍
+                  </div>
+                </div>
+              </div>
 
-                    <div className="flex flex-col sm:flex-row gap-3">
-                      <button
-                        onClick={() =>
-                          openModal(cleanUserName(user.name), user.id)
-                        }
-                        className="medieval-button group"
-                      >
-                        <span className="flex items-center space-x-2">
-                          <span>🎁</span>
-                          <span>Send Boon</span>
-                        </span>
-                      </button>
+              {/* Admin Resource Cards Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {allUsersWithResources
+                  .filter((user) => {
+                    const cleanName = cleanUserName(user.name);
+                    return (
+                      cleanName &&
+                      cleanName
+                        .toLowerCase()
+                        .includes(searchQuery.toLowerCase())
+                    );
+                  })
+                  .map((user) => (
+                    <div key={user.id} className="admin-resource-card group">
+                      <div className="flex items-center space-x-4 mb-4">
+                        <div className="relative group/avatar">
+                          <img
+                            src={user.imageUrl}
+                            alt={user.name || "Noble"}
+                            className="h-16 w-16 rounded-full border-2 border-medieval-gold-600 shadow-glow-gold transform transition-all duration-300 group-hover/avatar:scale-110"
+                          />
+                          <div className="absolute -inset-1 bg-gradient-to-r from-medieval-gold-400 to-medieval-gold-600 rounded-full opacity-0 group-hover/avatar:opacity-20 blur-lg transition-opacity duration-300"></div>
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-medieval text-lg text-medieval-gold-300 mb-1">
+                            {cleanUserName(user.name)}
+                          </h3>
+                          <p className="text-sm text-medieval-steel-400">
+                            {user.role === "ADMIN" ? "👑 Admin" : "🏰 Noble"}
+                          </p>
+                        </div>
+                      </div>
 
-                      {role === "ADMIN" && (
+                      <div className="grid grid-cols-2 gap-3 mb-4">
+                        <div className="text-center">
+                          <div className="text-2xl mb-1">🌲</div>
+                          <div className="text-sm font-medieval text-medieval-gold-300">
+                            {user.resources.wood}
+                          </div>
+                          <div className="text-xs text-medieval-steel-400">
+                            Wood
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl mb-1">🗿</div>
+                          <div className="text-sm font-medieval text-medieval-gold-300">
+                            {user.resources.stone}
+                          </div>
+                          <div className="text-xs text-medieval-steel-400">
+                            Stone
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl mb-1">🍞</div>
+                          <div className="text-sm font-medieval text-medieval-gold-300">
+                            {user.resources.food}
+                          </div>
+                          <div className="text-xs text-medieval-steel-400">
+                            Food
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl mb-1">💰</div>
+                          <div className="text-sm font-medieval text-medieval-gold-300">
+                            {user.resources.ducats}
+                          </div>
+                          <div className="text-xs text-medieval-steel-400">
+                            Ducats
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex flex-col gap-2">
+                        <button
+                          onClick={() =>
+                            openModal(cleanUserName(user.name), user.id)
+                          }
+                          className="medieval-button group w-full text-sm"
+                        >
+                          <span className="flex items-center justify-center space-x-2">
+                            <span>🎁</span>
+                            <span>Send Boon</span>
+                          </span>
+                        </button>
+
                         <button
                           onClick={() =>
                             openAdminModal(cleanUserName(user.name), user.id)
                           }
-                          className="medieval-button-secondary group"
+                          className="medieval-button-secondary group w-full text-sm"
                         >
-                          <span className="flex items-center space-x-2">
+                          <span className="flex items-center justify-center space-x-2">
                             <span>⚡</span>
                             <span>Manage Resources</span>
                           </span>
                         </button>
-                      )}
+                      </div>
                     </div>
+                  ))}
+              </div>
+            </div>
+          ) : (
+            /* Normal User List for Non-Admins */
+            <>
+              {/* Noble Search Section */}
+              <div className="mb-12">
+                <h2 className="font-medieval text-2xl text-medieval-gold-300 mb-6 glow-text text-center">
+                  🔍 Search Amongst the Noble Houses
+                </h2>
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Seek out your allies and rivals..."
+                    className="medieval-input w-full text-lg"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-medieval-gold-400">
+                    🔍
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
+
+              {/* Noble Houses List */}
+              <div className="medieval-card p-8">
+                <div className="flex flex-col lg:flex-row justify-between items-center mb-8">
+                  <h2 className="font-medieval text-3xl text-medieval-gold-300 glow-text text-center lg:text-left">
+                    👑 Noble Houses of the Realm
+                  </h2>
+                </div>
+                <div className="grid gap-6">
+                  {filteredUsers.map((user) => (
+                    <div key={user.id} className="user-card group">
+                      <div className="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-6">
+                        <div className="relative group/avatar">
+                          <img
+                            src={user.imageUrl}
+                            alt={user.name || "Noble"}
+                            className="h-24 w-24 rounded-full border-4 border-medieval-gold-600 shadow-glow-gold transform transition-all duration-300 group-hover/avatar:scale-110 group-hover/avatar:rotate-3"
+                          />
+                          <div className="absolute -inset-1 bg-gradient-to-r from-medieval-gold-400 to-medieval-gold-600 rounded-full opacity-0 group-hover/avatar:opacity-20 blur-lg transition-opacity duration-300"></div>
+                        </div>
+
+                        <div className="flex-1 text-center lg:text-left">
+                          <h3 className="font-medieval text-2xl text-medieval-gold-300 mb-2">
+                            {cleanUserName(user.name)}
+                          </h3>
+                          <p className="text-medieval-steel-300 italic">
+                            "A noble house of great renown"
+                          </p>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row gap-3">
+                          <button
+                            onClick={() =>
+                              openModal(cleanUserName(user.name), user.id)
+                            }
+                            className="medieval-button group"
+                          >
+                            <span className="flex items-center space-x-2">
+                              <span>🎁</span>
+                              <span>Send Boon</span>
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
           {/* Transfer Modal */}
           {modalOpen && (
             <div className="modal-overlay">
