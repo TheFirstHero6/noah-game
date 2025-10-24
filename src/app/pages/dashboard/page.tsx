@@ -22,6 +22,20 @@ export default function Dashboard() {
   const [resource, setResource] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [adminModalOpen, setAdminModalOpen] = useState(false);
+  const [adminResourceValues, setAdminResourceValues] = useState({
+    wood: 0,
+    stone: 0,
+    food: 0,
+    ducats: 0,
+  });
+  const [targetUserResources, setTargetUserResources] = useState({
+    wood: 0,
+    stone: 0,
+    food: 0,
+    ducats: 0,
+  });
+  const [isUpdatingResources, setIsUpdatingResources] = useState(false);
+  const [isLoadingUserResources, setIsLoadingUserResources] = useState(false);
 
   const [role, setRole] = useState("");
   const [isCleaningNames, setIsCleaningNames] = useState(false);
@@ -168,16 +182,111 @@ export default function Dashboard() {
     setToUser("");
     setToUserId("");
   };
-  const openAdminModal = (user: any, userID: any) => {
-    setModalOpen(true);
+  const fetchTargetUserResources = async (userId: string) => {
+    setIsLoadingUserResources(true);
+    try {
+      const response = await fetch(
+        `/api/dashboard/user-resources?userId=${userId}`
+      );
+      const data = await response.json();
+
+      if (response.ok) {
+        setTargetUserResources(data.resources);
+        setAdminResourceValues(data.resources);
+      } else {
+        // If user has no resources, set defaults
+        const defaultResources = { wood: 0, stone: 0, food: 0, ducats: 0 };
+        setTargetUserResources(defaultResources);
+        setAdminResourceValues(defaultResources);
+      }
+    } catch (error) {
+      console.error("Error fetching user resources:", error);
+      const defaultResources = { wood: 0, stone: 0, food: 0, ducats: 0 };
+      setTargetUserResources(defaultResources);
+      setAdminResourceValues(defaultResources);
+    } finally {
+      setIsLoadingUserResources(false);
+    }
+  };
+
+  const openAdminModal = async (user: any, userID: any) => {
+    setAdminModalOpen(true);
     setToUser(user);
     setToUserId(userID);
+    await fetchTargetUserResources(userID);
   };
 
   const closeAdminModal = () => {
-    setModalOpen(false);
+    setAdminModalOpen(false);
     setToUser("");
     setToUserId("");
+    setAdminResourceValues({
+      wood: 0,
+      stone: 0,
+      food: 0,
+      ducats: 0,
+    });
+  };
+
+  const updateUserResources = async () => {
+    // Validate input
+    const hasValidValues = Object.values(adminResourceValues).some(
+      (value) => value > 0
+    );
+    if (!hasValidValues) {
+      addNotification(
+        "error",
+        "Please enter at least one resource value greater than 0."
+      );
+      return;
+    }
+
+    setIsUpdatingResources(true);
+
+    try {
+      const response = await fetch("/api/dashboard/admin-resources", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          targetUserId: toUserId,
+          ...adminResourceValues,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        addNotification(
+          "error",
+          data.error || "Failed to update resources. Please try again."
+        );
+        return;
+      }
+
+      // Success case
+      addNotification(
+        "success",
+        `Executive Proclamation executed for ${toUser}!`,
+        "The realm's treasury has been adjusted by your royal decree."
+      );
+
+      // Close modal and reset form
+      closeAdminModal();
+
+      // Refresh user data to show updated amounts
+      fetchUserData();
+    } catch (error) {
+      console.error("Admin resource update error:", error);
+      addNotification(
+        "error",
+        "Connection lost. Please check your internet connection and try again.",
+        "If the problem persists, please contact support."
+      );
+    } finally {
+      setIsUpdatingResources(false);
+    }
   };
 
   const cleanupUserNames = async () => {
@@ -490,7 +599,7 @@ export default function Dashboard() {
           {/* Admin Modal */}
           {adminModalOpen && (
             <div className="modal-overlay">
-              <div className="modal-content p-8 animate-slide-up">
+              <div className="modal-content p-8 animate-slide-up max-w-2xl">
                 <button
                   className="absolute top-4 right-4 text-medieval-gold-300 hover:text-medieval-crimson-400 text-3xl transition-colors duration-300"
                   onClick={() => closeAdminModal()}
@@ -506,44 +615,139 @@ export default function Dashboard() {
                     "As the realm's overseer, you hold the power to shape the
                     fortunes of noble houses"
                   </p>
+                  {isLoadingUserResources ? (
+                    <div className="mt-4 text-medieval-gold-300">
+                      <span className="animate-pulse">
+                        ⏳ Loading current resources...
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="mt-4 p-4 bg-medieval-steel-800 rounded-lg border border-medieval-gold-600">
+                      <p className="text-medieval-gold-300 font-medieval text-lg mb-2">
+                        Current Resources:
+                      </p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                        <div className="text-center">
+                          <span className="text-medieval-gold-300">🌲</span>
+                          <div className="text-medieval-steel-300">
+                            {targetUserResources.wood}
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <span className="text-medieval-gold-300">🗿</span>
+                          <div className="text-medieval-steel-300">
+                            {targetUserResources.stone}
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <span className="text-medieval-gold-300">🍞</span>
+                          <div className="text-medieval-steel-300">
+                            {targetUserResources.food}
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <span className="text-medieval-gold-300">💰</span>
+                          <div className="text-medieval-steel-300">
+                            {targetUserResources.ducats}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-6">
-                  <div>
-                    <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
-                      💰 Enter the Amount
-                    </label>
-                    <input
-                      type="number"
-                      className="medieval-input w-full text-lg"
-                      value={amount}
-                      onChange={(e) => setAmount(Number(e.target.value))}
-                      placeholder="How many shall you bestow or remove?"
-                    />
-                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
+                        🌲 Wood
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        className="medieval-input w-full text-lg"
+                        value={adminResourceValues.wood}
+                        onChange={(e) =>
+                          setAdminResourceValues((prev) => ({
+                            ...prev,
+                            wood: Number(e.target.value) || 0,
+                          }))
+                        }
+                        placeholder="Set wood amount"
+                      />
+                    </div>
 
-                  <div>
-                    <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
-                      🏺 Choose the Resource Type
-                    </label>
-                    <select
-                      value={resource}
-                      onChange={(e) => setResource(e.target.value)}
-                      className="medieval-input w-full text-lg"
-                    >
-                      <option value="">Select a resource...</option>
-                      <option value="wood">🌲 Wood</option>
-                      <option value="stone">🗿 Stone</option>
-                      <option value="food">🍞 Food</option>
-                      <option value="ducats">💰 Ducats</option>
-                    </select>
+                    <div>
+                      <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
+                        🗿 Stone
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        className="medieval-input w-full text-lg"
+                        value={adminResourceValues.stone}
+                        onChange={(e) =>
+                          setAdminResourceValues((prev) => ({
+                            ...prev,
+                            stone: Number(e.target.value) || 0,
+                          }))
+                        }
+                        placeholder="Set stone amount"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
+                        🍞 Food
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        className="medieval-input w-full text-lg"
+                        value={adminResourceValues.food}
+                        onChange={(e) =>
+                          setAdminResourceValues((prev) => ({
+                            ...prev,
+                            food: Number(e.target.value) || 0,
+                          }))
+                        }
+                        placeholder="Set food amount"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
+                        💰 Ducats
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        className="medieval-input w-full text-lg"
+                        value={adminResourceValues.ducats}
+                        onChange={(e) =>
+                          setAdminResourceValues((prev) => ({
+                            ...prev,
+                            ducats: Number(e.target.value) || 0,
+                          }))
+                        }
+                        placeholder="Set ducats amount"
+                      />
+                    </div>
                   </div>
 
                   <div className="flex justify-center pt-4">
-                    <button className="medieval-button-secondary group">
+                    <button
+                      onClick={updateUserResources}
+                      disabled={isUpdatingResources}
+                      className="medieval-button-secondary group disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
                       <span className="flex items-center space-x-2">
-                        <span>👑</span>
-                        <span>Execute Administrative Action</span>
+                        <span>{isUpdatingResources ? "⏳" : "👑"}</span>
+                        <span>
+                          {isUpdatingResources
+                            ? "Proclaiming..."
+                            : "Make Executive Proclamation"}
+                        </span>
                       </span>
                     </button>
                   </div>
