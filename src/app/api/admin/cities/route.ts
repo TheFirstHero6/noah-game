@@ -57,7 +57,7 @@ export async function POST(request: Request) {
       return new Response("Forbidden", { status: 403 });
     }
 
-    const { userId, name } = await request.json();
+    const { userId, name, tier } = await request.json();
 
     if (!userId || !name?.trim()) {
       return NextResponse.json(
@@ -65,6 +65,9 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+
+    // Validate tier (1-5)
+    const cityTier = tier && tier >= 1 && tier <= 5 ? tier : 1;
 
     // Check if user exists
     const targetUser = await prisma.user.findUnique({
@@ -75,12 +78,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Create the city with initial local wealth of 100
+    // Create the city with specified tier and initial local wealth
     const city = await prisma.city.create({
       data: {
         name: name.trim(),
         ownerId: userId,
-        upgradeTier: 1,
+        upgradeTier: cityTier,
         localWealth: 100, // Initial local wealth as per new rules
         taxRate: 5,
       },
@@ -88,7 +91,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: `City "${city.name}" granted to ${targetUser.name}`,
+      message: `City "${city.name}" (Tier ${cityTier}) granted to ${targetUser.name}`,
       city: city,
     });
   } catch (error) {

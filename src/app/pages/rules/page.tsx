@@ -2,8 +2,16 @@
 
 import Image from "next/image";
 import logo from "../../../components/logo.png";
+import { useState } from "react";
 
 export default function RulesPage() {
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const [hoveredResource, setHoveredResource] = useState<string | null>(null);
+
+  const toggleSection = (section: string) => {
+    setExpandedSection(expandedSection === section ? null : section);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-background text-foreground p-8">
       {/* Background Pattern */}
@@ -50,18 +58,6 @@ export default function RulesPage() {
               realm through turn-based economic gameplay.
             </p>
 
-            <div className="bg-gradient-to-r from-background/50 to-background/50 p-8 rounded-lg border-2 border-primary/30">
-              <p className="medieval-text text-lg leading-relaxed">
-                <span className="font-medieval text-medieval-gold-300">
-                  "In this realm, power flows through the wise management of
-                  cities, the construction of buildings, and the strategic use
-                  of resources. The noble houses that prosper are those who
-                  understand the art of city management, taxation, and economic
-                  growth."
-                </span>
-              </p>
-            </div>
-
             <div className="bg-gradient-to-r from-background/30 to-background/30 p-8 rounded-lg border border-primary/30 mt-6">
               <p className="medieval-text text-lg leading-relaxed italic">
                 <span className="font-script text-medieval-gold-200">
@@ -83,95 +79,376 @@ export default function RulesPage() {
           </div>
         </div>
 
-        {/* Core Resources Section */}
+        {/* How to Take Your Turn Section */}
         <div className="medieval-card p-12 mb-12 animate-slide-up">
           <h2 className="font-medieval text-3xl text-medieval-gold-300 mb-8 glow-text text-center">
-            💎 The Seven Pillars of Wealth
+            🔄 How to Take Your Turn
           </h2>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
-            <div className="bg-gradient-to-br from-background/50 to-background/30 p-6 rounded-lg border border-primary/30">
-              <div className="flex items-center mb-4">
-                <span className="text-3xl mr-3">🌳</span>
-                <h3 className="font-medieval text-xl text-medieval-gold-300">
-                  Wood
-                </h3>
-              </div>
-              <p className="medieval-text">
-                The foundation of construction. Essential for basic buildings,
-                tools, and infrastructure. Gathered from forests and processed
-                in sawmills.
-              </p>
-            </div>
+          <div className="space-y-8">
+            <p className="medieval-text text-lg text-center mb-8">
+              Each turn follows a specific sequence of phases. Understanding
+              this order is crucial for effective gameplay.
+            </p>
 
-            <div className="bg-gradient-to-br from-background/50 to-background/30 p-6 rounded-lg border border-primary/30">
-              <div className="flex items-center mb-4">
-                <span className="text-3xl mr-3">🪨</span>
-                <h3 className="font-medieval text-xl text-medieval-gold-300">
-                  Stone
-                </h3>
-              </div>
-              <p className="medieval-text">
-                The backbone of fortification. Required for advanced buildings,
-                walls, and defensive structures. Mined from quarries and stone
-                deposits.
-              </p>
-            </div>
+            <div className="grid lg:grid-cols-2 gap-8">
+              <div className="space-y-6">
+                <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30 transition-all duration-300 hover:shadow-lg hover:border-medieval-gold-400">
+                  <div className="flex items-center mb-4">
+                    <span className="text-3xl mr-3 transition-transform duration-300 hover:scale-110">
+                      💰
+                    </span>
+                    <h3 className="font-medieval text-xl text-medieval-gold-300">
+                      1. Collect Income (Automatic)
+                    </h3>
+                  </div>
+                  <p className="medieval-text">
+                    Your cities generate income based on their tier level and
+                    local wealth. Each turn, cities gain income according to
+                    their tier level.{" "}
+                    <strong>
+                      City income per turn = Tier level income (10, 15, 40, 55,
+                      or 70)
+                    </strong>{" "}
+                    This income is added to the city's total wealth. You can
+                    then tax a percentage of the city's total wealth, which is
+                    deducted from the city but added to your personal wealth.
+                  </p>
+                </div>
 
-            <div className="bg-gradient-to-br from-background/50 to-background/30 p-6 rounded-lg border border-primary/30">
-              <div className="flex items-center mb-4">
-                <span className="text-3xl mr-3">🌾</span>
-                <h3 className="font-medieval text-xl text-medieval-gold-300">
-                  Food
-                </h3>
-              </div>
-              <p className="medieval-text">
-                The lifeblood of your people. Sustains population, feeds armies,
-                and drives economic growth. Produced by farms and agricultural
-                buildings.
-              </p>
-            </div>
+                <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30 transition-all duration-300 hover:shadow-lg hover:border-medieval-gold-400">
+                  <div className="flex items-center mb-4">
+                    <span className="text-3xl mr-3 transition-transform duration-300 hover:scale-110">
+                      ⚔️
+                    </span>
+                    <h3 className="font-medieval text-xl text-medieval-gold-300">
+                      2. Pay Upkeep and Move Armies
+                    </h3>
+                  </div>
+                  <p className="medieval-text">
+                    Keep your armies in check by paying their upkeep costs.
+                  </p>
+                </div>
 
-            <div className="bg-gradient-to-br from-background/50 to-background/30 p-6 rounded-lg border border-primary/30">
-              <div className="flex items-center mb-4">
-                <span className="text-3xl mr-3">💰</span>
-                <h3 className="font-medieval text-xl text-medieval-gold-300">
-                  Currency
-                </h3>
+                <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30 transition-all duration-300 hover:shadow-lg hover:border-medieval-gold-400">
+                  <div className="flex items-center mb-4">
+                    <span className="text-3xl mr-3 transition-transform duration-300 hover:scale-110">
+                      📜
+                    </span>
+                    <h3 className="font-medieval text-xl text-medieval-gold-300">
+                      3. Receive Event
+                    </h3>
+                  </div>
+                  <p className="medieval-text">
+                    An event triggers for all players, providing opportunities
+                    for intrigue, diplomacy, and strategic decisions that can
+                    affect your realm.
+                  </p>
+                </div>
               </div>
-              <p className="medieval-text">
-                The universal medium of exchange. Used for construction, trade,
-                and administrative costs. Generated through taxation and
-                economic activities.
-              </p>
-            </div>
 
-            <div className="bg-gradient-to-br from-background/50 to-background/30 p-6 rounded-lg border border-primary/30">
-              <div className="flex items-center mb-4">
-                <span className="text-3xl mr-3">⚒️</span>
-                <h3 className="font-medieval text-xl text-medieval-gold-300">
-                  Metal
-                </h3>
-              </div>
-              <p className="medieval-text">
-                The forge of industry. Essential for weapons, advanced tools,
-                and technological development. Smelted in forges and
-                metalworking facilities.
-              </p>
-            </div>
+              <div className="space-y-6">
+                <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30 transition-all duration-300 hover:shadow-lg hover:border-medieval-gold-400">
+                  <div className="flex items-center mb-4">
+                    <span className="text-3xl mr-3 transition-transform duration-300 hover:scale-110">
+                      🏗️
+                    </span>
+                    <h3 className="font-medieval text-xl text-medieval-gold-300">
+                      4. Build and Recruitment
+                    </h3>
+                  </div>
+                  <p className="medieval-text">
+                    Construct buildings and recruit units using your wealth and
+                    resources. Costs are paid from your personal wealth, not the
+                    cities' wealth.
+                  </p>
+                </div>
 
-            <div className="bg-gradient-to-br from-background/50 to-background/30 p-6 rounded-lg border border-primary/30">
-              <div className="flex items-center mb-4">
-                <span className="text-3xl mr-3">🐄</span>
-                <h3 className="font-medieval text-xl text-medieval-gold-300">
-                  Livestock
-                </h3>
+                <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30 transition-all duration-300 hover:shadow-lg hover:border-medieval-gold-400">
+                  <div className="flex items-center mb-4">
+                    <span className="text-3xl mr-3 transition-transform duration-300 hover:scale-110">
+                      🗺️
+                    </span>
+                    <h3 className="font-medieval text-xl text-medieval-gold-300">
+                      5. Give Movement Orders
+                    </h3>
+                  </div>
+                  <p className="medieval-text">
+                    At the end of your turn, write down movement orders for
+                    armies that will move next turn. Give these to the game
+                    master before the turn passes.
+                  </p>
+                </div>
+
+                <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30 transition-all duration-300 hover:shadow-lg hover:border-medieval-gold-400">
+                  <div className="flex items-center mb-4">
+                    <span className="text-3xl mr-3 transition-transform duration-300 hover:scale-110">
+                      📊
+                    </span>
+                    <h3 className="font-medieval text-xl text-medieval-gold-300">
+                      Tax Collection
+                    </h3>
+                  </div>
+                  <p className="medieval-text">
+                    Set tax rates in 5% increments. You tax a percentage of your
+                    city's total wealth, not just the income gained that turn.{" "}
+                    <strong>
+                      Tax amount = (%tax rate × City's total wealth)
+                    </strong>{" "}
+                    The taxed amount is deducted from the city's wealth and
+                    added to your personal wealth. Cities continue to gain their
+                    normal income per turn regardless of taxation.
+                  </p>
+                </div>
               </div>
-              <p className="medieval-text">
-                The wealth of the pastures. Provides food, materials, and trade
-                goods. Raised in pastures and managed through agricultural
-                expertise.
-              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Game Overview Section */}
+        <div className="medieval-card p-12 mb-12 animate-slide-up">
+          <h2 className="font-medieval text-3xl text-medieval-gold-300 mb-8 glow-text text-center">
+            🎮 How the Game Works
+          </h2>
+
+          <div className="space-y-8">
+            <p className="medieval-text text-lg text-center mb-8">
+              War of the Elector is a strategic multiplayer game where you build
+              cities, manage resources, and compete for dominance through
+              economic and military might.
+            </p>
+
+            <div className="grid lg:grid-cols-2 gap-8">
+              <div className="space-y-6">
+                <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30">
+                  <div className="flex items-center mb-4">
+                    <span className="text-3xl mr-3">🏰</span>
+                    <h3 className="font-medieval text-xl text-medieval-gold-300">
+                      City Management
+                    </h3>
+                  </div>
+                  <p className="medieval-text">
+                    Each city has a tier level (1-5) that determines its income
+                    generation. Cities accumulate wealth over time, and you can
+                    tax a percentage of their total accumulated wealth. Higher
+                    tier cities generate more income per turn but cost more to
+                    upgrade.
+                  </p>
+                </div>
+
+                <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30">
+                  <div className="flex items-center mb-4">
+                    <span className="text-3xl mr-3">🏗️</span>
+                    <h3 className="font-medieval text-xl text-medieval-gold-300">
+                      Building Construction
+                    </h3>
+                  </div>
+                  <p className="medieval-text">
+                    Construct buildings to generate resources and improve your
+                    cities. Buildings have different rarities (Common/Rare) and
+                    require specific resources. Each building provides ongoing
+                    benefits to your economy.
+                  </p>
+                </div>
+
+                <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30">
+                  <div className="flex items-center mb-4">
+                    <span className="text-3xl mr-3">⚔️</span>
+                    <h3 className="font-medieval text-xl text-medieval-gold-300">
+                      Military Strategy
+                    </h3>
+                  </div>
+                  <p className="medieval-text">
+                    Recruit and maintain armies to defend your territory and
+                    expand your influence. Units have different tiers (T1-T5)
+                    representing training and equipment quality. Higher tier
+                    units are more effective but cost more to maintain.
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30">
+                  <div className="flex items-center mb-4">
+                    <span className="text-3xl mr-3">💰</span>
+                    <h3 className="font-medieval text-xl text-medieval-gold-300">
+                      Economic System
+                    </h3>
+                  </div>
+                  <p className="medieval-text">
+                    Balance taxation with city growth. Set tax rates in 5%
+                    increments to extract wealth from your cities' total wealth.
+                    Cities gain fixed income each turn regardless of taxation,
+                    but high taxes will drain accumulated city wealth over time.
+                  </p>
+                </div>
+
+                <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30">
+                  <div className="flex items-center mb-4">
+                    <span className="text-3xl mr-3">🗺️</span>
+                    <h3 className="font-medieval text-xl text-medieval-gold-300">
+                      Turn-Based Gameplay
+                    </h3>
+                  </div>
+                  <p className="medieval-text">
+                    The game progresses in turns, with each turn following the
+                    5-phase sequence. Four turns make up one year. Time
+                    management and planning ahead are crucial for success in
+                    this strategic environment.
+                  </p>
+                </div>
+
+                <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30">
+                  <div className="flex items-center mb-4">
+                    <span className="text-3xl mr-3">👑</span>
+                    <h3 className="font-medieval text-xl text-medieval-gold-300">
+                      Victory Conditions
+                    </h3>
+                  </div>
+                  <p className="medieval-text">
+                    Compete to build the most prosperous realm through city
+                    mastery, economic dominance, and military excellence. The
+                    player with the strongest combination of these elements will
+                    emerge victorious.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Resources Section */}
+        <div className="medieval-card p-12 mb-12 animate-slide-up">
+          <h2 className="font-medieval text-3xl text-medieval-gold-300 mb-8 glow-text text-center">
+            💎 The Five Core Resources
+          </h2>
+
+          <div className="space-y-8">
+            <p className="medieval-text text-lg text-center mb-8">
+              Your realm's prosperity depends on managing these five essential
+              resources effectively.
+            </p>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+              <div
+                className={`bg-gradient-to-br from-background/50 to-background/30 p-6 rounded-lg border border-primary/30 transition-all duration-300 cursor-pointer transform hover:scale-105 hover:shadow-lg ${
+                  hoveredResource === "crops"
+                    ? "border-medieval-gold-400 shadow-glow-gold"
+                    : ""
+                }`}
+                onMouseEnter={() => setHoveredResource("crops")}
+                onMouseLeave={() => setHoveredResource(null)}
+              >
+                <div className="flex items-center mb-4">
+                  <span className="text-3xl mr-3 transition-transform duration-300 hover:rotate-12">
+                    🌾
+                  </span>
+                  <h3 className="font-medieval text-xl text-medieval-gold-300">
+                    Crops
+                  </h3>
+                </div>
+                <p className="medieval-text">
+                  Essential for feeding your population and armies. Produced by
+                  Fields and other agricultural buildings. Critical for
+                  maintaining your realm's food security.
+                </p>
+              </div>
+
+              <div
+                className={`bg-gradient-to-br from-background/50 to-background/30 p-6 rounded-lg border border-primary/30 transition-all duration-300 cursor-pointer transform hover:scale-105 hover:shadow-lg ${
+                  hoveredResource === "wood"
+                    ? "border-medieval-gold-400 shadow-glow-gold"
+                    : ""
+                }`}
+                onMouseEnter={() => setHoveredResource("wood")}
+                onMouseLeave={() => setHoveredResource(null)}
+              >
+                <div className="flex items-center mb-4">
+                  <span className="text-3xl mr-3 transition-transform duration-300 hover:rotate-12">
+                    🌳
+                  </span>
+                  <h3 className="font-medieval text-xl text-medieval-gold-300">
+                    Wood
+                  </h3>
+                </div>
+                <p className="medieval-text">
+                  The foundation of construction and industry. Essential for
+                  building structures, weapons, and tools. Gathered from forests
+                  and processed in Sawmills.
+                </p>
+              </div>
+
+              <div
+                className={`bg-gradient-to-br from-background/50 to-background/30 p-6 rounded-lg border border-primary/30 transition-all duration-300 cursor-pointer transform hover:scale-105 hover:shadow-lg ${
+                  hoveredResource === "stone"
+                    ? "border-medieval-gold-400 shadow-glow-gold"
+                    : ""
+                }`}
+                onMouseEnter={() => setHoveredResource("stone")}
+                onMouseLeave={() => setHoveredResource(null)}
+              >
+                <div className="flex items-center mb-4">
+                  <span className="text-3xl mr-3 transition-transform duration-300 hover:rotate-12">
+                    🪨
+                  </span>
+                  <h3 className="font-medieval text-xl text-medieval-gold-300">
+                    Stone
+                  </h3>
+                </div>
+                <p className="medieval-text">
+                  Required for fortifications, advanced buildings, and defensive
+                  structures. Mined from quarries and stone deposits. Essential
+                  for city upgrades.
+                </p>
+              </div>
+
+              <div
+                className={`bg-gradient-to-br from-background/50 to-background/30 p-6 rounded-lg border border-primary/30 transition-all duration-300 cursor-pointer transform hover:scale-105 hover:shadow-lg ${
+                  hoveredResource === "metal"
+                    ? "border-medieval-gold-400 shadow-glow-gold"
+                    : ""
+                }`}
+                onMouseEnter={() => setHoveredResource("metal")}
+                onMouseLeave={() => setHoveredResource(null)}
+              >
+                <div className="flex items-center mb-4">
+                  <span className="text-3xl mr-3 transition-transform duration-300 hover:rotate-12">
+                    ⚒️
+                  </span>
+                  <h3 className="font-medieval text-xl text-medieval-gold-300">
+                    Metal
+                  </h3>
+                </div>
+                <p className="medieval-text">
+                  The forge of industry and warfare. Essential for weapons,
+                  armor, and advanced tools. Mined from metal deposits and
+                  processed in forges.
+                </p>
+              </div>
+
+              <div
+                className={`bg-gradient-to-br from-background/50 to-background/30 p-6 rounded-lg border border-primary/30 transition-all duration-300 cursor-pointer transform hover:scale-105 hover:shadow-lg ${
+                  hoveredResource === "produce"
+                    ? "border-medieval-gold-400 shadow-glow-gold"
+                    : ""
+                }`}
+                onMouseEnter={() => setHoveredResource("produce")}
+                onMouseLeave={() => setHoveredResource(null)}
+              >
+                <div className="flex items-center mb-4">
+                  <span className="text-3xl mr-3 transition-transform duration-300 hover:rotate-12">
+                    🐄
+                  </span>
+                  <h3 className="font-medieval text-xl text-medieval-gold-300">
+                    Produce
+                  </h3>
+                </div>
+                <p className="medieval-text">
+                  Livestock and animal products. Provides food, materials, and
+                  trade goods. Raised in Pastures and managed through
+                  agricultural expertise.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -225,6 +502,41 @@ export default function RulesPage() {
                         <span>
                           <strong>Tax Rate:</strong> Set in 5% increments (5%,
                           10%, 15%, etc.)
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30 mt-4">
+                    <h4 className="font-medieval text-lg text-medieval-gold-300 mb-3">
+                      City Upgrade Costs
+                    </h4>
+                    <ul className="space-y-2">
+                      <li className="medieval-text flex items-start">
+                        <span className="text-medieval-gold-400 mr-2">•</span>
+                        <span>
+                          <strong>Tier 2:</strong> 100 Currency, 20 Wood, 20
+                          Stone
+                        </span>
+                      </li>
+                      <li className="medieval-text flex items-start">
+                        <span className="text-medieval-gold-400 mr-2">•</span>
+                        <span>
+                          <strong>Tier 3:</strong> 300 Currency, 40 Wood, 40
+                          Stone
+                        </span>
+                      </li>
+                      <li className="medieval-text flex items-start">
+                        <span className="text-medieval-gold-400 mr-2">•</span>
+                        <span>
+                          <strong>Tier 4:</strong> 900 Currency, 90 Wood, 90
+                          Stone
+                        </span>
+                      </li>
+                      <li className="medieval-text flex items-start">
+                        <span className="text-medieval-gold-400 mr-2">•</span>
+                        <span>
+                          <strong>Tier 5:</strong> 2700 Currency, 180 Wood, 180
+                          Stone
                         </span>
                       </li>
                     </ul>
@@ -300,16 +612,30 @@ export default function RulesPage() {
                         </h5>
                         <ul className="space-y-1 ml-4">
                           <li className="medieval-text text-sm">
-                            • <strong>Sawmill:</strong> 100 Currency
+                            • <strong>Sawmill:</strong> 50 Currency, 20 Wood, 10
+                            Stone
                           </li>
                           <li className="medieval-text text-sm">
-                            • <strong>Quarry:</strong> 100 Currency
+                            • <strong>Quarry:</strong> 50 Currency, 20 Wood
                           </li>
                           <li className="medieval-text text-sm">
-                            • <strong>Forge:</strong> 150 Currency, 50 Wood
+                            • <strong>Fields:</strong> 50 Currency, 20 Wood
                           </li>
                           <li className="medieval-text text-sm">
-                            • <strong>Farm:</strong> 80 Currency, 20 Wood
+                            • <strong>Pastures:</strong> 50 Currency, 20 Wood,
+                            10 Produce
+                          </li>
+                          <li className="medieval-text text-sm">
+                            • <strong>Infantry Barracks:</strong> 50 Currency,
+                            20 Wood, 20 Stone, 10 Metal, 10 Produce
+                          </li>
+                          <li className="medieval-text text-sm">
+                            • <strong>Archery Barracks:</strong> 50 Currency, 20
+                            Wood, 20 Stone, 10 Produce
+                          </li>
+                          <li className="medieval-text text-sm">
+                            • <strong>Town Square:</strong> 50 Currency, 20
+                            Wood, 20 Stone, 10 Produce
                           </li>
                         </ul>
                       </div>
@@ -319,8 +645,20 @@ export default function RulesPage() {
                         </h5>
                         <ul className="space-y-1 ml-4">
                           <li className="medieval-text text-sm">
-                            • <strong>Market:</strong> 200 Currency, 100 Wood,
-                            50 Stone
+                            • <strong>Mine:</strong> 150 Currency, 30 Wood, 30
+                            Stone
+                          </li>
+                          <li className="medieval-text text-sm">
+                            • <strong>Cavalry Barracks:</strong> 150 Currency,
+                            30 Wood, 20 Stone, 15 Metal, 10 Produce, 10 Produce
+                          </li>
+                          <li className="medieval-text text-sm">
+                            • <strong>Temple:</strong> 150 Currency, 30 Wood, 30
+                            Stone
+                          </li>
+                          <li className="medieval-text text-sm">
+                            • <strong>Trading Post:</strong> 150 Currency, 30
+                            Wood, 30 Stone, 20 Metal, 10 Produce, 10 Produce
                           </li>
                         </ul>
                       </div>
@@ -397,38 +735,57 @@ export default function RulesPage() {
                     <h4 className="font-medieval text-lg text-medieval-gold-300 mb-3">
                       City Income Formula
                     </h4>
-                    <ul className="space-y-2">
-                      <li className="medieval-text flex items-start">
-                        <span className="text-medieval-gold-400 mr-2">•</span>
-                        <span>
-                          <strong>Tier 1:</strong> 10 income per turn
-                        </span>
-                      </li>
-                      <li className="medieval-text flex items-start">
-                        <span className="text-medieval-gold-400 mr-2">•</span>
-                        <span>
-                          <strong>Tier 2:</strong> 15 income per turn
-                        </span>
-                      </li>
-                      <li className="medieval-text flex items-start">
-                        <span className="text-medieval-gold-400 mr-2">•</span>
-                        <span>
-                          <strong>Tier 3:</strong> 20 income per turn
-                        </span>
-                      </li>
-                      <li className="medieval-text flex items-start">
-                        <span className="text-medieval-gold-400 mr-2">•</span>
-                        <span>
-                          <strong>Tier 4:</strong> 25 income per turn
-                        </span>
-                      </li>
-                      <li className="medieval-text flex items-start">
-                        <span className="text-medieval-gold-400 mr-2">•</span>
-                        <span>
-                          <strong>Tier 5:</strong> 30 income per turn
-                        </span>
-                      </li>
-                    </ul>
+                    <div className="space-y-3">
+                      <p className="medieval-text text-sm">
+                        <strong>
+                          City income per turn = Tier level income (fixed
+                          amount)
+                        </strong>
+                      </p>
+                      <p className="medieval-text text-sm">
+                        <strong>
+                          Tax amount = (%tax rate × City's total wealth)
+                        </strong>
+                      </p>
+                      <p className="medieval-text text-sm">
+                        <strong>
+                          City wealth after tax = (Previous wealth + Income) -
+                          Tax amount
+                        </strong>
+                      </p>
+                      <ul className="space-y-2">
+                        <li className="medieval-text flex items-start">
+                          <span className="text-medieval-gold-400 mr-2">•</span>
+                          <span>
+                            <strong>Tier 1:</strong> 10 income per turn
+                          </span>
+                        </li>
+                        <li className="medieval-text flex items-start">
+                          <span className="text-medieval-gold-400 mr-2">•</span>
+                          <span>
+                            <strong>Tier 2:</strong> 15 income per turn
+                          </span>
+                        </li>
+                        <li className="medieval-text flex items-start">
+                          <span className="text-medieval-gold-400 mr-2">•</span>
+                          <span>
+                            <strong>Tier 3:</strong> 40 income per turn
+                          </span>
+                        </li>
+                        <li className="medieval-text flex items-start">
+                          <span className="text-medieval-gold-400 mr-2">•</span>
+                          <span>
+                            <strong>Tier 4:</strong> 55 income per turn
+                          </span>
+                        </li>
+                        <li className="medieval-text flex items-start">
+                          <span className="text-medieval-gold-400 mr-2">•</span>
+                          <span>
+                            <strong>Tier 5:</strong> 70 income per turn
+                          </span>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -565,7 +922,7 @@ export default function RulesPage() {
                         • Enter a custom city name
                       </li>
                       <li className="medieval-text text-sm">
-                        • City starts at Tier 1 with 0 local wealth
+                        • City starts at Tier 1 with 100 local wealth
                       </li>
                       <li className="medieval-text text-sm">
                         • Default tax rate of 5% is applied
@@ -758,112 +1115,6 @@ export default function RulesPage() {
                   economic output. Master the art of resource production and
                   industrial development.
                 </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Advanced Strategies Section */}
-        <div className="medieval-card p-12 mb-12 animate-slide-up">
-          <h2 className="font-medieval text-3xl text-medieval-gold-300 mb-8 glow-text text-center">
-            🧠 Advanced Strategies & Tips
-          </h2>
-
-          <div className="grid lg:grid-cols-2 gap-12">
-            <div className="space-y-6">
-              <div>
-                <h3 className="font-medieval text-xl text-medieval-gold-300 mb-4">
-                  💡 Economic Optimization
-                </h3>
-                <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30">
-                  <ul className="space-y-2">
-                    <li className="medieval-text text-sm">
-                      • Balance tax rates to maximize income without stifling
-                      growth
-                    </li>
-                    <li className="medieval-text text-sm">
-                      • Prioritize buildings that generate the resources you
-                      need most
-                    </li>
-                    <li className="medieval-text text-sm">
-                      • Consider the long-term value of rare buildings like
-                      Markets
-                    </li>
-                    <li className="medieval-text text-sm">
-                      • Monitor local wealth accumulation for optimal tax timing
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="font-medieval text-xl text-medieval-gold-300 mb-4">
-                  🏗️ Construction Strategy
-                </h3>
-                <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30">
-                  <ul className="space-y-2">
-                    <li className="medieval-text text-sm">
-                      • Start with basic buildings to establish resource
-                      production
-                    </li>
-                    <li className="medieval-text text-sm">
-                      • Plan your building sequence based on resource
-                      availability
-                    </li>
-                    <li className="medieval-text text-sm">
-                      • Consider the cost-benefit ratio of each building type
-                    </li>
-                    <li className="medieval-text text-sm">
-                      • Save resources for rare buildings when possible
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <div>
-                <h3 className="font-medieval text-xl text-medieval-gold-300 mb-4">
-                  🏘️ City Management
-                </h3>
-                <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30">
-                  <ul className="space-y-2">
-                    <li className="medieval-text text-sm">
-                      • Name your cities strategically for easy identification
-                    </li>
-                    <li className="medieval-text text-sm">
-                      • Monitor city wealth to determine optimal tax rates
-                    </li>
-                    <li className="medieval-text text-sm">
-                      • Balance local wealth growth with tax collection
-                    </li>
-                    <li className="medieval-text text-sm">
-                      • Plan for city upgrade opportunities
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="font-medieval text-xl text-medieval-gold-300 mb-4">
-                  ⚖️ Resource Balance
-                </h3>
-                <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30">
-                  <ul className="space-y-2">
-                    <li className="medieval-text text-sm">
-                      • Maintain a diverse resource portfolio
-                    </li>
-                    <li className="medieval-text text-sm">
-                      • Trade excess resources with other players
-                    </li>
-                    <li className="medieval-text text-sm">
-                      • Plan ahead for expensive building projects
-                    </li>
-                    <li className="medieval-text text-sm">
-                      • Monitor resource production from all buildings
-                    </li>
-                  </ul>
-                </div>
               </div>
             </div>
           </div>

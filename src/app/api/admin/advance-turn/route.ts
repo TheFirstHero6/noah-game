@@ -82,22 +82,22 @@ export async function POST() {
           CITY_TIER_INCOME[city.upgradeTier as keyof typeof CITY_TIER_INCOME] ||
           0;
 
-        // Calculate tax amount (portion player takes) - preserve decimal values
-        const taxAmount = (city.taxRate / 100) * localTradeGain;
+        // First, add the income to city's total wealth
+        const cityWealthAfterIncome = city.localWealth + localTradeGain;
+
+        // Calculate tax amount (portion player takes from total city wealth)
+        const taxAmount = (city.taxRate / 100) * cityWealthAfterIncome;
 
         // Add tax to player currency
         resourceGains.currency += taxAmount;
 
-        // Calculate city share (wealth that stays in city)
-        const cityShare = localTradeGain - taxAmount;
-
-        // Add city share to local wealth
-        const updatedLocalWealth = city.localWealth + cityShare;
+        // Calculate final city wealth after tax deduction
+        const finalCityWealth = cityWealthAfterIncome - taxAmount;
 
         // Update city's local wealth
         await prisma.city.update({
           where: { id: city.id },
-          data: { localWealth: updatedLocalWealth },
+          data: { localWealth: finalCityWealth },
         });
       }
 

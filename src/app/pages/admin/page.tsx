@@ -26,6 +26,7 @@ export default function AdminPage() {
   const [cities, setCities] = useState<City[]>([]);
   const [selectedUser, setSelectedUser] = useState("");
   const [newCityName, setNewCityName] = useState("");
+  const [cityTier, setCityTier] = useState(1);
   const [isCreatingCity, setIsCreatingCity] = useState(false);
   const [isAdvancingTurn, setIsAdvancingTurn] = useState(false);
   const [showTurnModal, setShowTurnModal] = useState(false);
@@ -107,6 +108,7 @@ export default function AdminPage() {
         body: JSON.stringify({
           userId: selectedUser,
           name: newCityName.trim(),
+          tier: cityTier,
         }),
       });
 
@@ -244,6 +246,23 @@ export default function AdminPage() {
                   className="medieval-input w-full"
                   placeholder="Enter city name"
                 />
+              </div>
+
+              <div>
+                <label className="block font-medieval text-lg text-medieval-gold-300 mb-2">
+                  City Tier
+                </label>
+                <select
+                  value={cityTier}
+                  onChange={(e) => setCityTier(parseInt(e.target.value))}
+                  className="medieval-input w-full"
+                >
+                  <option value={1}>Tier 1 (10 income/turn)</option>
+                  <option value={2}>Tier 2 (15 income/turn)</option>
+                  <option value={3}>Tier 3 (40 income/turn)</option>
+                  <option value={4}>Tier 4 (55 income/turn)</option>
+                  <option value={5}>Tier 5 (70 income/turn)</option>
+                </select>
               </div>
 
               <button
