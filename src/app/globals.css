@@ -271,72 +271,308 @@ body {
   animation: typewriter;
 }
 
-/* Fantasy UI Components */
+/* Modern Fantasy UI Components */
 @layer components {
+  /* Enhanced Card System */
   .medieval-card {
-    @apply bg-gradient-to-br from-medieval-steel-800 to-medieval-steel-900 border-2 border-medieval-gold-600 rounded-lg shadow-medieval;
+    @apply relative bg-gradient-to-br from-medieval-steel-800/90 to-medieval-steel-900/90 backdrop-blur-sm border border-medieval-gold-600 rounded-2xl shadow-2xl overflow-hidden;
+    border-color: rgba(234, 179, 8, 0.5);
+    background: linear-gradient(
+      135deg,
+      rgba(30, 41, 59, 0.95) 0%,
+      rgba(15, 23, 42, 0.95) 100%
+    );
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3),
+      0 10px 10px -5px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(234, 179, 8, 0.1),
+      0 0 0 1px rgba(234, 179, 8, 0.1);
   }
 
+  .medieval-card::before {
+    content: "";
+    @apply absolute inset-0 bg-gradient-to-br from-medieval-gold-600/5 to-transparent pointer-events-none;
+  }
+
+  .medieval-card:hover {
+    @apply border-medieval-gold-500 shadow-glow-gold;
+    border-color: rgba(234, 179, 8, 0.7);
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(234, 179, 8, 0.2), 0 0 30px rgba(234, 179, 8, 0.3);
+  }
+
+  /* Premium Button System */
   .medieval-button {
-    @apply bg-gradient-to-r from-medieval-gold-600 to-medieval-gold-700 text-medieval-steel-900 font-medieval font-semibold px-6 py-3 rounded-lg border-2 border-medieval-gold-500 shadow-medieval hover:from-medieval-gold-500 hover:to-medieval-gold-600 hover:shadow-glow-gold transition-all duration-300 transform hover:scale-105;
+    @apply relative inline-flex items-center justify-center px-8 py-4 text-medieval-steel-900 font-medieval font-bold text-lg rounded-xl border-2 border-medieval-gold-500 overflow-hidden;
+    background: linear-gradient(
+      135deg,
+      rgba(234, 179, 8, 0.9) 0%,
+      rgba(202, 138, 4, 0.9) 50%,
+      rgba(234, 179, 8, 0.9) 100%
+    );
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 0 1px rgba(234, 179, 8, 0.3);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .medieval-button::before {
+    content: "";
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent;
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+  }
+
+  .medieval-button:hover::before {
+    transform: translateX(100%);
+  }
+
+  .medieval-button:hover {
+    @apply border-medieval-gold-400 shadow-glow-gold;
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(234, 179, 8, 0.4),
+      0 0 40px rgba(234, 179, 8, 0.4);
+  }
+
+  .medieval-button:active {
+    transform: translateY(-1px) scale(1.02);
   }
 
   .medieval-button-secondary {
-    @apply bg-gradient-to-r from-medieval-steel-600 to-medieval-steel-700 text-medieval-gold-300 font-medieval font-semibold px-6 py-3 rounded-lg border-2 border-medieval-steel-500 shadow-medieval hover:from-medieval-steel-500 hover:to-medieval-steel-600 hover:shadow-glow-silver transition-all duration-300 transform hover:scale-105;
+    @apply relative inline-flex items-center justify-center px-8 py-4 text-medieval-gold-300 font-medieval font-bold text-lg rounded-xl border-2 border-medieval-steel-500 overflow-hidden;
+    background: linear-gradient(
+      135deg,
+      rgba(71, 85, 105, 0.8) 0%,
+      rgba(51, 65, 85, 0.8) 50%,
+      rgba(71, 85, 105, 0.8) 100%
+    );
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 0 1px rgba(100, 116, 139, 0.3);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
+  .medieval-button-secondary:hover {
+    @apply border-medieval-steel-400 shadow-glow-silver;
+    transform: translateY(-3px) scale(1.05);
+    background: linear-gradient(
+      135deg,
+      rgba(100, 116, 139, 0.9) 0%,
+      rgba(71, 85, 105, 0.9) 50%,
+      rgba(100, 116, 139, 0.9) 100%
+    );
+  }
+
+  /* Enhanced Input System */
   .medieval-input {
-    @apply bg-medieval-steel-800 border-2 border-medieval-gold-600 text-medieval-gold-100 placeholder-medieval-steel-400 rounded-lg px-4 py-3 focus:border-medieval-gold-400 focus:ring-2 focus:ring-medieval-gold-500 focus:outline-none transition-all duration-300;
+    @apply w-full px-6 py-4 text-medieval-gold-100 placeholder-medieval-steel-400 rounded-xl border-2 border-medieval-gold-600 bg-medieval-steel-800/80 backdrop-blur-sm;
+    border-color: rgba(234, 179, 8, 0.5);
+    background: linear-gradient(
+      135deg,
+      rgba(30, 41, 59, 0.8) 0%,
+      rgba(15, 23, 42, 0.8) 100%
+    );
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(234, 179, 8, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
+  .medieval-input:focus {
+    @apply border-medieval-gold-400 ring-4 outline-none;
+    ring-color: rgba(234, 179, 8, 0.2);
+    background: linear-gradient(
+      135deg,
+      rgba(30, 41, 59, 0.95) 0%,
+      rgba(15, 23, 42, 0.95) 100%
+    );
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2),
+      0 0 0 1px rgba(234, 179, 8, 0.4), 0 0 20px rgba(234, 179, 8, 0.2);
+    transform: translateY(-1px);
+  }
+
+  /* Typography System */
   .medieval-title {
-    @apply font-medieval text-4xl md:text-5xl text-medieval-gold-300 tracking-wider;
+    @apply font-medieval text-5xl md:text-6xl lg:text-7xl text-medieval-gold-300 tracking-wider leading-tight;
+    text-shadow: 0 0 20px rgba(234, 179, 8, 0.3), 0 2px 4px rgba(0, 0, 0, 0.5);
   }
 
   .medieval-subtitle {
-    @apply font-serif text-xl text-medieval-gold-200 tracking-wide;
+    @apply font-serif text-xl md:text-2xl text-medieval-gold-200 tracking-wide leading-relaxed;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   }
 
   .medieval-text {
-    @apply text-medieval-steel-200 leading-relaxed;
+    @apply text-medieval-steel-200 leading-relaxed text-lg;
   }
 
+  /* Enhanced Resource Cards */
   .resource-card {
-    @apply bg-gradient-to-br from-medieval-steel-800 to-medieval-steel-900 border-2 border-medieval-gold-600 rounded-lg p-6 shadow-medieval hover:shadow-glow-gold transition-all duration-300 transform hover:scale-105;
+    @apply relative cursor-pointer overflow-hidden;
+    background: linear-gradient(
+      135deg,
+      rgba(30, 41, 59, 0.9) 0%,
+      rgba(15, 23, 42, 0.9) 100%
+    );
+    border: 1px solid rgba(234, 179, 8, 0.3);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(234, 179, 8, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .user-card {
-    @apply bg-gradient-to-br from-medieval-steel-800 to-medieval-steel-900 border-2 border-medieval-steel-600 rounded-lg p-4 shadow-medieval hover:border-medieval-gold-500 hover:shadow-glow-gold transition-all duration-300;
+  .resource-card::before {
+    content: "";
+    @apply absolute inset-0 bg-gradient-to-br from-medieval-gold-600/10 to-transparent opacity-0;
+    transition: opacity 0.4s ease;
   }
 
-  .admin-resource-card {
-    @apply bg-gradient-to-br from-medieval-steel-800 to-medieval-steel-900 border-2 border-medieval-gold-600 rounded-lg p-4 shadow-medieval hover:shadow-glow-gold transition-all duration-300 transform hover:scale-105;
+  .resource-card:hover::before {
+    opacity: 1;
   }
 
+  .resource-card:hover {
+    @apply border-medieval-gold-500 shadow-glow-gold;
+    border-color: rgba(234, 179, 8, 0.6);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(234, 179, 8, 0.3),
+      0 0 40px rgba(234, 179, 8, 0.2);
+  }
+
+  /* City Cards */
+  .city-card {
+    @apply relative cursor-pointer overflow-hidden rounded-2xl p-6 transition-all duration-500 ease-out;
+    background: linear-gradient(
+      135deg,
+      rgba(30, 41, 59, 0.9) 0%,
+      rgba(15, 23, 42, 0.9) 100%
+    );
+    border: 1px solid rgba(234, 179, 8, 0.2);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(234, 179, 8, 0.1);
+  }
+
+  .city-card::before {
+    content: "";
+    @apply absolute inset-0 bg-gradient-to-r from-medieval-gold-600/5 via-transparent to-medieval-gold-600/5;
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+  }
+
+  .city-card:hover::before {
+    transform: translateX(100%);
+  }
+
+  .city-card:hover {
+    @apply border-medieval-gold-500 shadow-glow-gold;
+    border-color: rgba(234, 179, 8, 0.5);
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25),
+      0 0 0 1px rgba(234, 179, 8, 0.3), 0 0 30px rgba(234, 179, 8, 0.2);
+  }
+
+  /* Modal System */
   .modal-overlay {
-    @apply fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50;
+    @apply fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50;
+    animation: fadeIn 0.3s ease-out;
   }
 
   .modal-content {
-    @apply bg-gradient-to-br from-medieval-steel-800 to-medieval-steel-900 border-4 border-medieval-gold-600 rounded-lg shadow-2xl max-w-lg w-full mx-4;
+    @apply relative bg-gradient-to-br from-medieval-steel-800/95 to-medieval-steel-900/95 backdrop-blur-md border border-medieval-gold-600 rounded-3xl shadow-2xl max-w-lg w-full mx-4 overflow-hidden;
+    border-color: rgba(234, 179, 8, 0.5);
+    animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(234, 179, 8, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
+  /* Enhanced Dividers */
   .medieval-divider {
-    @apply border-t-2 border-medieval-gold-600 my-6;
+    @apply relative my-8;
   }
 
+  .medieval-divider::before {
+    content: "";
+    @apply absolute inset-0 flex items-center;
+  }
+
+  .medieval-divider::after {
+    content: "";
+    @apply flex-1 border-t border-medieval-gold-600;
+    border-color: rgba(234, 179, 8, 0.3);
+  }
+
+  /* Glow Effects */
   .glow-text {
-    @apply text-medieval-gold-300 drop-shadow-lg;
-    text-shadow: 0 0 10px rgba(234, 179, 8, 0.5);
+    @apply text-medieval-gold-300;
+    text-shadow: 0 0 10px rgba(234, 179, 8, 0.5),
+      0 0 20px rgba(234, 179, 8, 0.3), 0 0 30px rgba(234, 179, 8, 0.1);
   }
 
-  .ancient-border {
-    @apply border-4 border-double border-medieval-gold-600;
-    border-image: linear-gradient(45deg, #eab308, #facc15, #eab308) 1;
-  }
-
+  /* Theme Cards */
   .theme-card {
-    @apply bg-gradient-to-br from-medieval-steel-800 to-medieval-steel-900 border-2 border-medieval-gold-600 rounded-lg shadow-medieval hover:shadow-glow-gold transition-all duration-300 transform hover:scale-105;
+    @apply relative cursor-pointer overflow-hidden rounded-2xl transition-all duration-500 ease-out;
+    background: linear-gradient(
+      135deg,
+      rgba(30, 41, 59, 0.9) 0%,
+      rgba(15, 23, 42, 0.9) 100%
+    );
+    border: 2px solid rgba(234, 179, 8, 0.3);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(234, 179, 8, 0.1);
+  }
+
+  .theme-card:hover {
+    @apply border-medieval-gold-500 shadow-glow-gold;
+    border-color: rgba(234, 179, 8, 0.7);
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(234, 179, 8, 0.4),
+      0 0 40px rgba(234, 179, 8, 0.3);
+  }
+
+  /* Loading States */
+  .loading-skeleton {
+    @apply animate-pulse bg-gradient-to-r from-medieval-steel-700 via-medieval-steel-600 to-medieval-steel-700 rounded-lg;
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  /* Interactive Elements */
+  .interactive-hover {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .interactive-hover:hover {
+    @apply transform scale-105 shadow-lg;
+  }
+
+  /* Status Indicators */
+  .status-indicator {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  }
+
+  .status-success {
+    @apply bg-emerald-500/20 text-emerald-300 border border-emerald-500/30;
+  }
+
+  .status-warning {
+    @apply bg-yellow-500/20 text-yellow-300 border border-yellow-500/30;
+  }
+
+  .status-error {
+    @apply bg-red-500/20 text-red-300 border border-red-500/30;
+  }
+
+  /* Responsive Grid System */
+  .responsive-grid {
+    @apply grid gap-6;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  .responsive-grid-sm {
+    @apply grid gap-4;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  .responsive-grid-lg {
+    @apply grid gap-8;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   }
 }
 

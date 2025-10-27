@@ -320,30 +320,31 @@ export default function CityDetailsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-background text-foreground p-8">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-background text-foreground p-4 sm:p-6 lg:p-8 pt-20">
       <NotificationContainer />
 
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-medieval-pattern opacity-5"></div>
 
-      <div className="relative w-full max-w-6xl mx-auto">
+      <div className="relative w-full max-w-7xl mx-auto space-y-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <Link
-              href="/pages/cities"
-              className="text-medieval-gold-300 hover:text-medieval-gold-200 mb-2 inline-block"
-            >
-              ← Back to Cities
-            </Link>
-            <h1 className="medieval-title glow-text">{city.name}</h1>
-          </div>
+        <div className="animate-fade-in">
+          <Link
+            href="/pages/cities"
+            className="inline-flex items-center space-x-2 text-medieval-gold-300 hover:text-medieval-gold-200 mb-4 transition-colors duration-300 group"
+          >
+            <span className="text-xl group-hover:animate-bounce-gentle">←</span>
+            <span>Back to Cities</span>
+          </Link>
+          <h1 className="medieval-title glow-text animate-text-glow">
+            {city.name}
+          </h1>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* City Details */}
-          <div className="medieval-card p-6">
-            <h2 className="font-medieval text-xl text-medieval-gold-300 mb-4">
+          <div className="medieval-card p-6 sm:p-8 animate-slide-left">
+            <h2 className="font-medieval text-xl sm:text-2xl text-medieval-gold-300 mb-6 glow-text">
               City Information
             </h2>
 
@@ -500,33 +501,34 @@ export default function CityDetailsPage() {
                 No buildings constructed yet
               </p>
             ) : (
-              <div className="space-y-2">
-                {city.buildings.map((building) => (
+              <div className="space-y-3">
+                {city.buildings.map((building, index) => (
                   <div
                     key={building.id}
-                    className="flex items-center justify-between p-3 bg-medieval-steel-800 rounded border"
+                    className="flex items-center justify-between p-4 bg-medieval-steel-800/50 rounded-xl border border-medieval-gold-600 hover:border-medieval-gold-500 transition-all duration-300 animate-scale-in"
+                    style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medieval text-medieval-gold-300">
+                      <div className="flex items-center gap-3">
+                        <span className="font-medieval text-lg text-medieval-gold-300">
                           {building.name}
                         </span>
-                        <span className="text-sm text-medieval-steel-400">
-                          ({building.rarity})
+                        <span className="text-sm text-medieval-steel-400 bg-medieval-steel-700/50 px-2 py-1 rounded-lg">
+                          {building.rarity}
                         </span>
-                        <span className="text-xs bg-medieval-gold-600 text-medieval-gold-100 px-2 py-1 rounded">
+                        <span className="text-xs bg-medieval-gold-600/20 text-medieval-gold-300 px-3 py-1 rounded-full border border-medieval-gold-600">
                           Tier {building.tier}
                         </span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                       {building.tier < 3 && (
                         <button
                           onClick={() =>
                             upgradeBuilding(building.id, building.tier)
                           }
                           disabled={isUpgradingBuilding === building.id}
-                          className="px-3 py-1 bg-medieval-gold-600 hover:bg-medieval-gold-700 text-medieval-gold-100 text-sm rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="medieval-button text-sm px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {isUpgradingBuilding === building.id
                             ? "Upgrading..."
@@ -534,7 +536,7 @@ export default function CityDetailsPage() {
                         </button>
                       )}
                       {building.tier >= 3 && (
-                        <span className="text-xs text-medieval-steel-400">
+                        <span className="text-xs text-medieval-gold-400 bg-medieval-gold-600/20 px-3 py-1 rounded-full border border-medieval-gold-600">
                           Max Tier
                         </span>
                       )}
@@ -547,21 +549,21 @@ export default function CityDetailsPage() {
         </div>
 
         {/* Building Construction */}
-        <div className="medieval-card p-6 mt-8">
-          <h2 className="font-medieval text-xl text-medieval-gold-300 mb-4">
+        <div className="medieval-card p-6 sm:p-8 animate-slide-right">
+          <h2 className="font-medieval text-xl sm:text-2xl text-medieval-gold-300 mb-6 glow-text">
             Construct Buildings
           </h2>
 
           {/* Building Limits Warning */}
           {city.buildings.length >= MAX_BUILDINGS_PER_CITY && (
-            <div className="mb-4 p-4 bg-medieval-red-900 border border-medieval-red-600 rounded">
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl animate-scale-in">
               <div className="flex items-center">
-                <span className="text-medieval-red-300 mr-2">⚠️</span>
+                <span className="text-red-400 mr-3 text-xl">⚠️</span>
                 <div>
-                  <div className="font-medieval text-medieval-red-300">
+                  <div className="font-medieval text-red-300 text-lg">
                     Building Limit Reached
                   </div>
-                  <div className="text-sm text-medieval-red-400">
+                  <div className="text-sm text-red-400">
                     This city has reached its maximum capacity of{" "}
                     {MAX_BUILDINGS_PER_CITY} buildings. All cities can have
                     exactly {MAX_BUILDINGS_PER_CITY} buildings.
@@ -571,17 +573,18 @@ export default function CityDetailsPage() {
             </div>
           )}
 
-          <div className="grid gap-4">
-            {BUILDING_INDEX.map((building) => (
+          <div className="responsive-grid-sm">
+            {BUILDING_INDEX.map((building, index) => (
               <div
                 key={building.name}
-                className="flex items-center justify-between p-4 bg-medieval-steel-800 rounded border"
+                className="p-4 bg-medieval-steel-800/50 rounded-xl border border-medieval-gold-600 hover:border-medieval-gold-500 transition-all duration-300 animate-scale-in"
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="flex-1">
-                  <div className="font-medieval text-lg text-medieval-gold-300">
+                <div className="mb-4">
+                  <div className="font-medieval text-lg text-medieval-gold-300 mb-2">
                     {building.name}
                   </div>
-                  <div className="text-sm text-medieval-steel-400 mb-2">
+                  <div className="text-sm text-medieval-steel-400 mb-3 bg-medieval-steel-700/50 px-2 py-1 rounded-lg inline-block">
                     {building.rarity} Building
                   </div>
                   <div className="text-sm text-medieval-steel-300">
@@ -598,7 +601,7 @@ export default function CityDetailsPage() {
                     isBuilding === building.name ||
                     city.buildings.length >= MAX_BUILDINGS_PER_CITY
                   }
-                  className="medieval-button"
+                  className="medieval-button w-full disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isBuilding === building.name
                     ? "Building..."

@@ -60,193 +60,248 @@ export default function Navbar() {
     };
   }, [isMobileMenuOpen]);
   return (
-    <nav className="sticky top-0 z-50 bg-gradient-to-r from-background via-background to-background border-b-4 border-primary shadow-2xl backdrop-blur-sm">
-      <div className="flex items-center justify-between mx-auto max-w-7xl h-24 px-6">
+    <nav
+      className="sticky top-0 z-50 bg-gradient-to-r from-background/95 via-background/90 to-background/95 backdrop-blur-xl border-b border-medieval-gold-600 shadow-2xl"
+      style={{ borderColor: "rgba(234, 179, 8, 0.3)" }}
+    >
+      <div className="flex items-center justify-between mx-auto max-w-7xl h-20 px-4 sm:px-6 lg:px-8">
         {/* Logo Section */}
         <Link
           href="/"
-          className="group flex items-center space-x-2 md:space-x-4"
+          className="group flex items-center space-x-3 md:space-x-4 animate-fade-in"
         >
           <div className="relative">
+            <div className="absolute -inset-2 bg-gradient-to-r from-medieval-gold-400/20 via-medieval-gold-600/30 to-medieval-gold-400/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-all duration-700 animate-pulse-glow"></div>
             <Image
               src={logo}
               alt="War of the Elector"
-              className="h-16 w-16 md:h-20 md:w-20 rounded-full object-cover border-4 border-medieval-gold-600 shadow-glow-gold transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-12"
+              className="relative h-14 w-14 md:h-16 md:w-16 rounded-full object-cover border-2 border-medieval-gold-600 shadow-lg transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 group-hover:border-medieval-gold-500"
+              style={{ borderColor: "rgba(234, 179, 8, 0.6)" }}
             />
-            <div className="absolute -inset-1 bg-gradient-to-r from-medieval-gold-400 to-medieval-gold-600 rounded-full opacity-0 group-hover:opacity-20 blur-lg transition-opacity duration-500"></div>
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-medieval-gold-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           </div>
           <div className="hidden sm:block">
-            <h1 className="font-medieval text-lg md:text-2xl text-medieval-gold-300 tracking-wider group-hover:text-medieval-gold-200 transition-colors duration-300">
+            <h1 className="font-medieval text-lg md:text-xl lg:text-2xl text-medieval-gold-300 tracking-wider group-hover:text-medieval-gold-200 transition-all duration-300 animate-text-glow">
               War of the Elector
             </h1>
-            <p className="font-script text-xs md:text-sm text-foreground italic">
+            <p className="font-script text-xs md:text-sm text-medieval-steel-300 italic group-hover:text-medieval-steel-200 transition-colors duration-300">
               Forge Your Destiny
             </p>
           </div>
         </Link>
 
         {/* Navigation Links */}
-        <div className="hidden lg:flex items-center space-x-4">
-          <Link href="/pages/dashboard" className="group">
-            <div className="relative px-4 py-2 rounded-lg border-2 border-transparent hover:border-medieval-gold-500 transition-all duration-300">
-              <span className="font-medieval text-base text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300">
-                🏰 Dashboard
+        <div className="hidden lg:flex items-center space-x-2">
+          <Link href="/pages/dashboard" className="group relative">
+            <div className="relative px-5 py-3 rounded-xl border border-medieval-gold-600 bg-medieval-steel-800/50 backdrop-blur-sm hover:border-medieval-gold-500 transition-all duration-500 ease-out hover:scale-105 hover:shadow-lg">
+              <span className="font-medieval text-sm text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300 flex items-center space-x-2">
+                <span className="text-lg group-hover:animate-bounce-gentle">
+                  🏰
+                </span>
+                <span>Dashboard</span>
               </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/10 to-medieval-gold-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/10 via-medieval-gold-500/20 to-medieval-gold-600/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-medieval-gold-600/20 to-medieval-gold-500/20 rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </div>
           </Link>
 
-          <Link href="/pages/rules" className="group">
-            <div className="relative px-4 py-2 rounded-lg border-2 border-transparent hover:border-medieval-gold-500 transition-all duration-300">
-              <span className="font-medieval text-base text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300">
-                📜 Rules
+          <Link href="/pages/rules" className="group relative">
+            <div className="relative px-5 py-3 rounded-xl border border-medieval-gold-600 bg-medieval-steel-800/50 backdrop-blur-sm hover:border-medieval-gold-500 transition-all duration-500 ease-out hover:scale-105 hover:shadow-lg">
+              <span className="font-medieval text-sm text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300 flex items-center space-x-2">
+                <span className="text-lg group-hover:animate-bounce-gentle">
+                  📜
+                </span>
+                <span>Rules</span>
               </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/10 to-medieval-gold-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/10 via-medieval-gold-500/20 to-medieval-gold-600/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-medieval-gold-600/20 to-medieval-gold-500/20 rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </div>
           </Link>
 
-          <Link href="/pages/cities" className="group">
-            <div className="relative px-4 py-2 rounded-lg border-2 border-transparent hover:border-medieval-gold-500 transition-all duration-300">
-              <span className="font-medieval text-base text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300">
-                🏘️ Cities
+          <Link href="/pages/cities" className="group relative">
+            <div className="relative px-5 py-3 rounded-xl border border-medieval-gold-600 bg-medieval-steel-800/50 backdrop-blur-sm hover:border-medieval-gold-500 transition-all duration-500 ease-out hover:scale-105 hover:shadow-lg">
+              <span className="font-medieval text-sm text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300 flex items-center space-x-2">
+                <span className="text-lg group-hover:animate-bounce-gentle">
+                  🏘️
+                </span>
+                <span>Cities</span>
               </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/10 to-medieval-gold-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/10 via-medieval-gold-500/20 to-medieval-gold-600/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-medieval-gold-600/20 to-medieval-gold-500/20 rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </div>
           </Link>
 
-          <Link href="/pages/settings" className="group">
-            <div className="relative px-4 py-2 rounded-lg border-2 border-transparent hover:border-medieval-gold-500 transition-all duration-300">
-              <span className="font-medieval text-base text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300">
-                ⚙️ Settings
+          <Link href="/pages/settings" className="group relative">
+            <div className="relative px-5 py-3 rounded-xl border border-medieval-gold-600 bg-medieval-steel-800/50 backdrop-blur-sm hover:border-medieval-gold-500 transition-all duration-500 ease-out hover:scale-105 hover:shadow-lg">
+              <span className="font-medieval text-sm text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300 flex items-center space-x-2">
+                <span className="text-lg group-hover:animate-bounce-gentle">
+                  ⚙️
+                </span>
+                <span>Settings</span>
               </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/10 to-medieval-gold-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/10 via-medieval-gold-500/20 to-medieval-gold-600/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-medieval-gold-600/20 to-medieval-gold-500/20 rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </div>
           </Link>
 
           {userRole === "ADMIN" && (
-            <Link href="/pages/admin" className="group">
-              <div className="relative px-4 py-2 rounded-lg border-2 border-transparent hover:border-medieval-gold-500 transition-all duration-300">
-                <span className="font-medieval text-base text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300">
-                  👑 Admin
+            <Link href="/pages/admin" className="group relative">
+              <div className="relative px-5 py-3 rounded-xl border border-medieval-gold-600 bg-gradient-to-r from-medieval-gold-600/20 to-medieval-gold-500/20 backdrop-blur-sm hover:border-medieval-gold-500 transition-all duration-500 ease-out hover:scale-105 hover:shadow-lg">
+                <span className="font-medieval text-sm text-medieval-gold-200 group-hover:text-medieval-gold-100 transition-colors duration-300 flex items-center space-x-2">
+                  <span className="text-lg group-hover:animate-bounce-gentle">
+                    👑
+                  </span>
+                  <span>Admin</span>
                 </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/10 to-medieval-gold-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/20 via-medieval-gold-500/30 to-medieval-gold-600/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute -inset-1 bg-gradient-to-r from-medieval-gold-600/30 to-medieval-gold-500/30 rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
             </Link>
           )}
 
-          <Link href="/" className="group">
-            <div className="relative px-4 py-2 rounded-lg border-2 border-transparent hover:border-medieval-gold-500 transition-all duration-300">
-              <span className="font-medieval text-base text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300">
-                🏠 Home
+          <Link href="/" className="group relative">
+            <div className="relative px-5 py-3 rounded-xl border border-medieval-gold-600 bg-medieval-steel-800/50 backdrop-blur-sm hover:border-medieval-gold-500 transition-all duration-500 ease-out hover:scale-105 hover:shadow-lg">
+              <span className="font-medieval text-sm text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300 flex items-center space-x-2">
+                <span className="text-lg group-hover:animate-bounce-gentle">
+                  🏠
+                </span>
+                <span>Home</span>
               </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/10 to-medieval-gold-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/10 via-medieval-gold-500/20 to-medieval-gold-600/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-medieval-gold-600/20 to-medieval-gold-500/20 rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </div>
           </Link>
         </div>
 
         {/* Auth Section - Hidden on mobile, shown in mobile menu */}
-        <div className="hidden lg:flex items-center space-x-4">
+        <div className="hidden lg:flex items-center space-x-3">
           <SignedOut>
-            <div className="relative">
+            <div className="relative group">
               <SignInButton>
-                <button className="medieval-button group">
-                  <span className="flex items-center space-x-2">
-                    <span>🔐</span>
+                <button className="relative px-6 py-3 rounded-xl border border-medieval-gold-600 bg-gradient-to-r from-medieval-gold-600/20 to-medieval-gold-500/20 backdrop-blur-sm hover:border-medieval-gold-500 transition-all duration-500 ease-out hover:scale-105 hover:shadow-lg overflow-hidden">
+                  <span className="font-medieval text-sm text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300 flex items-center space-x-2">
+                    <span className="text-lg group-hover:animate-bounce-gentle">
+                      🔐
+                    </span>
                     <span>Enter the Realm</span>
                   </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/20 via-medieval-gold-500/30 to-medieval-gold-600/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute -inset-1 bg-gradient-to-r from-medieval-gold-600/30 to-medieval-gold-500/30 rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </button>
               </SignInButton>
             </div>
           </SignedOut>
           <SignedIn>
             <div className="flex items-center space-x-4">
-              <div className="hidden md:block text-right">
-                <p className="font-medieval text-sm text-medieval-gold-300">
+              <div className="hidden md:block text-right animate-slide-left">
+                <p className="font-medieval text-xs text-medieval-steel-400">
                   Welcome back,
                 </p>
-                <p className="font-script text-lg text-medieval-gold-200">
+                <p className="font-script text-sm text-medieval-gold-300">
                   Noble Lord
                 </p>
               </div>
-              <UserButton
-                appearance={{
-                  elements: {
-                    userButtonAvatarBox:
-                      "border-4 border-medieval-gold-600 hover:border-medieval-gold-400 hover:scale-110 transition-all duration-300 shadow-glow-gold",
-                    userButtonPopoverCard:
-                      "bg-medieval-steel-800 border-2 border-medieval-gold-600",
-                    userButtonPopoverActionButton:
-                      "text-medieval-gold-300 hover:bg-medieval-gold-600/20",
-                    userButtonPopoverFooter:
-                      "border-t border-medieval-gold-600",
-                  },
-                }}
-                showName
-              />
+              <div className="relative group">
+                <UserButton
+                  appearance={{
+                    elements: {
+                      userButtonAvatarBox:
+                        "border-2 border-medieval-gold-600 hover:border-medieval-gold-400 hover:scale-110 transition-all duration-500 shadow-lg rounded-full",
+                      userButtonPopoverCard:
+                        "bg-medieval-steel-800/95 backdrop-blur-md border border-medieval-gold-600 rounded-2xl shadow-2xl",
+                      userButtonPopoverActionButton:
+                        "text-medieval-gold-300 hover:bg-medieval-gold-600/20 rounded-xl transition-all duration-300",
+                      userButtonPopoverFooter:
+                        "border-t border-medieval-gold-600",
+                    },
+                  }}
+                  showName
+                />
+                <div className="absolute -inset-2 bg-gradient-to-r from-medieval-gold-600/20 to-medieval-gold-500/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              </div>
             </div>
           </SignedIn>
         </div>
       </div>
 
       {/* Mobile Menu Button */}
-      <div className="lg:hidden absolute top-6 right-6">
+      <div className="lg:hidden absolute top-5 right-4">
         <button
           onClick={toggleMobileMenu}
-          className="medieval-button-secondary p-3"
+          className="relative p-3 rounded-xl border border-medieval-gold-600 bg-medieval-steel-800/50 backdrop-blur-sm hover:border-medieval-gold-500 transition-all duration-500 ease-out hover:scale-105 hover:shadow-lg group"
         >
-          <span className="text-xl">{isMobileMenuOpen ? "✕" : "☰"}</span>
+          <span className="text-xl text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300">
+            {isMobileMenuOpen ? "✕" : "☰"}
+          </span>
+          <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/10 via-medieval-gold-500/20 to-medieval-gold-600/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
         </button>
       </div>
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 right-0 bg-gradient-to-b from-background to-background border-b-4 border-primary shadow-2xl backdrop-blur-sm">
-          <div className="px-6 py-4 space-y-4">
+        <div className="lg:hidden absolute top-full left-0 right-0 bg-gradient-to-b from-background/98 via-background/95 to-background/98 backdrop-blur-xl border-b border-medieval-gold-600 shadow-2xl animate-slide-down">
+          <div className="px-6 py-6 space-y-3">
             <Link
               href="/pages/dashboard"
               onClick={closeMobileMenu}
-              className="block"
+              className="block group"
             >
-              <div className="relative px-4 py-3 rounded-lg border-2 border-transparent hover:border-medieval-gold-500 transition-all duration-300">
-                <span className="font-medieval text-lg text-medieval-gold-300">
-                  🏰 Dashboard
+              <div className="relative px-5 py-4 rounded-xl border border-medieval-gold-600 bg-medieval-steel-800/50 backdrop-blur-sm hover:border-medieval-gold-500 transition-all duration-500 ease-out hover:scale-105 hover:shadow-lg">
+                <span className="font-medieval text-lg text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300 flex items-center space-x-3">
+                  <span className="text-xl group-hover:animate-bounce-gentle">
+                    🏰
+                  </span>
+                  <span>Dashboard</span>
                 </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/10 via-medieval-gold-500/20 to-medieval-gold-600/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
             </Link>
 
             <Link
               href="/pages/rules"
               onClick={closeMobileMenu}
-              className="block"
+              className="block group"
             >
-              <div className="relative px-4 py-3 rounded-lg border-2 border-transparent hover:border-medieval-gold-500 transition-all duration-300">
-                <span className="font-medieval text-lg text-medieval-gold-300">
-                  📜 Rules
+              <div className="relative px-5 py-4 rounded-xl border border-medieval-gold-600 bg-medieval-steel-800/50 backdrop-blur-sm hover:border-medieval-gold-500 transition-all duration-500 ease-out hover:scale-105 hover:shadow-lg">
+                <span className="font-medieval text-lg text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300 flex items-center space-x-3">
+                  <span className="text-xl group-hover:animate-bounce-gentle">
+                    📜
+                  </span>
+                  <span>Rules</span>
                 </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/10 via-medieval-gold-500/20 to-medieval-gold-600/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
             </Link>
 
             <Link
               href="/pages/cities"
               onClick={closeMobileMenu}
-              className="block"
+              className="block group"
             >
-              <div className="relative px-4 py-3 rounded-lg border-2 border-transparent hover:border-medieval-gold-500 transition-all duration-300">
-                <span className="font-medieval text-lg text-medieval-gold-300">
-                  🏘️ Cities
+              <div className="relative px-5 py-4 rounded-xl border border-medieval-gold-600 bg-medieval-steel-800/50 backdrop-blur-sm hover:border-medieval-gold-500 transition-all duration-500 ease-out hover:scale-105 hover:shadow-lg">
+                <span className="font-medieval text-lg text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300 flex items-center space-x-3">
+                  <span className="text-xl group-hover:animate-bounce-gentle">
+                    🏘️
+                  </span>
+                  <span>Cities</span>
                 </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/10 via-medieval-gold-500/20 to-medieval-gold-600/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
             </Link>
 
             <Link
               href="/pages/settings"
               onClick={closeMobileMenu}
-              className="block"
+              className="block group"
             >
-              <div className="relative px-4 py-3 rounded-lg border-2 border-transparent hover:border-medieval-gold-500 transition-all duration-300">
-                <span className="font-medieval text-lg text-medieval-gold-300">
-                  ⚙️ Settings
+              <div className="relative px-5 py-4 rounded-xl border border-medieval-gold-600 bg-medieval-steel-800/50 backdrop-blur-sm hover:border-medieval-gold-500 transition-all duration-500 ease-out hover:scale-105 hover:shadow-lg">
+                <span className="font-medieval text-lg text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300 flex items-center space-x-3">
+                  <span className="text-xl group-hover:animate-bounce-gentle">
+                    ⚙️
+                  </span>
+                  <span>Settings</span>
                 </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/10 via-medieval-gold-500/20 to-medieval-gold-600/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
             </Link>
 
@@ -254,45 +309,56 @@ export default function Navbar() {
               <Link
                 href="/pages/admin"
                 onClick={closeMobileMenu}
-                className="block"
+                className="block group"
               >
-                <div className="relative px-4 py-3 rounded-lg border-2 border-transparent hover:border-medieval-gold-500 transition-all duration-300">
-                  <span className="font-medieval text-lg text-medieval-gold-300">
-                    👑 Admin
+                <div className="relative px-5 py-4 rounded-xl border border-medieval-gold-600 bg-gradient-to-r from-medieval-gold-600/20 to-medieval-gold-500/20 backdrop-blur-sm hover:border-medieval-gold-500 transition-all duration-500 ease-out hover:scale-105 hover:shadow-lg">
+                  <span className="font-medieval text-lg text-medieval-gold-200 group-hover:text-medieval-gold-100 transition-colors duration-300 flex items-center space-x-3">
+                    <span className="text-xl group-hover:animate-bounce-gentle">
+                      👑
+                    </span>
+                    <span>Admin</span>
                   </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/20 via-medieval-gold-500/30 to-medieval-gold-600/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </div>
               </Link>
             )}
 
-            <Link href="/" onClick={closeMobileMenu} className="block">
-              <div className="relative px-4 py-3 rounded-lg border-2 border-transparent hover:border-medieval-gold-500 transition-all duration-300">
-                <span className="font-medieval text-lg text-medieval-gold-300">
-                  🏠 Home
+            <Link href="/" onClick={closeMobileMenu} className="block group">
+              <div className="relative px-5 py-4 rounded-xl border border-medieval-gold-600 bg-medieval-steel-800/50 backdrop-blur-sm hover:border-medieval-gold-500 transition-all duration-500 ease-out hover:scale-105 hover:shadow-lg">
+                <span className="font-medieval text-lg text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300 flex items-center space-x-3">
+                  <span className="text-xl group-hover:animate-bounce-gentle">
+                    🏠
+                  </span>
+                  <span>Home</span>
                 </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/10 via-medieval-gold-500/20 to-medieval-gold-600/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
             </Link>
 
             {/* Mobile Auth Section */}
-            <div className="pt-4 border-t border-medieval-gold-600">
+            <div className="pt-6 border-t border-medieval-gold-600">
               <SignedOut>
                 <div className="w-full">
                   <SignInButton>
-                    <button className="medieval-button w-full group">
-                      <span className="flex items-center justify-center space-x-2">
-                        <span>🔐</span>
+                    <button className="relative w-full px-6 py-4 rounded-xl border border-medieval-gold-600 bg-gradient-to-r from-medieval-gold-600/20 to-medieval-gold-500/20 backdrop-blur-sm hover:border-medieval-gold-500 transition-all duration-500 ease-out hover:scale-105 hover:shadow-lg group overflow-hidden">
+                      <span className="font-medieval text-lg text-medieval-gold-300 group-hover:text-medieval-gold-200 transition-colors duration-300 flex items-center justify-center space-x-3">
+                        <span className="text-xl group-hover:animate-bounce-gentle">
+                          🔐
+                        </span>
                         <span>Enter the Realm</span>
                       </span>
+                      <div className="absolute inset-0 bg-gradient-to-r from-medieval-gold-600/20 via-medieval-gold-500/30 to-medieval-gold-600/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     </button>
                   </SignInButton>
                 </div>
               </SignedOut>
               <SignedIn>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between p-4 rounded-xl border border-medieval-gold-600 bg-medieval-steel-800/50 backdrop-blur-sm">
                   <div className="text-left">
-                    <p className="font-medieval text-sm text-medieval-gold-300">
+                    <p className="font-medieval text-sm text-medieval-steel-400">
                       Welcome back,
                     </p>
-                    <p className="font-script text-lg text-medieval-gold-200">
+                    <p className="font-script text-lg text-medieval-gold-300">
                       Noble Lord
                     </p>
                   </div>
@@ -300,11 +366,11 @@ export default function Navbar() {
                     appearance={{
                       elements: {
                         userButtonAvatarBox:
-                          "border-4 border-medieval-gold-600 hover:border-medieval-gold-400 hover:scale-110 transition-all duration-300 shadow-glow-gold",
+                          "border-2 border-medieval-gold-600 hover:border-medieval-gold-400 hover:scale-110 transition-all duration-500 shadow-lg rounded-full",
                         userButtonPopoverCard:
-                          "bg-medieval-steel-800 border-2 border-medieval-gold-600",
+                          "bg-medieval-steel-800/95 backdrop-blur-md border border-medieval-gold-600 rounded-2xl shadow-2xl",
                         userButtonPopoverActionButton:
-                          "text-medieval-gold-300 hover:bg-medieval-gold-600/20",
+                          "text-medieval-gold-300 hover:bg-medieval-gold-600/20 rounded-xl transition-all duration-300",
                         userButtonPopoverFooter:
                           "border-t border-medieval-gold-600",
                       },

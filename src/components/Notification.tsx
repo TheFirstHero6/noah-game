@@ -56,25 +56,49 @@ export default function Notification({
 
   return (
     <div
-      className={`fixed top-24 right-4 z-50 max-w-md w-full mx-4 transform transition-all duration-300 ${
+      className={`fixed top-24 right-4 z-50 max-w-md w-full mx-4 transform transition-all duration-500 ease-out animate-slide-left ${
         isVisible ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
       }`}
     >
-      <div className={`medieval-card p-6 border-2 ${getStyles()} shadow-2xl`}>
-        <div className="flex items-start space-x-4">
-          <div className="text-2xl flex-shrink-0">{getIcon()}</div>
+      <div
+        className={`relative p-4 rounded-xl border backdrop-blur-md shadow-2xl overflow-hidden ${getStyles()}`}
+      >
+        <div className="flex items-start space-x-3">
+          <div className="flex-shrink-0">
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                type === "success"
+                  ? "bg-emerald-500/20"
+                  : type === "error"
+                  ? "bg-red-500/20"
+                  : "bg-blue-500/20"
+              }`}
+            >
+              <span
+                className={`text-lg ${
+                  type === "success"
+                    ? "text-emerald-400"
+                    : type === "error"
+                    ? "text-red-400"
+                    : "text-blue-400"
+                }`}
+              >
+                {getIcon()}
+              </span>
+            </div>
+          </div>
 
           <div className="flex-1 min-w-0">
-            <h3 className="font-medieval text-lg font-semibold mb-2">
-              {type === "success" && "Boon Sent Successfully!"}
-              {type === "error" && "Transaction Failed!"}
+            <h3 className="font-medieval text-base font-semibold mb-1">
+              {type === "success" && "Success!"}
+              {type === "error" && "Error!"}
               {type === "info" && "Information"}
             </h3>
 
-            <p className="medieval-text text-sm leading-relaxed">{message}</p>
+            <p className="text-sm leading-relaxed opacity-90">{message}</p>
 
             {details && (
-              <p className="text-xs opacity-80 mt-2 italic">{details}</p>
+              <p className="text-xs opacity-70 mt-1 italic">{details}</p>
             )}
           </div>
 
@@ -83,10 +107,22 @@ export default function Notification({
               setIsVisible(false);
               setTimeout(onClose, 300);
             }}
-            className="flex-shrink-0 text-lg hover:text-medieval-gold-300 transition-colors duration-200"
+            className="flex-shrink-0 text-lg hover:opacity-100 opacity-60 transition-opacity duration-200"
           >
-            ✕
+            ×
           </button>
+        </div>
+
+        {/* Progress bar */}
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-current opacity-20 rounded-b-xl overflow-hidden">
+          <div
+            className="h-full bg-current opacity-60 transition-all duration-100 ease-linear"
+            style={{
+              width: `${
+                ((duration - (Date.now() - Date.now())) / duration) * 100
+              }%`,
+            }}
+          />
         </div>
       </div>
     </div>
@@ -125,7 +161,7 @@ export function useNotification() {
   };
 
   const NotificationContainer = () => (
-    <div className="fixed top-0 right-0 z-50 space-y-2">
+    <div className="fixed top-24 right-4 z-50 space-y-3">
       {notifications.map((notification) => (
         <Notification
           key={notification.id}

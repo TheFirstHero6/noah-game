@@ -428,32 +428,33 @@ export default function Dashboard() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-background text-foreground p-8 flex flex-col items-center pt-8">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-background text-foreground p-4 sm:p-6 lg:p-8 flex flex-col items-center pt-20">
       {/* Notification Container */}
       <NotificationContainer />
 
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-medieval-pattern opacity-5"></div>
 
-      <div className="relative w-full max-w-6xl">
+      <div className="relative w-full max-w-7xl space-y-8">
         {/* Main Dashboard Card */}
-        <div className="medieval-card p-12 animate-fade-in">
+        <div className="medieval-card p-6 sm:p-8 lg:p-12 animate-fade-in">
           {/* Header Section */}
-          <div className="flex flex-col lg:flex-row items-center justify-center space-y-8 lg:space-y-0 lg:space-x-12 mb-12">
+          <div className="flex flex-col lg:flex-row items-center justify-center space-y-6 lg:space-y-0 lg:space-x-12 mb-12">
             <div className="relative group">
+              <div className="absolute -inset-3 bg-gradient-to-r from-medieval-gold-400/20 via-medieval-gold-600/30 to-medieval-gold-400/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-all duration-700 animate-pulse-glow"></div>
               <img
                 src={userpic}
                 alt="Noble Portrait"
-                className="h-32 w-32 rounded-full border-4 border-medieval-gold-600 shadow-glow-gold transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-3"
+                className="relative h-24 w-24 sm:h-32 sm:w-32 rounded-full border-2 border-medieval-gold-600 shadow-lg transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 group-hover:border-medieval-gold-500"
               />
-              <div className="absolute -inset-2 bg-gradient-to-r from-medieval-gold-400 to-medieval-gold-600 rounded-full opacity-0 group-hover:opacity-30 blur-lg transition-opacity duration-500"></div>
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-medieval-gold-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </div>
 
             <div className="text-center lg:text-left">
-              <h1 className="medieval-title mb-4 glow-text">
+              <h1 className="medieval-title mb-4 glow-text animate-text-glow">
                 {username || "Noble"}'s Royal Court
               </h1>
-              <p className="medieval-subtitle italic">
+              <p className="medieval-subtitle italic animate-slide-up">
                 {role === "ADMIN"
                   ? "Your Majesty, the realm bows to your royal authority... Command your subjects with wisdom and justice."
                   : "Make your decisions carefully, young lord... The realm depends on your wisdom."}
@@ -465,78 +466,93 @@ export default function Dashboard() {
 
           {/* Resources Section */}
           <div className="mb-12">
-            <h2 className="font-medieval text-3xl text-medieval-gold-300 mb-8 glow-text text-center">
+            <h2 className="font-medieval text-3xl sm:text-4xl text-medieval-gold-300 mb-8 glow-text text-center animate-text-glow">
               💰 Royal Treasury
             </h2>
-            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              <div className="resource-card text-center group">
-                <div className="text-4xl mb-4 group-hover:animate-float">
+            <div className="responsive-grid">
+              <div className="resource-card text-center group animate-scale-in">
+                <div className="text-4xl sm:text-5xl mb-4 group-hover:animate-bounce-gentle">
                   🌲
                 </div>
-                <span className="block text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
+                <span className="block text-2xl sm:text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
                   {resources.wood}
                 </span>
-                <span className="text-lg text-medieval-steel-300 font-serif">
+                <span className="text-base sm:text-lg text-medieval-steel-300 font-serif">
                   Wood
                 </span>
               </div>
 
-              <div className="resource-card text-center group">
-                <div className="text-4xl mb-4 group-hover:animate-float">
+              <div
+                className="resource-card text-center group animate-scale-in"
+                style={{ animationDelay: "0.1s" }}
+              >
+                <div className="text-4xl sm:text-5xl mb-4 group-hover:animate-bounce-gentle">
                   🗿
                 </div>
-                <span className="block text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
+                <span className="block text-2xl sm:text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
                   {resources.stone}
                 </span>
-                <span className="text-lg text-medieval-steel-300 font-serif">
+                <span className="text-base sm:text-lg text-medieval-steel-300 font-serif">
                   Stone
                 </span>
               </div>
 
-              <div className="resource-card text-center group">
-                <div className="text-4xl mb-4 group-hover:animate-float">
+              <div
+                className="resource-card text-center group animate-scale-in"
+                style={{ animationDelay: "0.2s" }}
+              >
+                <div className="text-4xl sm:text-5xl mb-4 group-hover:animate-bounce-gentle">
                   🍞
                 </div>
-                <span className="block text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
+                <span className="block text-2xl sm:text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
                   {resources.food}
                 </span>
-                <span className="text-lg text-medieval-steel-300 font-serif">
+                <span className="text-base sm:text-lg text-medieval-steel-300 font-serif">
                   Food
                 </span>
               </div>
 
-              <div className="resource-card text-center group">
-                <div className="text-4xl mb-4 group-hover:animate-float">
+              <div
+                className="resource-card text-center group animate-scale-in"
+                style={{ animationDelay: "0.3s" }}
+              >
+                <div className="text-4xl sm:text-5xl mb-4 group-hover:animate-bounce-gentle">
                   💰
                 </div>
-                <span className="block text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
+                <span className="block text-2xl sm:text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
                   {(resources.currency || 0).toFixed(1)}
                 </span>
-                <span className="text-lg text-medieval-steel-300 font-serif">
+                <span className="text-base sm:text-lg text-medieval-steel-300 font-serif">
                   Currency
                 </span>
               </div>
 
-              <div className="resource-card text-center group">
-                <div className="text-4xl mb-4 group-hover:animate-float">
+              <div
+                className="resource-card text-center group animate-scale-in"
+                style={{ animationDelay: "0.4s" }}
+              >
+                <div className="text-4xl sm:text-5xl mb-4 group-hover:animate-bounce-gentle">
                   ⚒️
                 </div>
-                <span className="block text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
+                <span className="block text-2xl sm:text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
                   {resources.metal}
                 </span>
-                <span className="text-lg text-medieval-steel-300 font-serif">
+                <span className="text-base sm:text-lg text-medieval-steel-300 font-serif">
                   Metal
                 </span>
               </div>
 
-              <div className="resource-card text-center group">
-                <div className="text-4xl mb-4 group-hover:animate-float">
+              <div
+                className="resource-card text-center group animate-scale-in"
+                style={{ animationDelay: "0.5s" }}
+              >
+                <div className="text-4xl sm:text-5xl mb-4 group-hover:animate-bounce-gentle">
                   🐄
                 </div>
-                <span className="block text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
+                <span className="block text-2xl sm:text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
                   {resources.livestock}
                 </span>
-                <span className="text-lg text-medieval-steel-300 font-serif">
+                <span className="text-base sm:text-lg text-medieval-steel-300 font-serif">
                   Livestock
                 </span>
               </div>
