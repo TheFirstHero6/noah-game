@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import {
   BUILDING_PRODUCTION_RATES,
   CITY_TIER_INCOME,
+  PER_UNIT_UPKEEP,
 } from "@/app/lib/game-config";
 
 export async function POST() {
@@ -101,11 +102,19 @@ export async function POST() {
         });
       }
 
-      // Update user's resources with all gains
+      // C. Upkeep costs for units (per unit per turn)
+      const unitSum = await prisma.armyUnit.aggregate({
+        _sum: { quantity: true },
+        where: { army: { ownerId: user.id } },
+      });
+      const totalUnits = unitSum._sum.quantity || 0;
+      const upkeepFood = (PER_UNIT_UPKEEP.food || 0) * totalUnits;
+
+      // Update user's resources with gains minus upkeep
       await prisma.resource.update({
         where: { userId: user.id },
         data: {
-          food: { increment: resourceGains.food },
+          food: { increment: resourceGains.food - upkeepFood },
           wood: { increment: resourceGains.wood },
           stone: { increment: resourceGains.stone },
           metal: { increment: resourceGains.metal },

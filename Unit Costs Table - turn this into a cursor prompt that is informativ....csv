@@ -1,0 +1,13 @@
+Unit,Money,Wood,Stone,Metal,LiveStock
+Militia-At-Arms,50,3,3,0,0
+Pike Men,100,8,2,0,0
+Swordsmen,150,3,0,6,0
+Matchlocks,100,4,0,4,0
+Flintlocks,150,4,2,6,0
+Light Calvary,150,3,0,6,4
+Dragons,150,4,2,6,4
+Heavy Calvary,300,3,0,10,4
+Banner Guard,500,3,0,12,4
+Light Artilery,150,10,5,5,0
+Medium Artilery,300,10,5,8,1
+Heavy Artilery,500,10,5,12,2

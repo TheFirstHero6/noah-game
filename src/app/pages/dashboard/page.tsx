@@ -1,9 +1,14 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { User } from "@/types";
-import Image from "next/image";
 import { useNotification } from "@/components/Notification";
+import { motion, AnimatePresence } from "framer-motion";
+import { AnimatedCard } from "@/components/AnimatedCard";
+import { AnimatedButton } from "@/components/AnimatedButton";
+import { AnimatedText } from "@/components/AnimatedText";
+import { StaggeredContainer } from "@/components/StaggeredContainer";
+import { cn } from "@/lib/design-system";
 export default function Dashboard() {
   const [resources, setResources] = useState({
     wood: 0,
@@ -428,7 +433,12 @@ export default function Dashboard() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-background text-foreground p-4 sm:p-6 lg:p-8 flex flex-col items-center pt-20">
+    <motion.div
+      className="min-h-screen bg-gradient-to-br from-steel-900 via-steel-800 to-steel-900 text-foreground p-4 sm:p-6 lg:p-8 flex flex-col items-center pt-20"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+    >
       {/* Notification Container */}
       <NotificationContainer />
 
@@ -437,150 +447,206 @@ export default function Dashboard() {
 
       <div className="relative w-full max-w-7xl space-y-8">
         {/* Main Dashboard Card */}
-        <div className="medieval-card p-6 sm:p-8 lg:p-12 animate-fade-in">
+        <AnimatedCard
+          className="p-6 sm:p-8 lg:p-12"
+          variant="interactive"
+          delay={0.1}
+        >
           {/* Header Section */}
-          <div className="flex flex-col lg:flex-row items-center justify-center space-y-6 lg:space-y-0 lg:space-x-12 mb-12">
-            <div className="relative group">
-              <div className="absolute -inset-3 bg-gradient-to-r from-medieval-gold-400/20 via-medieval-gold-600/30 to-medieval-gold-400/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-all duration-700 animate-pulse-glow"></div>
-              <img
+          <motion.div
+            className="flex flex-col lg:flex-row items-center justify-center space-y-6 lg:space-y-0 lg:space-x-12 mb-12"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <motion.div
+              className="relative group"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <motion.div
+                className="absolute -inset-3 bg-gradient-to-r from-gold-400/20 via-gold-600/30 to-gold-400/20 rounded-full blur-lg"
+                initial={{ opacity: 0 }}
+                whileHover={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              />
+              <motion.img
                 src={userpic}
                 alt="Noble Portrait"
-                className="relative h-24 w-24 sm:h-32 sm:w-32 rounded-full border-2 border-medieval-gold-600 shadow-lg transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 group-hover:border-medieval-gold-500"
+                className="relative rounded-full border-2 border-gold-600 shadow-lg object-cover"
+                style={{
+                  aspectRatio: "1/1",
+                  width: "120px",
+                  height: "120px",
+                  minWidth: "120px",
+                  minHeight: "120px",
+                  maxWidth: "120px",
+                  maxHeight: "120px",
+                }}
+                whileHover={{ rotate: 3, scale: 1.1 }}
+                transition={{ duration: 0.3 }}
               />
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-medieval-gold-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            </div>
+              <motion.div
+                className="absolute inset-0 rounded-full bg-gradient-to-br from-gold-600/20 to-transparent"
+                initial={{ opacity: 0 }}
+                whileHover={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              />
+            </motion.div>
 
-            <div className="text-center lg:text-left">
-              <h1 className="medieval-title mb-4 glow-text animate-text-glow">
+            <motion.div
+              className="text-center lg:text-left"
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              <motion.h1
+                className="font-medieval text-4xl sm:text-5xl lg:text-6xl text-gold-300 tracking-wider mb-4"
+                whileHover={{ textShadow: "0 0 20px rgba(245, 158, 11, 0.5)" }}
+              >
                 {username || "Noble"}'s Royal Court
-              </h1>
-              <p className="medieval-subtitle italic animate-slide-up">
+              </motion.h1>
+              <motion.p
+                className="font-script text-xl md:text-2xl text-gold-200 italic"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+              >
                 {role === "ADMIN"
                   ? "Your Majesty, the realm bows to your royal authority... Command your subjects with wisdom and justice."
                   : "Make your decisions carefully, young lord... The realm depends on your wisdom."}
-              </p>
-            </div>
-          </div>
+              </motion.p>
+            </motion.div>
+          </motion.div>
 
-          <div className="medieval-divider"></div>
+          <motion.div
+            className="relative my-8"
+            initial={{ opacity: 0, scaleX: 0 }}
+            animate={{ opacity: 1, scaleX: 1 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+          >
+            <div className="absolute inset-0 flex items-center">
+              <div className="flex-1 border-t border-gold-600/30"></div>
+            </div>
+          </motion.div>
 
           {/* Resources Section */}
-          <div className="mb-12">
-            <h2 className="font-medieval text-3xl sm:text-4xl text-medieval-gold-300 mb-8 glow-text text-center animate-text-glow">
+          <motion.div
+            className="mb-12"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1.0 }}
+          >
+            <motion.h2
+              className="font-medieval text-3xl sm:text-4xl text-gold-300 mb-8 text-center"
+              whileHover={{ textShadow: "0 0 20px rgba(245, 158, 11, 0.5)" }}
+            >
               💰 Royal Treasury
-            </h2>
-            <div className="responsive-grid">
-              <div className="resource-card text-center group animate-scale-in">
-                <div className="text-4xl sm:text-5xl mb-4 group-hover:animate-bounce-gentle">
-                  🌲
-                </div>
-                <span className="block text-2xl sm:text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
-                  {resources.wood}
-                </span>
-                <span className="text-base sm:text-lg text-medieval-steel-300 font-serif">
-                  Wood
-                </span>
-              </div>
-
-              <div
-                className="resource-card text-center group animate-scale-in"
-                style={{ animationDelay: "0.1s" }}
-              >
-                <div className="text-4xl sm:text-5xl mb-4 group-hover:animate-bounce-gentle">
-                  🗿
-                </div>
-                <span className="block text-2xl sm:text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
-                  {resources.stone}
-                </span>
-                <span className="text-base sm:text-lg text-medieval-steel-300 font-serif">
-                  Stone
-                </span>
-              </div>
-
-              <div
-                className="resource-card text-center group animate-scale-in"
-                style={{ animationDelay: "0.2s" }}
-              >
-                <div className="text-4xl sm:text-5xl mb-4 group-hover:animate-bounce-gentle">
-                  🍞
-                </div>
-                <span className="block text-2xl sm:text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
-                  {resources.food}
-                </span>
-                <span className="text-base sm:text-lg text-medieval-steel-300 font-serif">
-                  Food
-                </span>
-              </div>
-
-              <div
-                className="resource-card text-center group animate-scale-in"
-                style={{ animationDelay: "0.3s" }}
-              >
-                <div className="text-4xl sm:text-5xl mb-4 group-hover:animate-bounce-gentle">
-                  💰
-                </div>
-                <span className="block text-2xl sm:text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
-                  {(resources.currency || 0).toFixed(1)}
-                </span>
-                <span className="text-base sm:text-lg text-medieval-steel-300 font-serif">
-                  Currency
-                </span>
-              </div>
-
-              <div
-                className="resource-card text-center group animate-scale-in"
-                style={{ animationDelay: "0.4s" }}
-              >
-                <div className="text-4xl sm:text-5xl mb-4 group-hover:animate-bounce-gentle">
-                  ⚒️
-                </div>
-                <span className="block text-2xl sm:text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
-                  {resources.metal}
-                </span>
-                <span className="text-base sm:text-lg text-medieval-steel-300 font-serif">
-                  Metal
-                </span>
-              </div>
-
-              <div
-                className="resource-card text-center group animate-scale-in"
-                style={{ animationDelay: "0.5s" }}
-              >
-                <div className="text-4xl sm:text-5xl mb-4 group-hover:animate-bounce-gentle">
-                  🐄
-                </div>
-                <span className="block text-2xl sm:text-3xl font-medieval font-bold text-medieval-gold-300 mb-2">
-                  {resources.livestock}
-                </span>
-                <span className="text-base sm:text-lg text-medieval-steel-300 font-serif">
-                  Livestock
-                </span>
-              </div>
+            </motion.h2>
+            <StaggeredContainer
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6"
+              staggerDelay={0.1}
+            >
+              {[
+                {
+                  icon: "🌲",
+                  label: "Wood",
+                  value: resources.wood,
+                  color: "emerald",
+                },
+                {
+                  icon: "🗿",
+                  label: "Stone",
+                  value: resources.stone,
+                  color: "steel",
+                },
+                {
+                  icon: "🍞",
+                  label: "Food",
+                  value: resources.food,
+                  color: "amber",
+                },
+                {
+                  icon: "💰",
+                  label: "Currency",
+                  value: (resources.currency || 0).toFixed(1),
+                  color: "gold",
+                },
+                {
+                  icon: "⚒️",
+                  label: "Metal",
+                  value: resources.metal,
+                  color: "steel",
+                },
+                {
+                  icon: "🐄",
+                  label: "Livestock",
+                  value: resources.livestock,
+                  color: "emerald",
+                },
+              ].map((resource, index) => (
+                <motion.div
+                  key={resource.label}
+                  className="relative cursor-pointer overflow-hidden rounded-xl p-6 bg-gradient-to-br from-steel-800/50 via-steel-700/30 to-steel-800/50 backdrop-blur-sm border border-gold-600/30 shadow-xl hover:shadow-2xl transition-all duration-300 group"
+                  whileHover={{ y: -8, scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <motion.div
+                    className="text-4xl sm:text-5xl mb-4 text-center"
+                    whileHover={{ y: -4 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {resource.icon}
+                  </motion.div>
+                  <motion.span
+                    className="block text-2xl sm:text-3xl font-medieval font-bold text-gold-300 mb-2 text-center"
+                    initial={{ scale: 0.8 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                  >
+                    {resource.value}
+                  </motion.span>
+                  <span className="text-base sm:text-lg text-steel-300 font-serif text-center block">
+                    {resource.label}
+                  </span>
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-br from-gold-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    initial={{ opacity: 0 }}
+                    whileHover={{ opacity: 1 }}
+                  />
+                </motion.div>
+              ))}
+            </StaggeredContainer>
+          </motion.div>
+          <motion.div
+            className="relative my-8"
+            initial={{ opacity: 0, scaleX: 0 }}
+            animate={{ opacity: 1, scaleX: 1 }}
+            transition={{ duration: 0.8, delay: 1.2 }}
+          >
+            <div className="absolute inset-0 flex items-center">
+              <div className="flex-1 border-t border-gold-600/30"></div>
             </div>
-          </div>
-          <div className="medieval-divider"></div>
+          </motion.div>
 
           {/* Admin Dashboard - Replace normal list for admins */}
           {role === "ADMIN" ? (
-            <div className="medieval-card p-8">
-              <div className="flex flex-col lg:flex-row justify-between items-center mb-8">
-                <h2 className="font-medieval text-3xl text-medieval-gold-300 glow-text text-center lg:text-left">
-                  👑 Noble Houses of the Realm
-                </h2>
-
-                <button
-                  onClick={cleanupUserNames}
-                  disabled={isCleaningNames}
-                  className="medieval-button-secondary group mt-4 lg:mt-0"
+            <AnimatedCard className="p-8" variant="interactive" delay={1.4}>
+              <motion.div
+                className="flex flex-col lg:flex-row justify-between items-center mb-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.6 }}
+              >
+                <motion.h2
+                  className="font-medieval text-3xl text-gold-300 text-center lg:text-left"
+                  whileHover={{
+                    textShadow: "0 0 20px rgba(245, 158, 11, 0.5)",
+                  }}
                 >
-                  <span className="flex items-center space-x-2">
-                    <span>{isCleaningNames ? "⏳" : "🧹"}</span>
-                    <span>
-                      {isCleaningNames ? "Cleaning..." : "Clean Names"}
-                    </span>
-                  </span>
-                </button>
-              </div>
+                  👑 Noble Houses of the Realm
+                </motion.h2>
+              </motion.div>
 
               {/* Admin Search Section */}
               <div className="mb-8">
@@ -720,10 +786,10 @@ export default function Dashboard() {
                     </div>
                   ))}
               </div>
-            </div>
+            </AnimatedCard>
           ) : (
             /* Normal User List for Non-Admins */
-            <>
+            <AnimatedCard className="p-8" variant="interactive" delay={1.4}>
               {/* Noble Search Section */}
               <div className="mb-12">
                 <h2 className="font-medieval text-2xl text-medieval-gold-300 mb-6 glow-text text-center">
@@ -790,7 +856,7 @@ export default function Dashboard() {
                   ))}
                 </div>
               </div>
-            </>
+            </AnimatedCard>
           )}
           {/* Transfer Modal */}
           {modalOpen && (
@@ -1073,8 +1139,306 @@ export default function Dashboard() {
               </div>
             </div>
           )}
-        </div>
+          {/* Transfer Modal */}
+          {modalOpen && (
+            <div className="modal-overlay">
+              <div className="modal-content p-8 animate-slide-up">
+                <button
+                  className="absolute top-4 right-4 text-medieval-gold-300 hover:text-medieval-crimson-400 text-3xl transition-colors duration-300"
+                  onClick={() => setModalOpen(false)}
+                >
+                  ✕
+                </button>
+
+                <div className="text-center mb-8">
+                  <h2 className="font-medieval text-3xl text-medieval-gold-300 mb-4 glow-text">
+                    🎁 Send Your Boon to {toUser}
+                  </h2>
+                  <p className="medieval-text text-lg italic">
+                    "A gift from one noble house to another strengthens the
+                    bonds of the realm"
+                  </p>
+                </div>
+
+                <div className="space-y-6">
+                  <div>
+                    <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
+                      💰 Enter the Amount
+                    </label>
+                    <input
+                      type="number"
+                      className="medieval-input w-full text-lg"
+                      value={amount}
+                      onChange={(e) => setAmount(Number(e.target.value))}
+                      placeholder="How many shall you bestow?"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
+                      🏺 Choose the Type of Boon
+                    </label>
+                    <select
+                      value={resource}
+                      onChange={(e) => setResource(e.target.value)}
+                      className="medieval-input w-full text-lg"
+                    >
+                      <option value="">Select a resource...</option>
+                      <option value="wood">🌲 Wood</option>
+                      <option value="stone">🗿 Stone</option>
+                      <option value="food">🍞 Food</option>
+                      <option value="currency">💰 Currency</option>
+                      <option value="metal">⚒️ Metal</option>
+                      <option value="livestock">🐄 Livestock</option>
+                    </select>
+                  </div>
+
+                  <div className="flex justify-center pt-4">
+                    <button
+                      onClick={transferResources}
+                      disabled={isTransferring}
+                      className="medieval-button group disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <span className="flex items-center space-x-2">
+                        <span>{isTransferring ? "⏳" : "⚔️"}</span>
+                        <span>
+                          {isTransferring ? "Sending..." : "Send Your Boon"}
+                        </span>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          {/* Admin Modal */}
+          {adminModalOpen && (
+            <div className="modal-overlay">
+              <div className="modal-content p-8 animate-slide-up max-w-2xl">
+                <button
+                  className="absolute top-4 right-4 text-medieval-gold-300 hover:text-medieval-crimson-400 text-3xl transition-colors duration-300"
+                  onClick={() => closeAdminModal()}
+                >
+                  ✕
+                </button>
+
+                <div className="text-center mb-8">
+                  <h2 className="font-medieval text-3xl text-medieval-gold-300 mb-4 glow-text">
+                    ⚡ Manage {toUser}'s Resources
+                  </h2>
+                  <p className="medieval-text text-lg italic">
+                    "As the realm's overseer, you hold the power to shape the
+                    fortunes of noble houses"
+                  </p>
+                  {isLoadingUserResources ? (
+                    <div className="mt-4 text-medieval-gold-300">
+                      <span className="animate-pulse">
+                        ⏳ Loading current resources...
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="mt-4 p-4 bg-medieval-steel-800 rounded-lg border border-medieval-gold-600">
+                      <p className="text-medieval-gold-300 font-medieval text-lg mb-2">
+                        Current Resources:
+                      </p>
+                      <div className="grid grid-cols-3 md:grid-cols-6 gap-4 text-sm">
+                        <div className="text-center">
+                          <span className="text-medieval-gold-300">🌲</span>
+                          <div className="text-medieval-steel-300">
+                            {targetUserResources.wood}
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <span className="text-medieval-gold-300">🗿</span>
+                          <div className="text-medieval-steel-300">
+                            {targetUserResources.stone}
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <span className="text-medieval-gold-300">🍞</span>
+                          <div className="text-medieval-steel-300">
+                            {targetUserResources.food}
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <span className="text-medieval-gold-300">💰</span>
+                          <div className="text-medieval-steel-300">
+                            {(targetUserResources.currency || 0).toFixed(1)}
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <span className="text-medieval-gold-300">⚒️</span>
+                          <div className="text-medieval-steel-300">
+                            {targetUserResources.metal}
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <span className="text-medieval-gold-300">🐄</span>
+                          <div className="text-medieval-steel-300">
+                            {targetUserResources.livestock}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div>
+                    <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
+                      🌲 Wood
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      className="medieval-input w-full text-lg"
+                      value={adminResourceValues.wood}
+                      onChange={(e) =>
+                        setAdminResourceValues((prev) => ({
+                          ...prev,
+                          wood: Number(e.target.value) || 0,
+                        }))
+                      }
+                      placeholder="Set wood amount"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
+                      🗿 Stone
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      className="medieval-input w-full text-lg"
+                      value={adminResourceValues.stone}
+                      onChange={(e) =>
+                        setAdminResourceValues((prev) => ({
+                          ...prev,
+                          stone: Number(e.target.value) || 0,
+                        }))
+                      }
+                      placeholder="Set stone amount"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
+                      🍞 Food
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      className="medieval-input w-full text-lg"
+                      value={adminResourceValues.food}
+                      onChange={(e) =>
+                        setAdminResourceValues((prev) => ({
+                          ...prev,
+                          food: Number(e.target.value) || 0,
+                        }))
+                      }
+                      placeholder="Set food amount"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
+                      💰 Currency
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      className="medieval-input w-full text-lg"
+                      value={adminResourceValues.currency}
+                      onChange={(e) =>
+                        setAdminResourceValues((prev) => ({
+                          ...prev,
+                          currency: Number(e.target.value) || 0,
+                        }))
+                      }
+                      placeholder="Set currency amount"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
+                      ⚒️ Metal
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      className="medieval-input w-full text-lg"
+                      value={adminResourceValues.metal}
+                      onChange={(e) =>
+                        setAdminResourceValues((prev) => ({
+                          ...prev,
+                          metal: Number(e.target.value) || 0,
+                        }))
+                      }
+                      placeholder="Set metal amount"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
+                      🐄 Livestock
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      className="medieval-input w-full text-lg"
+                      value={adminResourceValues.livestock}
+                      onChange={(e) =>
+                        setAdminResourceValues((prev) => ({
+                          ...prev,
+                          livestock: Number(e.target.value) || 0,
+                        }))
+                      }
+                      placeholder="Set livestock amount"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex justify-center pt-4">
+                  <button
+                    onClick={updateUserResources}
+                    disabled={isUpdatingResources}
+                    className="medieval-button-secondary group disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <span className="flex items-center space-x-2">
+                      <span>{isUpdatingResources ? "⏳" : "👑"}</span>
+                      <span>
+                        {isUpdatingResources
+                          ? "Proclaiming..."
+                          : "Make Executive Proclamation"}
+                      </span>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+          {/* Non-Admin Section */}
+          {role !== "ADMIN" && (
+            <AnimatedCard className="p-8" variant="interactive" delay={1.4}>
+              <motion.div
+                className="text-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.6 }}
+              >
+                <h2 className="font-medieval text-3xl text-gold-300 mb-4">
+                  🏰 Your Noble House
+                </h2>
+                <p className="text-steel-300 text-lg">
+                  Welcome to your personal realm. Manage your resources and
+                  build your legacy.
+                </p>
+              </motion.div>
+            </AnimatedCard>
+          )}
+        </AnimatedCard>
       </div>
-    </div>
+    </motion.div>
   );
 }

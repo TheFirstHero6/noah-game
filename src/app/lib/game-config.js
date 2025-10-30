@@ -104,3 +104,32 @@ export const BUILDING_UPGRADE_COSTS = {
   2: { currency: 50, wood: 20, stone: 10, metal: 0, food: 0, livestock: 0 }, // Level 2 upgrade
   3: { currency: 100, wood: 20, stone: 20, metal: 0, food: 0, livestock: 0 }, // Level 3 upgrade
 };
+
+// Unit recruitment costs from official Unit Costs Table
+export const UNIT_COSTS = {
+  "Militia-At-Arms": { currency: 50, wood: 3, stone: 3, metal: 0, food: 0, livestock: 0 },
+  "Pike Men": { currency: 100, wood: 8, stone: 2, metal: 0, food: 0, livestock: 0 },
+  "Swordsmen": { currency: 150, wood: 3, stone: 0, metal: 6, food: 0, livestock: 0 },
+  "Matchlocks": { currency: 100, wood: 4, stone: 0, metal: 4, food: 0, livestock: 0 },
+  "Flintlocks": { currency: 150, wood: 4, stone: 2, metal: 6, food: 0, livestock: 0 },
+  "Light Calvary": { currency: 150, wood: 3, stone: 0, metal: 6, food: 0, livestock: 4 },
+  "Dragons": { currency: 150, wood: 4, stone: 2, metal: 6, food: 0, livestock: 4 },
+  "Heavy Calvary": { currency: 300, wood: 3, stone: 0, metal: 10, food: 0, livestock: 4 },
+  "Banner Guard": { currency: 500, wood: 3, stone: 0, metal: 12, food: 0, livestock: 4 },
+  "Light Artilery": { currency: 150, wood: 10, stone: 5, metal: 5, food: 0, livestock: 0 },
+  "Medium Artilery": { currency: 300, wood: 10, stone: 5, metal: 8, food: 0, livestock: 1 },
+  "Heavy Artilery": { currency: 500, wood: 10, stone: 5, metal: 12, food: 0, livestock: 2 },
+};
+
+// Population Unit Cap provided per city tier from official table
+// Sum caps across all cities owned by a player
+export const POPULATION_UNIT_CAP_BY_TIER = {
+  1: 2,
+  2: 3,
+  3: 7,
+  4: 10,
+  5: 15,
+};
+
+// Per-unit upkeep cost per turn
+export const PER_UNIT_UPKEEP = { food: 2 };

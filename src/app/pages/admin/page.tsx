@@ -28,6 +28,11 @@ export default function AdminPage() {
   const [newCityName, setNewCityName] = useState("");
   const [cityTier, setCityTier] = useState(1);
   const [isCreatingCity, setIsCreatingCity] = useState(false);
+  const [armies, setArmies] = useState<any[]>([]);
+  const [adminArmyName, setAdminArmyName] = useState("");
+  const [selectedArmyId, setSelectedArmyId] = useState("");
+  const [adminUnitType, setAdminUnitType] = useState("Militia-At-Arms");
+  const [adminQuantity, setAdminQuantity] = useState(1);
   const [isAdvancingTurn, setIsAdvancingTurn] = useState(false);
   const [showTurnModal, setShowTurnModal] = useState(false);
   const [userRole, setUserRole] = useState<string>("");
@@ -47,8 +52,18 @@ export default function AdminPage() {
     if (userRole === "ADMIN") {
       fetchUsers();
       fetchCities();
+      if (selectedUser) fetchArmies();
     }
   }, [userRole]);
+
+  useEffect(() => {
+    if (userRole === "ADMIN" && selectedUser) {
+      fetchArmies();
+    } else {
+      setArmies([]);
+      setSelectedArmyId("");
+    }
+  }, [selectedUser]);
 
   const fetchUserRole = async () => {
     try {
@@ -61,6 +76,83 @@ export default function AdminPage() {
       console.error("Error fetching user role:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchArmies = async () => {
+    try {
+      const res = await fetch(`/api/admin/armies?userId=${selectedUser}`);
+      if (res.ok) {
+        const data = await res.json();
+        setArmies(data.armies || []);
+      }
+    } catch (e) {
+      console.error("Error fetching armies", e);
+    }
+  };
+
+  const adminCreateArmy = async () => {
+    if (!selectedUser || !adminArmyName.trim()) {
+      addNotification("error", "Select user and enter army name");
+      return;
+    }
+    try {
+      const res = await fetch("/api/admin/armies", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: selectedUser, name: adminArmyName.trim() }),
+      });
+      if (res.ok) {
+        setAdminArmyName("");
+        addNotification("success", "Army created");
+        fetchArmies();
+      } else {
+        const txt = await res.text();
+        addNotification("error", txt || "Failed to create army");
+      }
+    } catch (e) {
+      console.error(e);
+      addNotification("error", "Error creating army");
+    }
+  };
+
+  const adminDeleteArmy = async (armyId: string) => {
+    try {
+      const res = await fetch(`/api/admin/armies?armyId=${armyId}`, { method: "DELETE" });
+      if (res.status === 204) {
+        addNotification("success", "Army deleted");
+        fetchArmies();
+      } else {
+        const txt = await res.text();
+        addNotification("error", txt || "Failed to delete army");
+      }
+    } catch (e) {
+      console.error(e);
+      addNotification("error", "Error deleting army");
+    }
+  };
+
+  const adminModifyUnits = async (method: "POST" | "DELETE") => {
+    if (!selectedArmyId) {
+      addNotification("error", "Select an army");
+      return;
+    }
+    try {
+      const res = await fetch(`/api/admin/armies/${selectedArmyId}/units`, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ unitType: adminUnitType, quantity: adminQuantity }),
+      });
+      if (res.ok || res.status === 204) {
+        addNotification("success", method === "POST" ? "Units added" : "Units removed");
+        fetchArmies();
+      } else {
+        const txt = await res.text();
+        addNotification("error", txt || "Failed to modify units");
+      }
+    } catch (e) {
+      console.error(e);
+      addNotification("error", "Error modifying units");
     }
   };
 
@@ -296,6 +388,81 @@ export default function AdminPage() {
               >
                 {isAdvancingTurn ? "Processing..." : "Advance to Next Turn"}
               </button>
+            </div>
+          </div>
+
+          {/* Armies Management */}
+          <div className="medieval-card p-6">
+            <h2 className="font-medieval text-xl text-medieval-gold-300 mb-4">Armies Management</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block font-medieval text-lg text-medieval-gold-300 mb-2">Select User</label>
+                <select value={selectedUser} onChange={(e) => setSelectedUser(e.target.value)} className="medieval-input w-full">
+                  <option value="">Choose a user...</option>
+                  {users.map((u) => (
+                    <option key={u.id} value={u.id}>{u.name} ({u.email})</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex gap-2">
+                <input className="medieval-input flex-1" placeholder="New army name" value={adminArmyName} onChange={(e) => setAdminArmyName(e.target.value)} />
+                <button className="medieval-button" onClick={adminCreateArmy} disabled={!selectedUser || !adminArmyName.trim()}>Create Army</button>
+              </div>
+
+              <div className="space-y-2">
+                {armies.map((a) => (
+                  <div key={a.id} className={`p-3 border rounded-md ${selectedArmyId === a.id ? "border-medieval-gold-400" : "border-primary/30"}`}>
+                    <div className="flex items-center justify-between">
+                      <div className="font-medieval text-medieval-gold-300">{a.name}</div>
+                      <div className="flex items-center gap-2">
+                        <button className="medieval-button-secondary" onClick={() => setSelectedArmyId(a.id)}>Select</button>
+                        <button className="medieval-button-secondary" onClick={() => adminDeleteArmy(a.id)}>Delete</button>
+                      </div>
+                    </div>
+                    {a.units && a.units.length > 0 && (
+                      <div className="mt-2 text-sm text-medieval-steel-300">
+                        {a.units.map((u: any) => (
+                          <span key={u.id} className="mr-3">{u.unitType}: {u.quantity}</span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+                {armies.length === 0 && <p className="text-medieval-steel-400">No armies</p>}
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="text-sm">Selected Army</label>
+                  <input className="medieval-input w-full" value={selectedArmyId} readOnly placeholder="Select an army above" />
+                </div>
+                <div>
+                  <label className="text-sm">Unit Type</label>
+                  <select className="medieval-input w-full" value={adminUnitType} onChange={(e) => setAdminUnitType(e.target.value)}>
+                    <option>Militia-At-Arms</option>
+                    <option>Pike Men</option>
+                    <option>Swordsmen</option>
+                    <option>Matchlocks</option>
+                    <option>Flintlocks</option>
+                    <option>Light Calvary</option>
+                    <option>Dragons</option>
+                    <option>Heavy Calvary</option>
+                    <option>Banner Guard</option>
+                    <option>Light Artilery</option>
+                    <option>Medium Artilery</option>
+                    <option>Heavy Artilery</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm">Quantity</label>
+                  <input type="number" min={1} className="medieval-input w-full" value={adminQuantity} onChange={(e) => setAdminQuantity(Math.max(1, parseInt(e.target.value || "1", 10)))} />
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <button className="medieval-button" onClick={() => adminModifyUnits("POST")} disabled={!selectedArmyId}>Add Units</button>
+                <button className="medieval-button-secondary" onClick={() => adminModifyUnits("DELETE")} disabled={!selectedArmyId}>Remove Units</button>
+              </div>
             </div>
           </div>
         </div>

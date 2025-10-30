@@ -1,8 +1,83 @@
-@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Uncial+Antiqua&family=Dancing+Script:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Uncial+Antiqua&family=Dancing+Script:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Modern CSS Custom Properties */
+:root {
+  /* Fluid Color System */
+  --gold-50: #fefce8;
+  --gold-100: #fef3c7;
+  --gold-200: #fde68a;
+  --gold-300: #fcd34d;
+  --gold-400: #fbbf24;
+  --gold-500: #f59e0b;
+  --gold-600: #d97706;
+  --gold-700: #b45309;
+  --gold-800: #92400e;
+  --gold-900: #78350f;
+
+  --steel-50: #f8fafc;
+  --steel-100: #f1f5f9;
+  --steel-200: #e2e8f0;
+  --steel-300: #cbd5e1;
+  --steel-400: #94a3b8;
+  --steel-500: #64748b;
+  --steel-600: #475569;
+  --steel-700: #334155;
+  --steel-800: #1e293b;
+  --steel-900: #0f172a;
+
+  --royal-50: #eff6ff;
+  --royal-100: #dbeafe;
+  --royal-200: #bfdbfe;
+  --royal-300: #93c5fd;
+  --royal-400: #60a5fa;
+  --royal-500: #3b82f6;
+  --royal-600: #2563eb;
+  --royal-700: #1d4ed8;
+  --royal-800: #1e40af;
+  --royal-900: #1e3a8a;
+
+  --emerald-50: #ecfdf5;
+  --emerald-100: #d1fae5;
+  --emerald-200: #a7f3d0;
+  --emerald-300: #6ee7b7;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --emerald-600: #059669;
+  --emerald-700: #047857;
+  --emerald-800: #065f46;
+  --emerald-900: #064e3b;
+
+  --crimson-50: #fef2f2;
+  --crimson-100: #fee2e2;
+  --crimson-200: #fecaca;
+  --crimson-300: #fca5a5;
+  --crimson-400: #f87171;
+  --crimson-500: #ef4444;
+  --crimson-600: #dc2626;
+  --crimson-700: #b91c1c;
+  --crimson-800: #991b1b;
+  --crimson-900: #7f1d1d;
+
+  /* Modern Shadows */
+  --shadow-glow: 0 0 20px rgba(245, 158, 11, 0.3);
+  --shadow-glow-lg: 0 0 40px rgba(245, 158, 11, 0.4);
+  --shadow-glow-xl: 0 0 60px rgba(245, 158, 11, 0.5);
+
+  /* Animation Timing */
+  --timing-fast: 0.15s;
+  --timing-normal: 0.3s;
+  --timing-slow: 0.5s;
+  --timing-slower: 0.8s;
+
+  /* Easing Functions */
+  --ease-out-cubic: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-in-out-cubic: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
 
 :root {
   /* Royal Court Theme (Default) */
@@ -374,6 +449,23 @@ body {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
+  /* Ensure selects inherit dark styling */
+  select.medieval-input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    color: var(--foreground);
+    background-color: rgba(15, 23, 42, 0.9);
+    background-image: none;
+  }
+  select.medieval-input::-ms-expand {
+    display: none;
+  }
+  select.medieval-input option {
+    color: var(--foreground);
+    background-color: var(--steel-800);
+  }
+
   .medieval-input:focus {
     @apply border-medieval-gold-400 ring-4 outline-none;
     ring-color: rgba(234, 179, 8, 0.2);
@@ -573,6 +665,112 @@ body {
   .responsive-grid-lg {
     @apply grid gap-8;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  }
+}
+
+/* Modern Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scale {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(245, 158, 11, 0.6);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 20px rgba(245, 158, 11, 0);
   }
 }
 
