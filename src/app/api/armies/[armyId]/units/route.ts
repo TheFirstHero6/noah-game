@@ -15,23 +15,27 @@ function sumResources(items: Array<Partial<Record<keyof typeof UNIT_COSTS[keyof 
 
 export async function POST(
   request: Request,
-  { params }: { params: { armyId: string } }
+  context: { params: Promise<{ armyId: string }> }
 ) {
   try {
     const clerkUser = await currentUser();
     if (!clerkUser) return new Response("Unauthorized", { status: 401 });
+    const { armyId } = await context.params;
+    if (!armyId || typeof armyId !== "string") {
+      return NextResponse.json({ error: "Missing armyId in route" }, { status: 400 });
+    }
     const user = await prisma.user.findUnique({ where: { clerkUserId: clerkUser.id }, include: { cities: true, resources: true } });
     if (!user || !user.resources) return new Response("Forbidden", { status: 403 });
 
     const { unitType, quantity } = await request.json();
     if (!unitType || typeof unitType !== "string" || !Number.isInteger(quantity) || quantity <= 0) {
-      return new Response("Invalid payload", { status: 400 });
+      return NextResponse.json({ error: "Invalid payload: provide unitType (string) and quantity (>0)" }, { status: 400 });
     }
     const costPer = (UNIT_COSTS as any)[unitType];
-    if (!costPer) return new Response("Unknown unit type", { status: 400 });
+    if (!costPer) return NextResponse.json({ error: `Unknown unit type: ${unitType}` }, { status: 400 });
 
     // Ownership check
-    const army = await prisma.army.findUnique({ where: { id: params.armyId } });
+    const army = await prisma.army.findUnique({ where: { id: armyId } });
     if (!army || army.ownerId !== user.id) return new Response("Not Found", { status: 404 });
 
     // Population cap check
@@ -45,7 +49,7 @@ export async function POST(
     });
     const totalUnits = currentUnits._sum.quantity || 0;
     if (totalUnits + quantity > cap) {
-      return new Response("Population cap exceeded", { status: 400 });
+      return NextResponse.json({ error: "Population cap exceeded" }, { status: 400 });
     }
 
     // Resource check
@@ -61,7 +65,7 @@ export async function POST(
       r.food < totalCost.food ||
       r.livestock < totalCost.livestock
     ) {
-      return new Response("Insufficient resources", { status: 400 });
+      return NextResponse.json({ error: "Insufficient resources" }, { status: 400 });
     }
 
     // Apply changes transactionally
@@ -88,29 +92,33 @@ export async function POST(
     });
 
     return NextResponse.json({ success: true, unit: result });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error adding units", error);
-    return new Response("Internal Server Error", { status: 500 });
+    return NextResponse.json({ error: error?.message || "Internal Server Error" }, { status: 500 });
   }
 }
 
 // DELETE: remove units of a type from an army (no refunds)
 export async function DELETE(
   request: Request,
-  { params }: { params: { armyId: string } }
+  context: { params: Promise<{ armyId: string }> }
 ) {
   try {
     const clerkUser = await currentUser();
     if (!clerkUser) return new Response("Unauthorized", { status: 401 });
     const user = await prisma.user.findUnique({ where: { clerkUserId: clerkUser.id } });
     if (!user) return new Response("Forbidden", { status: 403 });
+    const { armyId } = await context.params;
+    if (!armyId || typeof armyId !== "string") {
+      return NextResponse.json({ error: "Missing armyId in route" }, { status: 400 });
+    }
 
     const { unitType, quantity } = await request.json();
     if (!unitType || !Number.isInteger(quantity) || quantity <= 0) {
       return new Response("Invalid payload", { status: 400 });
     }
 
-    const army = await prisma.army.findUnique({ where: { id: params.armyId } });
+    const army = await prisma.army.findUnique({ where: { id: armyId } });
     if (!army || army.ownerId !== user.id) return new Response("Not Found", { status: 404 });
 
     const existing = await prisma.armyUnit.findFirst({ where: { armyId: army.id, unitType } });
@@ -122,9 +130,9 @@ export async function DELETE(
       await prisma.armyUnit.update({ where: { id: existing.id }, data: { quantity: newQty } });
     }
     return new Response(null, { status: 204 });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error removing units", error);
-    return new Response("Internal Server Error", { status: 500 });
+    return NextResponse.json({ error: error?.message || "Internal Server Error" }, { status: 500 });
   }
 }
 

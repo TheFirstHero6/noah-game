@@ -25,10 +25,13 @@ export default function AdminPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [cities, setCities] = useState<City[]>([]);
   const [selectedUser, setSelectedUser] = useState("");
+  const [selectedUserForCity, setSelectedUserForCity] = useState("");
+  const [selectedUserForArmies, setSelectedUserForArmies] = useState("");
   const [newCityName, setNewCityName] = useState("");
   const [cityTier, setCityTier] = useState(1);
   const [isCreatingCity, setIsCreatingCity] = useState(false);
   const [armies, setArmies] = useState<any[]>([]);
+  const [allArmies, setAllArmies] = useState<any[]>([]);
   const [adminArmyName, setAdminArmyName] = useState("");
   const [selectedArmyId, setSelectedArmyId] = useState("");
   const [adminUnitType, setAdminUnitType] = useState("Militia-At-Arms");
@@ -37,6 +40,10 @@ export default function AdminPage() {
   const [showTurnModal, setShowTurnModal] = useState(false);
   const [userRole, setUserRole] = useState<string>("");
   const [loading, setLoading] = useState(true);
+  const [transferType, setTransferType] = useState<"city" | "army">("city");
+  const [transferItemId, setTransferItemId] = useState("");
+  const [transferToUserId, setTransferToUserId] = useState("");
+  const [isTransferringItem, setIsTransferringItem] = useState(false);
 
   const { addNotification, NotificationContainer } = useNotification();
 
@@ -52,18 +59,20 @@ export default function AdminPage() {
     if (userRole === "ADMIN") {
       fetchUsers();
       fetchCities();
-      if (selectedUser) fetchArmies();
+      if (selectedUserForArmies) fetchArmies();
+      // Also fetch all armies for transfer dropdown
+      fetchAllArmies();
     }
   }, [userRole]);
 
   useEffect(() => {
-    if (userRole === "ADMIN" && selectedUser) {
+    if (userRole === "ADMIN" && selectedUserForArmies) {
       fetchArmies();
     } else {
       setArmies([]);
       setSelectedArmyId("");
     }
-  }, [selectedUser]);
+  }, [selectedUserForArmies]);
 
   const fetchUserRole = async () => {
     try {
@@ -81,7 +90,12 @@ export default function AdminPage() {
 
   const fetchArmies = async () => {
     try {
-      const res = await fetch(`/api/admin/armies?userId=${selectedUser}`);
+      const res = await fetch(
+        `/api/admin/armies?userId=${selectedUserForArmies}`,
+        {
+          cache: "no-store",
+        }
+      );
       if (res.ok) {
         const data = await res.json();
         setArmies(data.armies || []);
@@ -91,8 +105,20 @@ export default function AdminPage() {
     }
   };
 
+  const fetchAllArmies = async () => {
+    try {
+      const res = await fetch(`/api/admin/armies-all`, { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        setAllArmies(data.armies || []);
+      }
+    } catch (e) {
+      console.error("Error fetching all armies", e);
+    }
+  };
+
   const adminCreateArmy = async () => {
-    if (!selectedUser || !adminArmyName.trim()) {
+    if (!selectedUserForArmies || !adminArmyName.trim()) {
       addNotification("error", "Select user and enter army name");
       return;
     }
@@ -100,7 +126,10 @@ export default function AdminPage() {
       const res = await fetch("/api/admin/armies", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: selectedUser, name: adminArmyName.trim() }),
+        body: JSON.stringify({
+          userId: selectedUserForArmies,
+          name: adminArmyName.trim(),
+        }),
       });
       if (res.ok) {
         setAdminArmyName("");
@@ -118,7 +147,9 @@ export default function AdminPage() {
 
   const adminDeleteArmy = async (armyId: string) => {
     try {
-      const res = await fetch(`/api/admin/armies?armyId=${armyId}`, { method: "DELETE" });
+      const res = await fetch(`/api/admin/armies?armyId=${armyId}`, {
+        method: "DELETE",
+      });
       if (res.status === 204) {
         addNotification("success", "Army deleted");
         fetchArmies();
@@ -141,10 +172,16 @@ export default function AdminPage() {
       const res = await fetch(`/api/admin/armies/${selectedArmyId}/units`, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ unitType: adminUnitType, quantity: adminQuantity }),
+        body: JSON.stringify({
+          unitType: adminUnitType,
+          quantity: adminQuantity,
+        }),
       });
       if (res.ok || res.status === 204) {
-        addNotification("success", method === "POST" ? "Units added" : "Units removed");
+        addNotification(
+          "success",
+          method === "POST" ? "Units added" : "Units removed"
+        );
         fetchArmies();
       } else {
         const txt = await res.text();
@@ -156,12 +193,57 @@ export default function AdminPage() {
     }
   };
 
+  const adminTransferItem = async () => {
+    if (!transferItemId || !transferToUserId) {
+      addNotification("error", "Please select an item and a target user");
+      return;
+    }
+
+    try {
+      setIsTransferringItem(true);
+      const res = await fetch("/api/admin/transfer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: transferType,
+          itemID: transferItemId,
+          toUserID: transferToUserId,
+        }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        addNotification("error", data.error || "Transfer Failed");
+        return;
+      }
+
+      addNotification("success", data.message || "Transfer Successful");
+
+      fetchCities();
+      if (selectedUserForArmies) fetchArmies();
+
+      setTransferItemId("");
+      setTransferToUserId("");
+    } catch (e) {
+      console.error(e);
+      addNotification("error", "Error performing transfer");
+    } finally {
+      setIsTransferringItem(false);
+    }
+  };
   const fetchUsers = async () => {
     try {
       const response = await fetch("/api/admin/users");
       if (response.ok) {
         const data = await response.json();
         setUsers(data.users);
+        // Auto-select first users if empty
+        if (data.users && data.users.length > 0) {
+          if (!selectedUser) setSelectedUser(data.users[0].id);
+          if (!selectedUserForCity) setSelectedUserForCity(data.users[0].id);
+          if (!selectedUserForArmies)
+            setSelectedUserForArmies(data.users[0].id);
+        }
       } else {
         addNotification("error", "Failed to load users");
       }
@@ -187,7 +269,7 @@ export default function AdminPage() {
   };
 
   const createCity = async () => {
-    if (!selectedUser || !newCityName.trim()) {
+    if (!selectedUserForCity || !newCityName.trim()) {
       addNotification("error", "Please select a user and enter a city name");
       return;
     }
@@ -198,7 +280,7 @@ export default function AdminPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: selectedUser,
+          userId: selectedUserForCity,
           name: newCityName.trim(),
           tier: cityTier,
         }),
@@ -209,7 +291,7 @@ export default function AdminPage() {
       if (response.ok) {
         addNotification("success", data.message);
         setNewCityName("");
-        setSelectedUser("");
+        setSelectedUserForCity("");
         fetchCities();
       } else {
         addNotification("error", data.error || "Failed to create city");
@@ -314,8 +396,8 @@ export default function AdminPage() {
                   Select User
                 </label>
                 <select
-                  value={selectedUser}
-                  onChange={(e) => setSelectedUser(e.target.value)}
+                  value={selectedUserForCity}
+                  onChange={(e) => setSelectedUserForCity(e.target.value)}
                   className="medieval-input w-full"
                 >
                   <option value="">Choose a user...</option>
@@ -360,7 +442,7 @@ export default function AdminPage() {
               <button
                 onClick={createCity}
                 disabled={
-                  isCreatingCity || !selectedUser || !newCityName.trim()
+                  isCreatingCity || !selectedUserForCity || !newCityName.trim()
                 }
                 className="medieval-button w-full"
               >
@@ -393,53 +475,106 @@ export default function AdminPage() {
 
           {/* Armies Management */}
           <div className="medieval-card p-6">
-            <h2 className="font-medieval text-xl text-medieval-gold-300 mb-4">Armies Management</h2>
+            <h2 className="font-medieval text-xl text-medieval-gold-300 mb-4">
+              Armies Management
+            </h2>
             <div className="space-y-4">
               <div>
-                <label className="block font-medieval text-lg text-medieval-gold-300 mb-2">Select User</label>
-                <select value={selectedUser} onChange={(e) => setSelectedUser(e.target.value)} className="medieval-input w-full">
+                <label className="block font-medieval text-lg text-medieval-gold-300 mb-2">
+                  Select User
+                </label>
+                <select
+                  value={selectedUserForArmies}
+                  onChange={(e) => setSelectedUserForArmies(e.target.value)}
+                  className="medieval-input w-full"
+                >
                   <option value="">Choose a user...</option>
                   {users.map((u) => (
-                    <option key={u.id} value={u.id}>{u.name} ({u.email})</option>
+                    <option key={u.id} value={u.id}>
+                      {u.name} ({u.email})
+                    </option>
                   ))}
                 </select>
               </div>
 
               <div className="flex gap-2">
-                <input className="medieval-input flex-1" placeholder="New army name" value={adminArmyName} onChange={(e) => setAdminArmyName(e.target.value)} />
-                <button className="medieval-button" onClick={adminCreateArmy} disabled={!selectedUser || !adminArmyName.trim()}>Create Army</button>
+                <input
+                  className="medieval-input flex-1"
+                  placeholder="New army name"
+                  value={adminArmyName}
+                  onChange={(e) => setAdminArmyName(e.target.value)}
+                />
+                <button
+                  className="medieval-button"
+                  onClick={adminCreateArmy}
+                  disabled={!selectedUserForArmies || !adminArmyName.trim()}
+                >
+                  Create Army
+                </button>
               </div>
 
               <div className="space-y-2">
                 {armies.map((a) => (
-                  <div key={a.id} className={`p-3 border rounded-md ${selectedArmyId === a.id ? "border-medieval-gold-400" : "border-primary/30"}`}>
+                  <div
+                    key={a.id}
+                    className={`p-3 border rounded-md ${
+                      selectedArmyId === a.id
+                        ? "border-medieval-gold-400"
+                        : "border-primary/30"
+                    }`}
+                  >
                     <div className="flex items-center justify-between">
-                      <div className="font-medieval text-medieval-gold-300">{a.name}</div>
+                      <div className="font-medieval text-medieval-gold-300">
+                        {a.name}
+                      </div>
                       <div className="flex items-center gap-2">
-                        <button className="medieval-button-secondary" onClick={() => setSelectedArmyId(a.id)}>Select</button>
-                        <button className="medieval-button-secondary" onClick={() => adminDeleteArmy(a.id)}>Delete</button>
+                        <button
+                          className="medieval-button-secondary"
+                          onClick={() => setSelectedArmyId(a.id)}
+                        >
+                          Select
+                        </button>
+                        <button
+                          className="medieval-button-secondary"
+                          onClick={() => adminDeleteArmy(a.id)}
+                        >
+                          Delete
+                        </button>
                       </div>
                     </div>
                     {a.units && a.units.length > 0 && (
                       <div className="mt-2 text-sm text-medieval-steel-300">
                         {a.units.map((u: any) => (
-                          <span key={u.id} className="mr-3">{u.unitType}: {u.quantity}</span>
+                          <span key={u.id} className="mr-3">
+                            {u.unitType}: {u.quantity}
+                          </span>
                         ))}
                       </div>
                     )}
                   </div>
                 ))}
-                {armies.length === 0 && <p className="text-medieval-steel-400">No armies</p>}
+                {armies.length === 0 && (
+                  <p className="text-medieval-steel-400">No armies</p>
+                )}
               </div>
 
               <div className="grid grid-cols-3 gap-3">
                 <div>
                   <label className="text-sm">Selected Army</label>
-                  <input className="medieval-input w-full" value={selectedArmyId} readOnly placeholder="Select an army above" />
+                  <input
+                    className="medieval-input w-full"
+                    value={selectedArmyId}
+                    readOnly
+                    placeholder="Select an army above"
+                  />
                 </div>
                 <div>
                   <label className="text-sm">Unit Type</label>
-                  <select className="medieval-input w-full" value={adminUnitType} onChange={(e) => setAdminUnitType(e.target.value)}>
+                  <select
+                    className="medieval-input w-full"
+                    value={adminUnitType}
+                    onChange={(e) => setAdminUnitType(e.target.value)}
+                  >
                     <option>Militia-At-Arms</option>
                     <option>Pike Men</option>
                     <option>Swordsmen</option>
@@ -456,17 +591,116 @@ export default function AdminPage() {
                 </div>
                 <div>
                   <label className="text-sm">Quantity</label>
-                  <input type="number" min={1} className="medieval-input w-full" value={adminQuantity} onChange={(e) => setAdminQuantity(Math.max(1, parseInt(e.target.value || "1", 10)))} />
+                  <input
+                    type="number"
+                    min={1}
+                    className="medieval-input w-full"
+                    value={adminQuantity}
+                    onChange={(e) =>
+                      setAdminQuantity(
+                        Math.max(1, parseInt(e.target.value || "1", 10))
+                      )
+                    }
+                  />
                 </div>
               </div>
               <div className="flex gap-2">
-                <button className="medieval-button" onClick={() => adminModifyUnits("POST")} disabled={!selectedArmyId}>Add Units</button>
-                <button className="medieval-button-secondary" onClick={() => adminModifyUnits("DELETE")} disabled={!selectedArmyId}>Remove Units</button>
+                <button
+                  className="medieval-button"
+                  onClick={() => adminModifyUnits("POST")}
+                  disabled={!selectedArmyId}
+                >
+                  Add Units
+                </button>
+                <button
+                  className="medieval-button-secondary"
+                  onClick={() => adminModifyUnits("DELETE")}
+                  disabled={!selectedArmyId}
+                >
+                  Remove Units
+                </button>
               </div>
             </div>
           </div>
         </div>
+        {/* Transfer Management */}
+        <div className="medieval-card p-6">
+          <h2 className="font-medieval text-xl text-medieval-gold-300 mb-4">
+            Transfer Ownership
+          </h2>
 
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm mb-1">Item Type</label>
+                <select
+                  className="medieval-input w-full"
+                  value={transferType}
+                  onChange={(e) => {
+                    setTransferType(e.target.value as "city" | "army");
+                    setTransferItemId("");
+                  }}
+                >
+                  <option value="city">City</option>
+                  <option value="army">Army</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm mb-1">
+                  {transferType === "city" ? "Select City" : "Select Army"}
+                </label>
+                <select
+                  className="medieval-input w-full"
+                  value={transferItemId}
+                  onChange={(e) => setTransferItemId(e.target.value)}
+                >
+                  <option value="">Choose...</option>
+                  {transferType === "city"
+                    ? cities.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.name} (owner:{" "}
+                          {users.find((u) => u.id === c.ownerId)?.name ||
+                            c.ownerId}
+                          )
+                        </option>
+                      ))
+                    : allArmies.map((a) => (
+                        <option key={a.id} value={a.id}>
+                          {a.name} (owner: {a.owner?.name || a.ownerId})
+                        </option>
+                      ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm mb-1">New Owner</label>
+                <select
+                  className="medieval-input w-full"
+                  value={transferToUserId}
+                  onChange={(e) => setTransferToUserId(e.target.value)}
+                >
+                  <option value="">Choose user...</option>
+                  {users.map((u) => (
+                    <option key={u.id} value={u.id}>
+                      {u.name} ({u.email})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <button
+              onClick={adminTransferItem}
+              disabled={
+                !transferItemId || !transferToUserId || isTransferringItem
+              }
+              className="medieval-button w-full"
+            >
+              {isTransferringItem ? "Transferring..." : "Transfer"}
+            </button>
+          </div>
+        </div>
         {/* Cities Overview */}
         <div className="medieval-card p-6 mt-8">
           <h2 className="font-medieval text-xl text-medieval-gold-300 mb-4">

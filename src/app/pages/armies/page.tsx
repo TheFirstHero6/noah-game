@@ -82,8 +82,12 @@ export default function ArmiesPage() {
       if (res.ok) {
         const data = await res.json();
         setArmies(data.armies || []);
-        if (!selectedArmyId && (data.armies || []).length) {
-          setSelectedArmyId(data.armies[0].id);
+        const firstId = data.armies?.[0]?.id || "";
+        // Ensure we always have a valid selection if possible
+        if (!firstId) {
+          setSelectedArmyId("");
+        } else if (!selectedArmyId || !data.armies.some((a: any) => a.id === selectedArmyId)) {
+          setSelectedArmyId(firstId);
         }
       }
     } catch (e) {
@@ -306,8 +310,10 @@ export default function ArmiesPage() {
   };
 
   const addUnits = async () => {
-    if (!selectedArmyId) {
-      addNotification("info", "Select an army first");
+    // Resolve a valid army id at click time to avoid missing id in route
+    const armyIdToUse = selectedArmyId || (armies[0]?.id ?? "");
+    if (!armyIdToUse) {
+      addNotification("info", "Create or select an army first");
       return;
     }
     if (atOrOverCap) {
@@ -319,7 +325,7 @@ export default function ArmiesPage() {
       return;
     }
     try {
-      const res = await fetch(`/api/armies/${selectedArmyId}/units`, {
+      const res = await fetch(`/api/armies/${armyIdToUse}/units`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ unitType, quantity }),

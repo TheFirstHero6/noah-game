@@ -471,7 +471,7 @@ export default function Dashboard() {
                 transition={{ duration: 0.3 }}
               />
               <motion.img
-                src={userpic}
+                src={userpic || "/logo.png"}
                 alt="Noble Portrait"
                 className="relative rounded-full border-2 border-gold-600 shadow-lg object-cover"
                 style={{

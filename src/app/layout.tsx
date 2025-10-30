@@ -6,6 +6,7 @@ import GameInfo from "@/components/game-info";
 import SplashScreen from "@/components/splash-screen";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import Chatbot from "@/components/Chatbot";
+import Script from "next/script";
 
 export default function RootLayout({
   children,
@@ -28,9 +29,12 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="War of the Elector" />
         <link rel="apple-touch-icon" href="/favicon-196.png" />
         <link rel="manifest" href="/manifest.webmanifest" />
-        <script src="https://cdn.jotfor.ms/agent/embedjs/019a267959c1778582f0a76622404cfdbfe3/embed.js"></script>
       </head>
-      <body>
+      <body suppressHydrationWarning>
+        <Script
+          src="https://cdn.jotfor.ms/agent/embedjs/019a267959c1778582f0a76622404cfdbfe3/embed.js"
+          strategy="afterInteractive"
+        />
         <ThemeProvider>
           <ClerkProvider appearance={{ baseTheme: dark }}>
             <SplashScreen>
