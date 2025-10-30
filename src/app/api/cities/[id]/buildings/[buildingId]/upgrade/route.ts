@@ -5,7 +5,7 @@ import { BUILDING_UPGRADE_COSTS } from "@/app/lib/game-config";
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string; buildingId: string } }
+  context: { params: Promise<{ id: string; buildingId: string }> }
 ) {
   try {
     const clerkUser = await currentUser();
@@ -31,11 +31,12 @@ export async function POST(
     }
 
     // Find the building and verify ownership
+    const { id, buildingId } = await context.params;
     const building = await prisma.building.findFirst({
       where: {
-        id: params.buildingId,
+        id: buildingId,
         city: {
-          id: params.id,
+          id,
           ownerId: user.id,
         },
       },

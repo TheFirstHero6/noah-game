@@ -5,7 +5,7 @@ import { CITY_UPGRADE_COSTS } from "@/app/lib/game-config";
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const clerkUser = await currentUser();
@@ -33,9 +33,10 @@ export async function POST(
     }
 
     // Get the city
+    const { id } = await context.params;
     const city = await prisma.city.findFirst({
       where: {
-        id: params.id,
+        id,
         ownerId: user.id,
       },
     });

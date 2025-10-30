@@ -4,7 +4,7 @@ import prisma from "@/app/lib/db";
 // DELETE: delete an army owned by current user
 export async function DELETE(
   _request: Request,
-  { params }: { params: { armyId: string } }
+  context: { params: Promise<{ armyId: string }> }
 ) {
   try {
     const clerkUser = await currentUser();
@@ -12,7 +12,8 @@ export async function DELETE(
     const user = await prisma.user.findUnique({ where: { clerkUserId: clerkUser.id } });
     if (!user) return new Response("Forbidden", { status: 403 });
 
-    const army = await prisma.army.findUnique({ where: { id: params.armyId } });
+    const { armyId } = await context.params;
+    const army = await prisma.army.findUnique({ where: { id: armyId } });
     if (!army || army.ownerId !== user.id) return new Response("Not Found", { status: 404 });
 
     await prisma.armyUnit.deleteMany({ where: { armyId: army.id } });

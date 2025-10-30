@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const clerkUser = await currentUser();
@@ -21,9 +21,10 @@ export async function GET(
       return new Response("User not found", { status: 404 });
     }
 
+    const { id } = await context.params;
     const city = await prisma.city.findFirst({
       where: {
-        id: params.id,
+        id,
         ownerId: user.id,
       },
       include: {
@@ -47,7 +48,7 @@ export async function GET(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const clerkUser = await currentUser();
@@ -81,9 +82,10 @@ export async function PATCH(
     if (name !== undefined) updateData.name = name;
     if (taxRate !== undefined) updateData.taxRate = taxRate;
 
+    const { id } = await context.params;
     const city = await prisma.city.updateMany({
       where: {
-        id: params.id,
+        id,
         ownerId: user.id,
       },
       data: updateData,

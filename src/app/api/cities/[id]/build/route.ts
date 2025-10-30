@@ -47,7 +47,7 @@ const BUILDING_INDEX = [
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const clerkUser = await currentUser();
@@ -79,9 +79,10 @@ export async function POST(
     }
 
     // Check if user owns the city and get current building count
+    const { id } = await context.params;
     const city = await prisma.city.findFirst({
       where: {
-        id: params.id,
+        id,
         ownerId: user.id,
       },
       include: {
