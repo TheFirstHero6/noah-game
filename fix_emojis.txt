@@ -1,0 +1,15 @@
+The following emojis need to be fixed manually in src/app/pages/dashboard/page.tsx:
+
+Line 594: Replace corrupted metal emoji with: ⚒️
+Line 734: Replace corrupted food emoji with: 🍞
+Line 761: Replace corrupted livestock emoji with: 🐄  
+Line 921-926: Replace all dropdown option emojis:
+  - 🌲 Wood
+  - 🗿 Stone
+  - 🍞 Food
+  - 💰 Currency
+  - ⚒️ Metal
+  - 🐄 Livestock
+Line 752: Remove duplicate </div> tag
+
+

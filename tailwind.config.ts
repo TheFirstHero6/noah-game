@@ -48,6 +48,15 @@ export default {
           800: "var(--royal-800)",
           900: "var(--royal-900)",
         },
+        // Theme-aware colors
+        theme: {
+          gold: "var(--theme-gold)",
+          "gold-dark": "var(--theme-gold-dark)",
+          accent: "var(--theme-accent)",
+          bg: "var(--theme-bg)",
+          "card-bg": "var(--theme-card-bg)",
+          border: "var(--theme-border)",
+        },
         emerald: {
           50: "var(--emerald-50)",
           100: "var(--emerald-100)",

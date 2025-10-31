@@ -43,6 +43,54 @@ const BUILDING_INDEX = [
       livestock: 0,
     },
   },
+  {
+    name: "Infantry Barracks",
+    rarity: "Common",
+    cost: {
+      currency: 50,
+      wood: 20,
+      stone: 20,
+      metal: 10,
+      food: 10,
+      livestock: 0,
+    },
+  },
+  {
+    name: "Ranged Barracks",
+    rarity: "Common",
+    cost: {
+      currency: 50,
+      wood: 20,
+      stone: 20,
+      metal: 0,
+      food: 10,
+      livestock: 0,
+    },
+  },
+  {
+    name: "Pastures",
+    rarity: "Common",
+    cost: {
+      currency: 50,
+      wood: 20,
+      stone: 0,
+      metal: 0,
+      food: 0,
+      livestock: 0,
+    },
+  },
+  {
+    name: "Cavalry Barracks",
+    rarity: "Common",
+    cost: {
+      currency: 150,
+      wood: 30,
+      stone: 20,
+      metal: 15,
+      food: 10,
+      livestock: 10,
+    },
+  },
 ];
 
 export async function POST(

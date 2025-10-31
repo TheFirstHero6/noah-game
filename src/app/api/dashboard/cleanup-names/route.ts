@@ -9,7 +9,7 @@ export async function POST() {
 
     // If no user is authenticated, return 401
     if (!clerkUser) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Get the current user to check if they're admin
@@ -18,7 +18,7 @@ export async function POST() {
     });
 
     if (!user || user.role !== "ADMIN") {
-      return new NextResponse("Forbidden", { status: 403 });
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     // Find all users with names containing "null"
@@ -51,6 +51,12 @@ export async function POST() {
     });
   } catch (error) {
     console.error("Error cleaning up names:", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Internal Server Error",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 }
+    );
   }
 }

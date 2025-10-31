@@ -13,9 +13,26 @@ export default function RulesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-background text-foreground p-8">
+    <div className="min-h-screen bg-[var(--theme-bg)] text-foreground p-8 pt-28">
       {/* Background Pattern */}
-      <div className="absolute inset-0 bg-medieval-pattern opacity-5"></div>
+      <div className="fixed inset-0 opacity-5 pointer-events-none">
+        {Array.from({ length: 16 }).map((_, i) => (
+          <div
+            key={i}
+            className="absolute"
+            style={{ left: `${(i * 61) % 100}%`, top: `${(i * 37) % 100}%` }}
+          >
+            <svg className="h-12 w-12" fill="none" viewBox="0 0 40 40">
+              <path
+                d="M36 34V30H34V34H30V36H34V40H36V36H40V34H36ZM36 4V0H34V4H30V6H34V10H36V6H40V4H36ZM6 34V30H4V34H0V36H4V40H6V36H10V34H6ZM6 4V0H4V4H0V6H4V10H6V6H10V4H6Z"
+                fill="var(--theme-gold)"
+                fillRule="evenodd"
+                clipRule="evenodd"
+              />
+            </svg>
+          </div>
+        ))}
+      </div>
 
       <div className="relative w-full max-w-6xl mx-auto">
         {/* Header Section */}
@@ -27,16 +44,16 @@ export default function RulesPage() {
                 alt="War of the Elector"
                 width={120}
                 height={120}
-                className="rounded-full border-4 border-medieval-gold-600 shadow-glow-gold transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-12"
+                className="rounded-full border-4 border-[var(--theme-accent)] transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-12"
               />
-              <div className="absolute -inset-2 bg-gradient-to-r from-medieval-gold-400 to-medieval-gold-600 rounded-full opacity-0 group-hover:opacity-30 blur-lg transition-opacity duration-500"></div>
+              <div className="absolute -inset-2 bg-gradient-to-r from-[var(--theme-gold)] to-[var(--theme-accent)] rounded-full opacity-0 group-hover:opacity-30 blur-lg transition-opacity duration-500"></div>
             </div>
 
             <div className="text-center lg:text-left">
-              <h1 className="medieval-title mb-4 glow-text">
-                📜 The Complete Rules of War of the Elector
+              <h1 className="font-[Cinzel] text-4xl md:text-5xl text-[var(--theme-gold)] mb-4 uppercase tracking-wide">
+                📜 THE COMPLETE RULES OF WAR OF THE ELECTOR
               </h1>
-              <p className="medieval-subtitle italic">
+              <p className="font-[Playfair_Display] text-[var(--theme-gold)]/80 italic text-lg md:text-xl">
                 "Master the ancient laws that govern the realm and forge your
                 destiny..."
               </p>
@@ -45,34 +62,32 @@ export default function RulesPage() {
         </div>
 
         {/* Introduction Section */}
-        <div className="medieval-card p-12 mb-12 animate-slide-up">
-          <h2 className="font-medieval text-3xl text-medieval-gold-300 mb-8 glow-text text-center">
-            🏰 Introduction to the Realm
+        <div className="border border-[var(--theme-border)] rounded-lg p-8 md:p-12 mb-12">
+          <h2 className="font-[Cinzel] text-3xl text-[var(--theme-gold)] mb-8 uppercase text-center">
+            🏰 INTRODUCTION TO THE REALM
           </h2>
 
           <div className="space-y-6">
-            <p className="medieval-text text-lg leading-relaxed">
+            <p className="font-[Playfair_Display] text-gray-200 text-lg leading-relaxed">
               Welcome to the War of the Elector, a strategic multiplayer game
               based on the Imperium Fragmentum (2nd Edition) ruleset. Command
               your cities, construct buildings, manage resources, and build your
               realm through turn-based economic gameplay.
             </p>
 
-            <div className="bg-gradient-to-r from-background/30 to-background/30 p-8 rounded-lg border border-primary/30 mt-6">
-              <p className="medieval-text text-lg leading-relaxed italic">
-                <span className="font-script text-medieval-gold-200">
-                  "I have poured many hours into the original game and many more
-                  into this refined version of it, I really do hope that
-                  everyone enjoys it. A special thanks to people who helped me
-                  refine this 2nd edition of the game: Eli, for help with game
-                  balancing; Ben, for help with balancing, map building, and
-                  combat testing; Aidan, for taking a long time to make a well
-                  done detailed map that also was balanced for spawn locations;
-                  And finally to you the player for giving my dream project a
-                  chance :)"
-                </span>
+            <div className="bg-[var(--theme-card-bg)] p-8 rounded-lg border border-[var(--theme-border)] mt-6">
+              <p className="font-[Dancing_Script] text-[var(--theme-gold)]/80 text-lg leading-relaxed italic">
+                "I have poured many hours into the original game and many more
+                into this refined version of it, I really do hope that
+                everyone enjoys it. A special thanks to people who helped me
+                refine this 2nd edition of the game: Eli, for help with game
+                balancing; Ben, for help with balancing, map building, and
+                combat testing; Aidan, for taking a long time to make a well
+                done detailed map that also was balanced for spawn locations;
+                And finally to you the player for giving my dream project a
+                chance :)"
               </p>
-              <p className="medieval-text text-sm text-medieval-steel-400 mt-4 text-right">
+              <p className="font-[Playfair_Display] text-gray-400 text-sm mt-4 text-right">
                 — Noah, From the Imperium Fragmentum (2nd Edition) Foreword
               </p>
             </div>
@@ -80,29 +95,29 @@ export default function RulesPage() {
         </div>
 
         {/* How to Take Your Turn Section */}
-        <div className="medieval-card p-12 mb-12 animate-slide-up">
-          <h2 className="font-medieval text-3xl text-medieval-gold-300 mb-8 glow-text text-center">
-            🔄 How to Take Your Turn
+        <div className="border border-[var(--theme-border)] rounded-lg p-8 md:p-12 mb-12">
+          <h2 className="font-[Cinzel] text-3xl text-[var(--theme-gold)] mb-8 uppercase text-center">
+            🔄 HOW TO TAKE YOUR TURN
           </h2>
 
           <div className="space-y-8">
-            <p className="medieval-text text-lg text-center mb-8">
+            <p className="font-[Playfair_Display] text-gray-200 text-lg text-center mb-8">
               Each turn follows a specific sequence of phases. Understanding
               this order is crucial for effective gameplay.
             </p>
 
             <div className="grid lg:grid-cols-2 gap-8">
               <div className="space-y-6">
-                <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30 transition-all duration-300 hover:shadow-lg hover:border-medieval-gold-400">
+                <div className="bg-[var(--theme-card-bg)] p-6 rounded-lg border border-[var(--theme-border)] transition-all duration-300 hover:border-[var(--theme-accent)]">
               <div className="flex items-center mb-4">
                     <span className="text-3xl mr-3 transition-transform duration-300 hover:scale-110">
                       💰
                     </span>
-                <h3 className="font-medieval text-xl text-medieval-gold-300">
+                <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                       1. Collect Income (Automatic)
                 </h3>
               </div>
-              <p className="medieval-text">
+              <p className="font-[Playfair_Display] text-gray-200">
                     Your cities generate income based on their tier level and
                     local wealth. Each turn, cities gain income according to
                     their tier level.{" "}
@@ -116,30 +131,30 @@ export default function RulesPage() {
               </p>
             </div>
 
-                <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30 transition-all duration-300 hover:shadow-lg hover:border-medieval-gold-400">
+                <div className="bg-[var(--theme-card-bg)] p-6 rounded-lg border border-[var(--theme-border)] transition-all duration-300 hover:border-[var(--theme-accent)]">
               <div className="flex items-center mb-4">
                     <span className="text-3xl mr-3 transition-transform duration-300 hover:scale-110">
                       ⚔️
                     </span>
-                <h3 className="font-medieval text-xl text-medieval-gold-300">
+                <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                       2. Pay Upkeep and Move Armies
                 </h3>
               </div>
-              <p className="medieval-text">
+              <p className="font-[Playfair_Display] text-gray-200">
                     Keep your armies in check by paying their upkeep costs.
               </p>
             </div>
 
-                <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30 transition-all duration-300 hover:shadow-lg hover:border-medieval-gold-400">
+                <div className="bg-[var(--theme-card-bg)] p-6 rounded-lg border border-[var(--theme-border)] transition-all duration-300 hover:border-[var(--theme-accent)]">
               <div className="flex items-center mb-4">
                     <span className="text-3xl mr-3 transition-transform duration-300 hover:scale-110">
                       📜
                     </span>
-                <h3 className="font-medieval text-xl text-medieval-gold-300">
+                <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                       3. Receive Event
                 </h3>
               </div>
-              <p className="medieval-text">
+              <p className="font-[Playfair_Display] text-gray-200">
                     An event triggers for all players, providing opportunities
                     for intrigue, diplomacy, and strategic decisions that can
                     affect your realm.
@@ -148,48 +163,48 @@ export default function RulesPage() {
             </div>
 
               <div className="space-y-6">
-                <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30 transition-all duration-300 hover:shadow-lg hover:border-medieval-gold-400">
+                <div className="bg-[var(--theme-card-bg)] p-6 rounded-lg border border-[var(--theme-border)] transition-all duration-300 hover:border-[var(--theme-accent)]">
                   <div className="flex items-center mb-4">
                     <span className="text-3xl mr-3 transition-transform duration-300 hover:scale-110">
                       🏗️
                     </span>
-                    <h3 className="font-medieval text-xl text-medieval-gold-300">
+                    <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                       4. Build and Recruitment
                     </h3>
                   </div>
-                  <p className="medieval-text">
+                  <p className="font-[Playfair_Display] text-gray-200">
                     Construct buildings and recruit units using your wealth and
                     resources. Costs are paid from your personal wealth, not the
                     cities' wealth.
                   </p>
                 </div>
 
-                <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30 transition-all duration-300 hover:shadow-lg hover:border-medieval-gold-400">
+                <div className="bg-[var(--theme-card-bg)] p-6 rounded-lg border border-[var(--theme-border)] transition-all duration-300 hover:border-[var(--theme-accent)]">
                   <div className="flex items-center mb-4">
                     <span className="text-3xl mr-3 transition-transform duration-300 hover:scale-110">
                       🗺️
                     </span>
-                    <h3 className="font-medieval text-xl text-medieval-gold-300">
+                    <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                       5. Give Movement Orders
                     </h3>
                   </div>
-                  <p className="medieval-text">
+                  <p className="font-[Playfair_Display] text-gray-200">
                     At the end of your turn, write down movement orders for
                     armies that will move next turn. Give these to the game
                     master before the turn passes.
                   </p>
                 </div>
 
-                <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30 transition-all duration-300 hover:shadow-lg hover:border-medieval-gold-400">
+                <div className="bg-[var(--theme-card-bg)] p-6 rounded-lg border border-[var(--theme-border)] transition-all duration-300 hover:border-[var(--theme-accent)]">
                   <div className="flex items-center mb-4">
                     <span className="text-3xl mr-3 transition-transform duration-300 hover:scale-110">
                       📊
                     </span>
-                    <h3 className="font-medieval text-xl text-medieval-gold-300">
+                    <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                       Tax Collection
                     </h3>
                   </div>
-                  <p className="medieval-text">
+                  <p className="font-[Playfair_Display] text-gray-200">
                     Set tax rates in 5% increments. You tax a percentage of your
                     city's total wealth, not just the income gained that turn.{" "}
                     <strong>
@@ -206,8 +221,8 @@ export default function RulesPage() {
         </div>
 
         {/* Game Overview Section */}
-        <div className="medieval-card p-12 mb-12 animate-slide-up">
-          <h2 className="font-medieval text-3xl text-medieval-gold-300 mb-8 glow-text text-center">
+        <div className="border border-[var(--theme-border)] rounded-lg p-8 md:p-12 mb-12">
+          <h2 className="font-[Cinzel] text-3xl text-[var(--theme-gold)] mb-8 uppercase text-center">
             🎮 How the Game Works
           </h2>
 
@@ -223,11 +238,11 @@ export default function RulesPage() {
                 <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30">
                   <div className="flex items-center mb-4">
                     <span className="text-3xl mr-3">🏰</span>
-                    <h3 className="font-medieval text-xl text-medieval-gold-300">
+                    <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                       City Management
                     </h3>
                   </div>
-                  <p className="medieval-text">
+                  <p className="font-[Playfair_Display] text-gray-200">
                     Each city has a tier level (1-5) that determines its income
                     generation. Cities accumulate wealth over time, and you can
                     tax a percentage of their total accumulated wealth. Higher
@@ -239,11 +254,11 @@ export default function RulesPage() {
                 <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30">
                   <div className="flex items-center mb-4">
                     <span className="text-3xl mr-3">🏗️</span>
-                    <h3 className="font-medieval text-xl text-medieval-gold-300">
+                    <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                       Building Construction
                     </h3>
                   </div>
-                  <p className="medieval-text">
+                  <p className="font-[Playfair_Display] text-gray-200">
                     Construct buildings to generate resources and improve your
                     cities. Buildings have different rarities (Common/Rare) and
                     require specific resources. Each building provides ongoing
@@ -254,11 +269,11 @@ export default function RulesPage() {
                 <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30">
                   <div className="flex items-center mb-4">
                     <span className="text-3xl mr-3">⚔️</span>
-                    <h3 className="font-medieval text-xl text-medieval-gold-300">
+                    <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                       Military Strategy
                     </h3>
                   </div>
-                  <p className="medieval-text">
+                  <p className="font-[Playfair_Display] text-gray-200">
                     Recruit and maintain armies to defend your territory and
                     expand your influence. Units have different tiers (T1-T5)
                     representing training and equipment quality. Higher tier
@@ -271,11 +286,11 @@ export default function RulesPage() {
                 <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30">
               <div className="flex items-center mb-4">
                 <span className="text-3xl mr-3">💰</span>
-                <h3 className="font-medieval text-xl text-medieval-gold-300">
+                <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                       Economic System
                 </h3>
               </div>
-              <p className="medieval-text">
+              <p className="font-[Playfair_Display] text-gray-200">
                     Balance taxation with city growth. Set tax rates in 5%
                     increments to extract wealth from your cities' total wealth.
                     Cities gain fixed income each turn regardless of taxation,
@@ -286,11 +301,11 @@ export default function RulesPage() {
                 <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30">
               <div className="flex items-center mb-4">
                     <span className="text-3xl mr-3">🗺️</span>
-                    <h3 className="font-medieval text-xl text-medieval-gold-300">
+                    <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                       Turn-Based Gameplay
                     </h3>
                   </div>
-                  <p className="medieval-text">
+                  <p className="font-[Playfair_Display] text-gray-200">
                     The game progresses in turns, with each turn following the
                     5-phase sequence. Four turns make up one year. Time
                     management and planning ahead are crucial for success in
@@ -301,11 +316,11 @@ export default function RulesPage() {
                 <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30">
                   <div className="flex items-center mb-4">
                     <span className="text-3xl mr-3">👑</span>
-                    <h3 className="font-medieval text-xl text-medieval-gold-300">
+                    <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                       Victory Conditions
                     </h3>
                   </div>
-                  <p className="medieval-text">
+                  <p className="font-[Playfair_Display] text-gray-200">
                     Compete to build the most prosperous realm through city
                     mastery, economic dominance, and military excellence. The
                     player with the strongest combination of these elements will
@@ -318,8 +333,8 @@ export default function RulesPage() {
         </div>
 
         {/* Resources Section */}
-        <div className="medieval-card p-12 mb-12 animate-slide-up">
-          <h2 className="font-medieval text-3xl text-medieval-gold-300 mb-8 glow-text text-center">
+        <div className="border border-[var(--theme-border)] rounded-lg p-8 md:p-12 mb-12">
+          <h2 className="font-[Cinzel] text-3xl text-[var(--theme-gold)] mb-8 uppercase text-center">
             💎 The Five Core Resources
           </h2>
 
@@ -343,11 +358,11 @@ export default function RulesPage() {
                   <span className="text-3xl mr-3 transition-transform duration-300 hover:rotate-12">
                     🌾
                   </span>
-                  <h3 className="font-medieval text-xl text-medieval-gold-300">
+                  <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                     Crops
                   </h3>
                 </div>
-                <p className="medieval-text">
+                <p className="font-[Playfair_Display] text-gray-200">
                   Essential for feeding your population and armies. Produced by
                   Fields and other agricultural buildings. Critical for
                   maintaining your realm's food security.
@@ -367,11 +382,11 @@ export default function RulesPage() {
                   <span className="text-3xl mr-3 transition-transform duration-300 hover:rotate-12">
                     🌳
                   </span>
-                  <h3 className="font-medieval text-xl text-medieval-gold-300">
+                  <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                     Wood
                   </h3>
                 </div>
-                <p className="medieval-text">
+                <p className="font-[Playfair_Display] text-gray-200">
                   The foundation of construction and industry. Essential for
                   building structures, weapons, and tools. Gathered from forests
                   and processed in Sawmills.
@@ -391,11 +406,11 @@ export default function RulesPage() {
                   <span className="text-3xl mr-3 transition-transform duration-300 hover:rotate-12">
                     🪨
                   </span>
-                  <h3 className="font-medieval text-xl text-medieval-gold-300">
+                  <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                     Stone
                   </h3>
                 </div>
-                <p className="medieval-text">
+                <p className="font-[Playfair_Display] text-gray-200">
                   Required for fortifications, advanced buildings, and defensive
                   structures. Mined from quarries and stone deposits. Essential
                   for city upgrades.
@@ -415,11 +430,11 @@ export default function RulesPage() {
                   <span className="text-3xl mr-3 transition-transform duration-300 hover:rotate-12">
                     ⚒️
                   </span>
-                <h3 className="font-medieval text-xl text-medieval-gold-300">
+                <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                   Metal
                 </h3>
               </div>
-              <p className="medieval-text">
+              <p className="font-[Playfair_Display] text-gray-200">
                   The forge of industry and warfare. Essential for weapons,
                   armor, and advanced tools. Mined from metal deposits and
                   processed in forges.
@@ -439,11 +454,11 @@ export default function RulesPage() {
                   <span className="text-3xl mr-3 transition-transform duration-300 hover:rotate-12">
                     🐄
                   </span>
-                <h3 className="font-medieval text-xl text-medieval-gold-300">
+                <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                     Produce
                 </h3>
               </div>
-              <p className="medieval-text">
+              <p className="font-[Playfair_Display] text-gray-200">
                   Livestock and animal products. Provides food, materials, and
                   trade goods. Raised in Pastures and managed through
                   agricultural expertise.
@@ -454,8 +469,8 @@ export default function RulesPage() {
         </div>
 
         {/* City Management Section */}
-        <div className="medieval-card p-12 mb-12 animate-slide-up">
-          <h2 className="font-medieval text-3xl text-medieval-gold-300 mb-8 glow-text text-center">
+        <div className="border border-[var(--theme-border)] rounded-lg p-8 md:p-12 mb-12">
+          <h2 className="font-[Cinzel] text-3xl text-[var(--theme-gold)] mb-8 uppercase text-center">
             🏘️ City Management & Administration
           </h2>
 
@@ -467,7 +482,7 @@ export default function RulesPage() {
                   City Fundamentals
                 </h3>
                 <div className="space-y-4">
-                  <p className="medieval-text">
+                  <p className="font-[Playfair_Display] text-gray-200">
                     Cities are the heart of your realm, each with unique
                     characteristics and management requirements.
                   </p>
@@ -550,7 +565,7 @@ export default function RulesPage() {
                   Economic Management
                 </h3>
                 <div className="space-y-4">
-                  <p className="medieval-text">
+                  <p className="font-[Playfair_Display] text-gray-200">
                     Master the art of taxation and wealth management to maximize
                     your realm's prosperity.
                   </p>
@@ -597,7 +612,7 @@ export default function RulesPage() {
                   Building Construction
                 </h3>
                 <div className="space-y-4">
-                  <p className="medieval-text">
+                  <p className="font-[Playfair_Display] text-gray-200">
                     Construct buildings to generate resources, improve
                     efficiency, and expand your economic capabilities.
                   </p>
@@ -630,7 +645,7 @@ export default function RulesPage() {
                             20 Wood, 20 Stone, 10 Metal, 10 Produce
                           </li>
                           <li className="medieval-text text-sm">
-                            • <strong>Archery Barracks:</strong> 50 Currency, 20
+                            • <strong>Ranged Barracks:</strong> 50 Currency, 20
                             Wood, 20 Stone, 10 Produce
                           </li>
                           <li className="medieval-text text-sm">
@@ -673,7 +688,7 @@ export default function RulesPage() {
                   Construction Process
                 </h3>
                 <div className="space-y-4">
-                  <p className="medieval-text">
+                  <p className="font-[Playfair_Display] text-gray-200">
                     Understanding the building construction system is crucial
                     for efficient city development.
                   </p>
@@ -714,8 +729,8 @@ export default function RulesPage() {
         </div>
 
         {/* Turn-Based Economy Section */}
-        <div className="medieval-card p-12 mb-12 animate-slide-up">
-          <h2 className="font-medieval text-3xl text-medieval-gold-300 mb-8 glow-text text-center">
+        <div className="border border-[var(--theme-border)] rounded-lg p-8 md:p-12 mb-12">
+          <h2 className="font-[Cinzel] text-3xl text-[var(--theme-gold)] mb-8 uppercase text-center">
             🔄 Turn-Based Economic System
           </h2>
 
@@ -727,7 +742,7 @@ export default function RulesPage() {
                   Income Generation
                 </h3>
                 <div className="space-y-4">
-                  <p className="medieval-text">
+                  <p className="font-[Playfair_Display] text-gray-200">
                     Each turn, your cities generate income based on their
                     upgrade tier and economic activity.
                   </p>
@@ -796,7 +811,7 @@ export default function RulesPage() {
                   Resource Production
                 </h3>
                 <div className="space-y-4">
-                  <p className="medieval-text">
+                  <p className="font-[Playfair_Display] text-gray-200">
                     Buildings generate resources each turn, providing a steady
                     income stream for your realm.
                   </p>
@@ -821,7 +836,7 @@ export default function RulesPage() {
                   Tax Collection Process
                 </h3>
                 <div className="space-y-4">
-                  <p className="medieval-text">
+                  <p className="font-[Playfair_Display] text-gray-200">
                     The taxation system is the core of your economic power,
                     converting local wealth into usable currency.
                   </p>
@@ -857,7 +872,7 @@ export default function RulesPage() {
                   Turn Advancement
                 </h3>
                 <div className="space-y-4">
-                  <p className="medieval-text">
+                  <p className="font-[Playfair_Display] text-gray-200">
                     Turn advancement is controlled by administrators to ensure
                     proper game flow and economic processing.
                   </p>
@@ -893,8 +908,8 @@ export default function RulesPage() {
         </div>
 
         {/* Admin Controls Section */}
-        <div className="medieval-card p-12 mb-12 animate-slide-up">
-          <h2 className="font-medieval text-3xl text-medieval-gold-300 mb-8 glow-text text-center">
+        <div className="border border-[var(--theme-border)] rounded-lg p-8 md:p-12 mb-12">
+          <h2 className="font-[Cinzel] text-3xl text-[var(--theme-gold)] mb-8 uppercase text-center">
             👑 Administrative Powers & Game Management
           </h2>
 
@@ -904,7 +919,7 @@ export default function RulesPage() {
                 🏘️ City Granting Authority
               </h3>
               <div className="space-y-4">
-                <p className="medieval-text">
+                <p className="font-[Playfair_Display] text-gray-200">
                   Administrators wield the power to shape the realm by granting
                   cities to players, expanding their territories and economic
                   potential.
@@ -948,7 +963,7 @@ export default function RulesPage() {
                 🔄 Turn Management System
               </h3>
               <div className="space-y-4">
-                <p className="medieval-text">
+                <p className="font-[Playfair_Display] text-gray-200">
                   The turn-based economy requires careful administration to
                   maintain game balance and ensure fair economic processing for
                   all players.
@@ -990,8 +1005,8 @@ export default function RulesPage() {
         </div>
 
         {/* Game Interface Section */}
-        <div className="medieval-card p-12 mb-12 animate-slide-up">
-          <h2 className="font-medieval text-3xl text-medieval-gold-300 mb-8 glow-text text-center">
+        <div className="border border-[var(--theme-border)] rounded-lg p-8 md:p-12 mb-12">
+          <h2 className="font-[Cinzel] text-3xl text-[var(--theme-gold)] mb-8 uppercase text-center">
             🎮 Game Interface & Navigation
           </h2>
 
@@ -1068,8 +1083,8 @@ export default function RulesPage() {
         </div>
 
         {/* Victory Conditions Section */}
-        <div className="medieval-card p-12 mb-12 animate-slide-up">
-          <h2 className="font-medieval text-3xl text-medieval-gold-300 mb-8 glow-text text-center">
+        <div className="border border-[var(--theme-border)] rounded-lg p-8 md:p-12 mb-12">
+          <h2 className="font-[Cinzel] text-3xl text-[var(--theme-gold)] mb-8 uppercase text-center">
             🏆 Paths to Victory
           </h2>
 
@@ -1083,10 +1098,10 @@ export default function RulesPage() {
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center space-y-4">
                 <div className="text-5xl">🏘️</div>
-                <h3 className="font-medieval text-xl text-medieval-gold-300">
+                <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                   City Mastery
                 </h3>
-                <p className="medieval-text">
+                <p className="font-[Playfair_Display] text-gray-200">
                   Build the most cities with the highest upgrade tiers and local
                   wealth. Expand your territorial control and economic influence
                   across the realm.
@@ -1095,10 +1110,10 @@ export default function RulesPage() {
 
               <div className="text-center space-y-4">
                 <div className="text-5xl">💰</div>
-                <h3 className="font-medieval text-xl text-medieval-gold-300">
+                <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                   Economic Dominance
                 </h3>
-                <p className="medieval-text">
+                <p className="font-[Playfair_Display] text-gray-200">
                   Accumulate vast resources and currency through efficient city
                   management, optimal tax rates, and strategic building
                   construction.
@@ -1107,10 +1122,10 @@ export default function RulesPage() {
 
               <div className="text-center space-y-4">
                 <div className="text-5xl">🏗️</div>
-                <h3 className="font-medieval text-xl text-medieval-gold-300">
+                <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                   Building Excellence
                 </h3>
-                <p className="medieval-text">
+                <p className="font-[Playfair_Display] text-gray-200">
                   Construct the most advanced buildings and optimize your
                   economic output. Master the art of resource production and
                   industrial development.

@@ -330,7 +330,7 @@ _(Note: The "Building Functions" table is located at an external Google Doc )_
 | Fields            | Common | 50    | 20   | 0     | 0     | 0         | 0    |
 | Pastures          | Common | 50    | 20   | 0     | 0     | 0         | 10   |
 | Infantry Barracks | Common | 50    | 20   | 20    | 10    | 0         | 10   |
-| Archery Barracks  | Common | 50    | 20   | 20    | 0     | 0         | 10   |
+| Ranged Barracks   | Common | 50    | 20   | 20    | 0     | 0         | 10   |
 | Town Square       | Common | 50    | 20   | 20    | 0     | 0         | 10   |
 | Mine              | Rare   | 150   | 30   | 30    | 0     | 0         | 0    |
 | Cavalry Barracks  | Rare   | 150   | 30   | 20    | 15    | 10        | 10   |

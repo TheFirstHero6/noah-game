@@ -39,14 +39,24 @@ export const BUILDING_PRODUCTION_RATES = {
     3: { food: 6, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // T3: 6 Food
   },
   Pastures: {
-    1: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 1, currency: 0 }, // T1: 1 Livestock
-    2: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 2, currency: 0 }, // T2: 2 Livestock
-    3: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 3, currency: 0 }, // T3: 3 Livestock
+    1: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 5, currency: 0 }, // T1: 5 Livestock per turn
+    2: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 5, currency: 0 }, // T2: 5 Livestock per turn
+    3: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 5, currency: 0 }, // T3: 5 Livestock per turn
   },
   Mine: {
     1: { food: 0, wood: 0, stone: 0, metal: 2, livestock: 0, currency: 0 }, // T1: 2 Metal (rare)
     2: { food: 0, wood: 0, stone: 0, metal: 4, livestock: 0, currency: 0 }, // T2: 4 Metal
     3: { food: 0, wood: 0, stone: 0, metal: 6, livestock: 0, currency: 0 }, // T3: 6 Metal
+  },
+  "Infantry Barracks": {
+    1: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // Military - no production
+    2: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // Military - no production
+    3: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // Military - no production
+  },
+  "Ranged Barracks": {
+    1: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // Military - no production
+    2: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // Military - no production
+    3: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // Military - no production
   },
   "Cavalry Barracks": {
     1: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // Military - no production

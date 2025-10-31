@@ -9,7 +9,7 @@ export async function POST(req: Request) {
 
     // If no user is authenticated, return 401
     if (!clerkUser) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Find the admin user in our database
@@ -19,9 +19,10 @@ export async function POST(req: Request) {
 
     // Check if user exists and has ADMIN role
     if (!adminUser || adminUser.role !== "ADMIN") {
-      return new NextResponse("Forbidden - Admin access required", {
-        status: 403,
-      });
+      return NextResponse.json(
+        { error: "Forbidden - Admin access required" },
+        { status: 403 }
+      );
     }
 
     // Parse JSON body

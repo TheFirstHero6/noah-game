@@ -1,7 +1,7 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { dark } from "@clerk/themes";
-import Navbar from "@/components/navbar";
+import ConditionalNavbar from "@/components/ConditionalNavbar";
 import GameInfo from "@/components/game-info";
 import SplashScreen from "@/components/splash-screen";
 import { ThemeProvider } from "@/contexts/ThemeContext";
@@ -38,9 +38,11 @@ export default function RootLayout({
         <ThemeProvider>
           <ClerkProvider appearance={{ baseTheme: dark }}>
             <SplashScreen>
-              <Navbar />
-              {children}
-              <Chatbot />
+              <ConditionalNavbar />
+              <div className="pt-20">
+                {children}
+                <Chatbot />
+              </div>
             </SplashScreen>
           </ClerkProvider>
         </ThemeProvider>

@@ -52,6 +52,38 @@ export async function POST(
       return NextResponse.json({ error: "Population cap exceeded" }, { status: 400 });
     }
 
+    // Building requirement check
+    // Get all buildings from user's cities
+    const userCitiesWithBuildings = await prisma.city.findMany({
+      where: { ownerId: user.id },
+      include: { buildings: true },
+    });
+    const allBuildings = userCitiesWithBuildings.flatMap(city => city.buildings.map(b => b.name));
+
+    // Define building requirements for each unit type
+    const BUILDING_REQUIREMENTS: Record<string, string[]> = {
+      "Pike Men": ["Infantry Barracks"],
+      "Swordsmen": ["Infantry Barracks"],
+      "Matchlocks": ["Ranged Barracks"],
+      "Flintlocks": ["Ranged Barracks"],
+      "Light Calvary": ["Cavalry Barracks"],
+      "Dragons": ["Cavalry Barracks"], // Note: Unit type is "Dragons" in UNIT_COSTS
+      "Heavy Calvary": ["Cavalry Barracks"],
+      "Banner Guard": ["Cavalry Barracks"],
+    };
+
+    const requiredBuildings = BUILDING_REQUIREMENTS[unitType];
+    if (requiredBuildings) {
+      const hasRequiredBuilding = requiredBuildings.some(buildingName => 
+        allBuildings.includes(buildingName)
+      );
+      if (!hasRequiredBuilding) {
+        return NextResponse.json({ 
+          error: `You need ${requiredBuildings.join(" or ")} to recruit ${unitType}` 
+        }, { status: 400 });
+      }
+    }
+
     // Resource check
     const totalCost = Object.fromEntries(
       Object.entries(costPer).map(([k, v]) => [k, (v as number) * quantity])

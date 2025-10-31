@@ -75,6 +75,54 @@ const BUILDING_INDEX: BuildingTemplate[] = [
       livestock: 0,
     },
   },
+  {
+    name: "Infantry Barracks",
+    rarity: "Common",
+    cost: {
+      currency: 50,
+      wood: 20,
+      stone: 20,
+      metal: 10,
+      food: 10,
+      livestock: 0,
+    },
+  },
+  {
+    name: "Ranged Barracks",
+    rarity: "Common",
+    cost: {
+      currency: 50,
+      wood: 20,
+      stone: 20,
+      metal: 0,
+      food: 10,
+      livestock: 0,
+    },
+  },
+  {
+    name: "Pastures",
+    rarity: "Common",
+    cost: {
+      currency: 50,
+      wood: 20,
+      stone: 0,
+      metal: 0,
+      food: 0,
+      livestock: 0,
+    },
+  },
+  {
+    name: "Cavalry Barracks",
+    rarity: "Common",
+    cost: {
+      currency: 150,
+      wood: 30,
+      stone: 20,
+      metal: 15,
+      food: 10,
+      livestock: 10,
+    },
+  },
 ];
 
 export default function CityDetailsPage() {
@@ -93,12 +141,21 @@ export default function CityDetailsPage() {
   const [isUpgradingBuilding, setIsUpgradingBuilding] = useState<string | null>(
     null
   );
+  const [resources, setResources] = useState({
+    wood: 0,
+    stone: 0,
+    food: 0,
+    currency: 0,
+    metal: 0,
+    livestock: 0,
+  });
 
   const { addNotification, NotificationContainer } = useNotification();
 
   useEffect(() => {
     if (cityId) {
       fetchCity();
+      fetchResources();
     }
   }, [cityId]);
 
@@ -119,6 +176,25 @@ export default function CityDetailsPage() {
       addNotification("error", "Failed to load city details");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchResources = async () => {
+    try {
+      const response = await fetch("/api/dashboard/user-data");
+      if (response.ok) {
+        const data = await response.json();
+        setResources(data.resources || {
+          wood: 0,
+          stone: 0,
+          food: 0,
+          currency: 0,
+          metal: 0,
+          livestock: 0,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching resources:", error);
     }
   };
 
@@ -198,6 +274,7 @@ export default function CityDetailsPage() {
       if (response.ok) {
         addNotification("success", data.message);
         fetchCity(); // Refresh city data
+        fetchResources(); // Refresh resources
       } else {
         addNotification("error", data.error || "Failed to build structure");
       }
@@ -574,43 +651,74 @@ export default function CityDetailsPage() {
           )}
 
           <div className="responsive-grid-sm">
-            {BUILDING_INDEX.map((building, index) => (
-              <div
-                key={building.name}
-                className="p-4 bg-medieval-steel-800/50 rounded-xl border border-medieval-gold-600 hover:border-medieval-gold-500 transition-all duration-300 animate-scale-in"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="mb-4">
-                  <div className="font-medieval text-lg text-medieval-gold-300 mb-2">
-                    {building.name}
-                  </div>
-                  <div className="text-sm text-medieval-steel-400 mb-3 bg-medieval-steel-700/50 px-2 py-1 rounded-lg inline-block">
-                    {building.rarity} Building
-                  </div>
-                  <div className="text-sm text-medieval-steel-300">
-                    Cost:{" "}
-                    {Object.entries(building.cost)
-                      .filter(([_, value]) => value > 0)
-                      .map(([resource, value]) => `${value} ${resource}`)
-                      .join(", ")}
-                  </div>
-                </div>
-                <button
-                  onClick={() => buildBuilding(building)}
-                  disabled={
-                    isBuilding === building.name ||
-                    city.buildings.length >= MAX_BUILDINGS_PER_CITY
-                  }
-                  className="medieval-button w-full disabled:opacity-50 disabled:cursor-not-allowed"
+            {BUILDING_INDEX.map((building, index) => {
+              const hasEnoughResources =
+                resources.currency >= building.cost.currency &&
+                resources.wood >= building.cost.wood &&
+                resources.stone >= building.cost.stone &&
+                resources.metal >= building.cost.metal &&
+                resources.food >= building.cost.food &&
+                resources.livestock >= building.cost.livestock;
+              
+              const isDisabled =
+                isBuilding === building.name ||
+                city.buildings.length >= MAX_BUILDINGS_PER_CITY ||
+                !hasEnoughResources;
+
+              const missingResources = Object.entries(building.cost)
+                .filter(([key, value]) => value > 0 && (resources[key as keyof typeof resources] || 0) < value)
+                .map(([key, value]) => `${value - (resources[key as keyof typeof resources] || 0)} ${key}`)
+                .join(", ");
+
+              return (
+                <div
+                  key={building.name}
+                  className="p-4 bg-medieval-steel-800/50 rounded-xl border border-medieval-gold-600 hover:border-medieval-gold-500 transition-all duration-300 animate-scale-in"
+                  style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  {isBuilding === building.name
-                    ? "Building..."
-                    : city.buildings.length >= MAX_BUILDINGS_PER_CITY
-                    ? "Limit Reached"
-                    : "Build"}
-                </button>
-              </div>
-            ))}
+                  <div className="mb-4">
+                    <div className="font-medieval text-lg text-medieval-gold-300 mb-2">
+                      {building.name}
+                    </div>
+                    <div className="text-sm text-medieval-steel-400 mb-3 bg-medieval-steel-700/50 px-2 py-1 rounded-lg inline-block">
+                      {building.rarity} Building
+                    </div>
+                    <div className="text-sm text-medieval-steel-300">
+                      Cost:{" "}
+                      {Object.entries(building.cost)
+                        .filter(([_, value]) => value > 0)
+                        .map(([resource, value]) => `${value} ${resource}`)
+                        .join(", ")}
+                    </div>
+                    {!hasEnoughResources && (
+                      <div className="text-xs text-red-400 mt-2">
+                        Missing: {missingResources}
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => buildBuilding(building)}
+                    disabled={isDisabled}
+                    title={
+                      !hasEnoughResources
+                        ? `Insufficient resources. Missing: ${missingResources}`
+                        : city.buildings.length >= MAX_BUILDINGS_PER_CITY
+                        ? "Building limit reached"
+                        : ""
+                    }
+                    className="medieval-button w-full disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isBuilding === building.name
+                      ? "Building..."
+                      : city.buildings.length >= MAX_BUILDINGS_PER_CITY
+                      ? "Limit Reached"
+                      : !hasEnoughResources
+                      ? "Insufficient Resources"
+                      : "Build"}
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

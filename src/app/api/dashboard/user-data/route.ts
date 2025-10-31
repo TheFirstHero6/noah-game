@@ -13,7 +13,7 @@ export async function GET() {
     // If no user is authenticated, return 401
     if (!clerkUser) {
       console.log("API: No clerk user, returning 401");
-      return new Response("Unauthorized", { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Find the user in our database using their Clerk ID
@@ -29,7 +29,7 @@ export async function GET() {
     // If user doesn't exist in our database, return 404
     if (!user) {
       console.log("API: User not found in database, returning 404");
-      return new Response("User not found", { status: 404 });
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     console.log("API: User from database:", {
@@ -95,6 +95,6 @@ export async function GET() {
     return NextResponse.json(responseData);
   } catch (error) {
     console.error("Error fetching user data:", error);
-    return new Response("Internal Server Error", { status: 500 });
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

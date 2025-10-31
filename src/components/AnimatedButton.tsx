@@ -2,16 +2,19 @@
 
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
+import { type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/design-system";
+import { Button, buttonVariants } from "@/components/ui/button";
 
 interface AnimatedButtonProps {
   children: ReactNode;
   onClick?: () => void;
   className?: string;
-  variant?: "primary" | "secondary" | "ghost" | "danger";
-  size?: "sm" | "md" | "lg";
+  variant?: "primary" | "secondary" | "ghost" | "danger" | "success" | VariantProps<typeof buttonVariants>["variant"];
+  size?: "sm" | "md" | "lg" | VariantProps<typeof buttonVariants>["size"];
   disabled?: boolean;
   loading?: boolean;
+  asChild?: boolean;
 }
 
 export function AnimatedButton({
@@ -22,45 +25,54 @@ export function AnimatedButton({
   size = "md",
   disabled = false,
   loading = false,
+  asChild = false,
 }: AnimatedButtonProps) {
-  const variants = {
-    primary:
-      "bg-gradient-to-r from-gold-500 to-gold-600 text-steel-900 hover:from-gold-400 hover:to-gold-500 focus:ring-gold-500 shadow-lg hover:shadow-xl",
-    secondary:
-      "bg-gradient-to-r from-steel-600 to-steel-700 text-white hover:from-steel-500 hover:to-steel-600 focus:ring-steel-500 shadow-md hover:shadow-lg",
-    ghost:
-      "bg-transparent text-gold-400 hover:bg-gold-500/10 hover:text-gold-300 focus:ring-gold-500",
-    danger:
-      "bg-gradient-to-r from-crimson-500 to-crimson-600 text-white hover:from-crimson-400 hover:to-crimson-500 focus:ring-crimson-500 shadow-lg hover:shadow-xl",
+  // Map our custom variants to Figma button variants
+  const variantMap: Record<string, VariantProps<typeof buttonVariants>["variant"]> = {
+    primary: "default",
+    secondary: "secondary",
+    ghost: "ghost",
+    danger: "destructive",
   };
 
-  const sizes = {
-    sm: "px-4 py-2 text-sm",
-    md: "px-6 py-3 text-base",
-    lg: "px-8 py-4 text-lg",
+  const sizeMap: Record<string, VariantProps<typeof buttonVariants>["size"]> = {
+    sm: "sm",
+    md: "default",
+    lg: "lg",
   };
+
+  const mappedVariant = variantMap[variant as string] || (variant as VariantProps<typeof buttonVariants>["variant"]) || "default";
+  const mappedSize = sizeMap[size as string] || (size as VariantProps<typeof buttonVariants>["size"]) || "default";
 
   return (
-    <motion.button
-      onClick={onClick}
-      disabled={disabled || loading}
+    <motion.div
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      className={cn(
-        "relative inline-flex items-center justify-center font-medium rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed",
-        variants[variant],
-        sizes[size],
-        className
-      )}
+      className="inline-block"
     >
-      {loading && (
-        <motion.div
-          className="mr-2 h-4 w-4 border-2 border-current border-t-transparent rounded-full"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-        />
-      )}
-      {children}
-    </motion.button>
+      <Button
+        onClick={onClick}
+        disabled={disabled || loading}
+        variant={mappedVariant}
+        size={mappedSize}
+        asChild={asChild}
+        className={cn(
+          // Theme-aware Figma styling
+          variant === "primary" && "bg-gradient-to-r from-[var(--theme-gold)] to-[var(--theme-gold-dark)] text-slate-900",
+          variant === "secondary" && "border-2 border-[var(--theme-border)] hover:border-[var(--theme-accent)] text-[var(--theme-gold)]",
+          variant === "success" && "bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl",
+          className
+        )}
+      >
+        {loading && (
+          <motion.div
+            className="mr-2 h-4 w-4 border-2 border-current border-t-transparent rounded-full"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          />
+        )}
+        {children}
+      </Button>
+    </motion.div>
   );
 }

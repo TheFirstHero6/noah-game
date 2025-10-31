@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
 import { cn } from "@/lib/design-system";
+import { Card } from "@/components/ui/card";
 
 interface AnimatedCardProps {
   children: ReactNode;
@@ -21,10 +22,10 @@ export function AnimatedCard({
 }: AnimatedCardProps) {
   const variants = {
     default:
-      "bg-gradient-to-br from-steel-800/50 via-steel-700/30 to-steel-800/50 backdrop-blur-sm border border-steel-600/30",
+      "backdrop-blur-sm bg-[var(--theme-card-bg)] border border-[var(--theme-border)]",
     glass: "bg-white/5 backdrop-blur-md border border-white/10",
     interactive:
-      "bg-gradient-to-br from-steel-800/50 via-steel-700/30 to-steel-800/50 backdrop-blur-sm border border-steel-600/30 hover:border-gold-500/50 hover:shadow-glow cursor-pointer",
+      "backdrop-blur-sm bg-[var(--theme-card-bg)] border border-[var(--theme-border)] hover:border-[var(--theme-accent)] cursor-pointer",
   };
 
   return (
@@ -45,13 +46,17 @@ export function AnimatedCard({
             }
           : {}
       }
-      className={cn(
-        "rounded-xl shadow-xl transition-all duration-300",
-        variants[variant],
-        className
-      )}
+      className={cn("transition-all duration-300", className)}
     >
-      {children}
+      <Card 
+        className={cn(
+          "rounded-3xl shadow-[0px_20px_25px_-5px_rgba(0,0,0,0.3)] transition-all duration-300",
+          variants[variant],
+          hover && "hover:shadow-[0px_25px_50px_-12px_rgba(0,0,0,0.4)]"
+        )}
+      >
+        {children}
+      </Card>
     </motion.div>
   );
 }

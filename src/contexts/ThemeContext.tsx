@@ -27,25 +27,46 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         const response = await fetch("/api/dashboard/theme");
         if (response.ok) {
           const data = await response.json();
-          setThemeState(data.theme);
+          if (data.theme) {
+            setThemeState(data.theme);
+          }
         } else {
-          // Fallback to localStorage
-          const savedTheme = localStorage.getItem("medieval-theme") as Theme;
-          if (
-            savedTheme &&
-            [
-              "royal-court",
-              "forest-kingdom",
-              "mystical-wizard",
-              "dragons-lair",
-            ].includes(savedTheme)
-          ) {
-            setThemeState(savedTheme);
+          // If 401 (not authenticated), use localStorage or default
+          if (response.status === 401) {
+            const savedTheme = localStorage.getItem("medieval-theme") as Theme;
+            if (
+              savedTheme &&
+              [
+                "royal-court",
+                "forest-kingdom",
+                "mystical-wizard",
+                "dragons-lair",
+              ].includes(savedTheme)
+            ) {
+              setThemeState(savedTheme);
+            } else {
+              // Apply default theme for non-authenticated users
+              setThemeState("royal-court");
+            }
+          } else {
+            // For other errors, fallback to localStorage
+            const savedTheme = localStorage.getItem("medieval-theme") as Theme;
+            if (
+              savedTheme &&
+              [
+                "royal-court",
+                "forest-kingdom",
+                "mystical-wizard",
+                "dragons-lair",
+              ].includes(savedTheme)
+            ) {
+              setThemeState(savedTheme);
+            }
           }
         }
       } catch (error) {
         console.error("Error loading theme:", error);
-        // Fallback to localStorage
+        // Fallback to localStorage or default
         const savedTheme = localStorage.getItem("medieval-theme") as Theme;
         if (
           savedTheme &&
@@ -57,6 +78,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
           ].includes(savedTheme)
         ) {
           setThemeState(savedTheme);
+        } else {
+          // Apply default theme if no saved theme
+          setThemeState("royal-court");
         }
       } finally {
         setIsLoading(false);
