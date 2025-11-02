@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useNotification } from "@/components/Notification";
+import { useRealm } from "@/contexts/RealmContext";
+import RealmRequirement from "@/components/RealmRequirement";
 
 interface User {
   id: string;
@@ -22,6 +24,7 @@ interface City {
 
 export default function AdminPage() {
   const { user, isLoaded } = useUser();
+  const { currentRealm } = useRealm();
   const [users, setUsers] = useState<User[]>([]);
   const [cities, setCities] = useState<City[]>([]);
   const [selectedUser, setSelectedUser] = useState("");
@@ -48,12 +51,12 @@ export default function AdminPage() {
   const { addNotification, NotificationContainer } = useNotification();
 
   useEffect(() => {
-    if (isLoaded && user) {
+    if (isLoaded && user && currentRealm) {
       fetchUserRole();
     } else if (isLoaded && !user) {
       setLoading(false);
     }
-  }, [isLoaded, user]);
+  }, [isLoaded, user, currentRealm]);
 
   useEffect(() => {
     if (userRole === "ADMIN") {
@@ -75,11 +78,24 @@ export default function AdminPage() {
   }, [selectedUserForArmies]);
 
   const fetchUserRole = async () => {
+    if (!currentRealm) {
+      setLoading(false);
+      return;
+    }
     try {
-      const response = await fetch("/api/dashboard/user-data");
+      const response = await fetch(`/api/dashboard/user-data?realmId=${currentRealm.id}`);
       if (response.ok) {
         const data = await response.json();
-        setUserRole(data.role);
+        // Check realm admin role instead of global role
+        const realmMember = currentRealm.members?.find((m: any) => m.user.id === user?.id) || 
+                            (currentRealm.ownerId === user?.id ? { role: "OWNER" } : null);
+        const realmRole = currentRealm.memberRole || realmMember?.role;
+        // Check if user is OWNER or ADMIN in the realm
+        if (realmRole === "OWNER" || realmRole === "ADMIN") {
+          setUserRole("ADMIN");
+        } else {
+          setUserRole("BASIC");
+        }
       }
     } catch (error) {
       console.error("Error fetching user role:", error);
@@ -91,7 +107,7 @@ export default function AdminPage() {
   const fetchArmies = async () => {
     try {
       const res = await fetch(
-        `/api/admin/armies?userId=${selectedUserForArmies}`,
+        `/api/admin/armies?userId=${selectedUserForArmies}&realmId=${currentRealm?.id}`,
         {
           cache: "no-store",
         }
@@ -129,6 +145,7 @@ export default function AdminPage() {
         body: JSON.stringify({
           userId: selectedUserForArmies,
           name: adminArmyName.trim(),
+          realmId: currentRealm?.id,
         }),
       });
       if (res.ok) {
@@ -147,7 +164,7 @@ export default function AdminPage() {
 
   const adminDeleteArmy = async (armyId: string) => {
     try {
-      const res = await fetch(`/api/admin/armies?armyId=${armyId}`, {
+      const res = await fetch(`/api/admin/armies?armyId=${armyId}&realmId=${currentRealm?.id}`, {
         method: "DELETE",
       });
       if (res.status === 204) {
@@ -232,8 +249,9 @@ export default function AdminPage() {
     }
   };
   const fetchUsers = async () => {
+    if (!currentRealm) return;
     try {
-      const response = await fetch("/api/admin/users");
+      const response = await fetch(`/api/admin/users?realmId=${currentRealm.id}`);
       if (response.ok) {
         const data = await response.json();
         setUsers(data.users);
@@ -254,8 +272,9 @@ export default function AdminPage() {
   };
 
   const fetchCities = async () => {
+    if (!currentRealm) return;
     try {
-      const response = await fetch("/api/admin/cities");
+      const response = await fetch(`/api/admin/cities?realmId=${currentRealm.id}`);
       if (response.ok) {
         const data = await response.json();
         setCities(data.cities);
@@ -283,6 +302,7 @@ export default function AdminPage() {
           userId: selectedUserForCity,
           name: newCityName.trim(),
           tier: cityTier,
+          realmId: currentRealm?.id,
         }),
       });
 
@@ -305,11 +325,17 @@ export default function AdminPage() {
   };
 
   const advanceTurn = async () => {
+    if (!currentRealm) {
+      addNotification("error", "Please select a realm first");
+      return;
+    }
+    
     setIsAdvancingTurn(true);
     try {
       const response = await fetch("/api/admin/advance-turn", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ realmId: currentRealm.id }),
       });
 
       const data = await response.json();
@@ -368,8 +394,9 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-background text-foreground p-8">
-      <NotificationContainer />
+    <RealmRequirement>
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-background text-foreground p-8">
+        <NotificationContainer />
 
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-medieval-pattern opacity-5"></div>
@@ -762,6 +789,7 @@ export default function AdminPage() {
           </div>
         )}
       </div>
-    </div>
+      </div>
+    </RealmRequirement>
   );
 }

@@ -154,14 +154,31 @@ export async function POST(
       );
     }
 
-    // Check if user has enough resources
-    const resources = user.resources;
-    if (!resources) {
+    // Get user's resources in this realm
+    if (!city.realmId) {
       return NextResponse.json(
-        { error: "User has no resources" },
+        { error: "City is not in a realm" },
         { status: 400 }
       );
     }
+    
+    const userResource = await prisma.resource.findUnique({
+      where: {
+        realmId_userId: {
+          realmId: city.realmId,
+          userId: user.id,
+        },
+      },
+    });
+    
+    if (!userResource) {
+      return NextResponse.json(
+        { error: "User has no resources in this realm" },
+        { status: 400 }
+      );
+    }
+    
+    const resources = userResource;
 
     const cost = buildingTemplate.cost;
     if (
@@ -180,9 +197,14 @@ export async function POST(
 
     // Execute the transaction
     await prisma.$transaction(async (tx) => {
-      // Deduct resources
+      // Deduct resources (using composite unique key)
       await tx.resource.update({
-        where: { userId: user.id },
+        where: {
+          realmId_userId: {
+            realmId: city.realmId,
+            userId: user.id,
+          },
+        },
         data: {
           currency: { decrement: cost.currency },
           wood: { decrement: cost.wood },

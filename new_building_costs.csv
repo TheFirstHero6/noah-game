@@ -1,0 +1,5 @@
+Building,Money,Wood,Stone,Metal,Livestock,Food
+Infantry Barracks,50,20,20,10,0,10
+Ranged Barracks,50,20,20,0,0,10
+Pastures,50,20,0,0,0,0
+Cavalry Barracks,150,30,20,15,10,10

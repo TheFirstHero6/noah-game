@@ -7,38 +7,115 @@ import {
   PER_UNIT_UPKEEP,
 } from "@/app/lib/game-config";
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
     const clerkUser = await currentUser();
 
     if (!clerkUser) {
-      return new Response("Unauthorized", { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const user = await prisma.user.findUnique({
       where: { clerkUserId: clerkUser.id },
     });
 
-    if (!user || user.role !== "ADMIN") {
-      return new Response("Forbidden", { status: 403 });
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Get all users with their resources and cities
-    const users = await prisma.user.findMany({
+    const { realmId } = await request.json();
+
+    if (!realmId) {
+      return NextResponse.json(
+        { error: "realmId is required" },
+        { status: 400 }
+      );
+    }
+
+    // Verify realm exists and user is admin/owner of this realm
+    const realm = await prisma.realm.findFirst({
+      where: {
+        id: realmId,
+        OR: [
+          { ownerId: user.id },
+          { members: { some: { userId: user.id, role: "ADMIN" } } },
+        ],
+      },
+    });
+
+    if (!realm) {
+      return NextResponse.json(
+        { error: "Realm not found or you don't have admin access to this realm" },
+        { status: 403 }
+      );
+    }
+
+    // Get all users who are members of this realm, with their resources and cities in this realm
+    const realmMembers = await prisma.realmMember.findMany({
+      where: { realmId },
       include: {
-        resources: true,
-        cities: {
+        user: {
           include: {
-            buildings: true,
+            resources: {
+              where: { realmId },
+            },
+            cities: {
+              where: { realmId },
+              include: {
+                buildings: true,
+              },
+            },
+            armies: {
+              where: { realmId },
+              include: {
+                units: true,
+              },
+            },
           },
         },
       },
     });
 
+    // Also include the owner if they're not in members
+    const owner = await prisma.user.findUnique({
+      where: { id: realm.ownerId },
+      include: {
+        resources: {
+          where: { realmId },
+        },
+        cities: {
+          where: { realmId },
+          include: {
+            buildings: true,
+          },
+        },
+        armies: {
+          where: { realmId },
+          include: {
+            units: true,
+          },
+        },
+      },
+    });
+
+    // Combine owner and members
+    const users: any[] = [];
+    if (owner) {
+      users.push(owner);
+    }
+    realmMembers.forEach((member) => {
+      if (member.user.id !== realm.ownerId) {
+        users.push(member.user);
+      }
+    });
+
     // Process each user
     for (const user of users) {
-      if (!user.resources) {
-        console.warn(`User ${user.id} has no resource record. Skipping.`);
+      // Get user's resources in this realm (should only be one)
+      const userResource = user.resources?.[0];
+      
+      if (!userResource) {
+        console.warn(`User ${user.id} has no resource record in realm ${realmId}. Skipping.`);
         continue;
       }
 
@@ -102,17 +179,22 @@ export async function POST() {
         });
       }
 
-      // C. Upkeep costs for units (per unit per turn)
+      // C. Upkeep costs for units (per unit per turn) in this realm
       const unitSum = await prisma.armyUnit.aggregate({
         _sum: { quantity: true },
-        where: { army: { ownerId: user.id } },
+        where: { army: { ownerId: user.id, realmId } },
       });
       const totalUnits = unitSum._sum.quantity || 0;
       const upkeepFood = (PER_UNIT_UPKEEP.food || 0) * totalUnits;
 
-      // Update user's resources with gains minus upkeep
+      // Update user's resources with gains minus upkeep (using composite unique key)
       await prisma.resource.update({
-        where: { userId: user.id },
+        where: {
+          realmId_userId: {
+            realmId,
+            userId: user.id,
+          },
+        },
         data: {
           food: { increment: resourceGains.food - upkeepFood },
           wood: { increment: resourceGains.wood },
@@ -126,10 +208,10 @@ export async function POST() {
 
     return NextResponse.json({
       success: true,
-      message: `Turn advanced successfully. Processed ${users.length} users and their cities.`,
+      message: `Turn advanced successfully for realm "${realm.name}". Processed ${users.length} users and their cities.`,
     });
   } catch (error) {
     console.error("Error advancing turn:", error);
-    return new Response("Internal Server Error", { status: 500 });
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

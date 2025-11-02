@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useNotification } from "@/components/Notification";
+import { useRealm } from "@/contexts/RealmContext";
+import RealmRequirement from "@/components/RealmRequirement";
 import Link from "next/link";
 
 interface City {
@@ -24,13 +26,24 @@ export default function CitiesPage() {
   const [loading, setLoading] = useState(true);
   const { addNotification, NotificationContainer } = useNotification();
 
+  const { currentRealm } = useRealm();
+
   useEffect(() => {
-    fetchCities();
-  }, []);
+    if (currentRealm) {
+      fetchCities();
+    } else {
+      setLoading(false);
+      addNotification("info", "Please select a realm to view cities");
+    }
+  }, [currentRealm]);
 
   const fetchCities = async () => {
+    if (!currentRealm) {
+      addNotification("error", "No realm selected");
+      return;
+    }
     try {
-      const response = await fetch("/api/cities");
+      const response = await fetch(`/api/cities?realmId=${currentRealm.id}`);
       if (response.ok) {
         const data = await response.json();
         setCities(data.cities);
@@ -59,7 +72,8 @@ export default function CitiesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-background text-foreground p-4 sm:p-6 lg:p-8 pt-20">
+    <RealmRequirement>
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-background text-foreground p-4 sm:p-6 lg:p-8 pt-20">
       <NotificationContainer />
 
       {/* Background Pattern */}
@@ -159,5 +173,6 @@ export default function CitiesPage() {
         </div>
       </div>
     </div>
+    </RealmRequirement>
   );
 }

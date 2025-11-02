@@ -17,17 +17,42 @@ export async function GET(req: Request) {
       where: { clerkUserId: clerkUser.id },
     });
 
-    // Check if user exists and has ADMIN role
-    if (!adminUser || adminUser.role !== "ADMIN") {
+    if (!adminUser) {
       return NextResponse.json(
-        { error: "Forbidden - Admin access required" },
-        { status: 403 }
+        { error: "User not found" },
+        { status: 404 }
       );
     }
 
-    // Get the target user ID from query parameters
+    // Get the target user ID and realmId from query parameters
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get("userId");
+    const realmId = searchParams.get("realmId");
+
+    if (!realmId) {
+      return NextResponse.json(
+        { error: "realmId is required" },
+        { status: 400 }
+      );
+    }
+
+    // Verify realm exists and user is admin/owner of this realm
+    const realm = await prisma.realm.findFirst({
+      where: {
+        id: realmId,
+        OR: [
+          { ownerId: adminUser.id },
+          { members: { some: { userId: adminUser.id, role: "ADMIN" } } },
+        ],
+      },
+    });
+
+    if (!realm) {
+      return NextResponse.json(
+        { error: "Realm not found or you don't have admin access to this realm" },
+        { status: 403 }
+      );
+    }
 
     if (!userId) {
       return NextResponse.json(
@@ -36,25 +61,54 @@ export async function GET(req: Request) {
       );
     }
 
-    // Find the target user and their resources
+    // Find the target user
     const targetUser = await prisma.user.findUnique({
       where: { id: userId },
-      include: { resources: true },
     });
 
     if (!targetUser) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
+    // Verify target user is a member of this realm
+    const targetMembership = await prisma.realmMember.findUnique({
+      where: {
+        realmId_userId: {
+          realmId,
+          userId: targetUser.id,
+        },
+      },
+    });
+
+    // Also check if target user is the owner
+    const isOwner = realm.ownerId === targetUser.id;
+
+    if (!isOwner && !targetMembership) {
+      return NextResponse.json(
+        { error: "Target user is not a member of this realm" },
+        { status: 400 }
+      );
+    }
+
+    // Get user's resources in this realm
+    const userResource = await prisma.resource.findUnique({
+      where: {
+        realmId_userId: {
+          realmId,
+          userId: targetUser.id,
+        },
+      },
+    });
+
     // Return the user's resources (default to 0 if no resources exist, handle null values)
-    const resources = targetUser.resources
+    const resources = userResource
       ? {
-          wood: targetUser.resources.wood || 0,
-          stone: targetUser.resources.stone || 0,
-          food: targetUser.resources.food || 0,
-          currency: targetUser.resources.currency || 0.0,
-          metal: targetUser.resources.metal || 0,
-          livestock: targetUser.resources.livestock || 0,
+          wood: userResource.wood || 0,
+          stone: userResource.stone || 0,
+          food: userResource.food || 0,
+          currency: userResource.currency || 0.0,
+          metal: userResource.metal || 0,
+          livestock: userResource.livestock || 0,
         }
       : {
           wood: 0,

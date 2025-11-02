@@ -4,6 +4,8 @@ import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { useUser } from "@clerk/nextjs";
 import { useNotification } from "@/components/Notification";
+import { useRealm } from "@/contexts/RealmContext";
+import RealmRequirement from "@/components/RealmRequirement";
 
 export default function ArmiesPage() {
   const { user, isLoaded } = useUser();
@@ -35,9 +37,10 @@ export default function ArmiesPage() {
   const [quantity, setQuantity] = useState<number>(1);
 
   const { addNotification, NotificationContainer } = useNotification();
+  const { currentRealm } = useRealm();
 
   useEffect(() => {
-    if (isLoaded && user) {
+    if (isLoaded && user && currentRealm) {
       Promise.all([
         fetchUserRole(),
         fetchResources(),
@@ -46,8 +49,11 @@ export default function ArmiesPage() {
       ]).finally(() => setLoading(false));
     } else if (isLoaded && !user) {
       setLoading(false);
+    } else if (isLoaded && user && !currentRealm) {
+      setLoading(false);
+      addNotification("info", "Please select a realm to view armies");
     }
-  }, [isLoaded, user]);
+  }, [isLoaded, user, currentRealm]);
 
   const fetchUserRole = async () => {
     try {
@@ -64,8 +70,9 @@ export default function ArmiesPage() {
   };
 
   const fetchResources = async () => {
+    if (!currentRealm) return;
     try {
-      const res = await fetch("/api/dashboard/resources");
+      const res = await fetch(`/api/dashboard/resources?realmId=${currentRealm.id}`);
       if (res.ok) {
         const data = await res.json();
         // Endpoint returns the resource object directly
@@ -77,8 +84,9 @@ export default function ArmiesPage() {
   };
 
   const fetchArmies = async () => {
+    if (!currentRealm) return;
     try {
-      const res = await fetch("/api/armies");
+      const res = await fetch(`/api/armies?realmId=${currentRealm.id}`);
       if (res.ok) {
         const data = await res.json();
         setArmies(data.armies || []);
@@ -96,8 +104,9 @@ export default function ArmiesPage() {
   };
 
   const fetchCities = async () => {
+    if (!currentRealm) return;
     try {
-      const res = await fetch("/api/cities");
+      const res = await fetch(`/api/cities?realmId=${currentRealm.id}`);
       if (res.ok) {
         const data = await res.json();
         setCities(data.cities || []);
@@ -286,12 +295,16 @@ export default function ArmiesPage() {
       addNotification("error", "Please enter an army name");
       return;
     }
+    if (!currentRealm) {
+      addNotification("error", "Please select a realm first");
+      return;
+    }
     setCreating(true);
     try {
       const res = await fetch("/api/armies", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: newArmyName.trim() }),
+        body: JSON.stringify({ name: newArmyName.trim(), realmId: currentRealm.id }),
       });
       if (res.ok) {
         addNotification("success", "Army created");
@@ -368,7 +381,8 @@ export default function ArmiesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-background text-foreground p-8">
+    <RealmRequirement>
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-background text-foreground p-8">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-medieval-pattern opacity-5"></div>
 
@@ -763,5 +777,6 @@ export default function ArmiesPage() {
 
       <NotificationContainer />
     </div>
+    </RealmRequirement>
   );
 }

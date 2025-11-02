@@ -59,16 +59,8 @@ export default async function Home() {
             imageUrl: user.imageUrl,
             email: user.emailAddresses[0].emailAddress,
             theme: "royal-court", // Set default theme
-            resources: {
-              create: {
-                wood: 0,
-                stone: 0,
-                food: 0,
-                currency: 0.0,
-                metal: 0,
-                livestock: 0,
-              },
-            },
+            // Resources are now created per-realm, not during user creation
+            // They will be created lazily when the user first accesses a realm
           },
         });
         console.log("Home: New user created successfully:", newUser.id);

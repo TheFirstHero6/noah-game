@@ -24,8 +24,8 @@ export async function POST(
     if (!armyId || typeof armyId !== "string") {
       return NextResponse.json({ error: "Missing armyId in route" }, { status: 400 });
     }
-    const user = await prisma.user.findUnique({ where: { clerkUserId: clerkUser.id }, include: { cities: true, resources: true } });
-    if (!user || !user.resources) return new Response("Forbidden", { status: 403 });
+    const user = await prisma.user.findUnique({ where: { clerkUserId: clerkUser.id } });
+    if (!user) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
     const { unitType, quantity } = await request.json();
     if (!unitType || typeof unitType !== "string" || !Number.isInteger(quantity) || quantity <= 0) {
@@ -34,18 +34,41 @@ export async function POST(
     const costPer = (UNIT_COSTS as any)[unitType];
     if (!costPer) return NextResponse.json({ error: `Unknown unit type: ${unitType}` }, { status: 400 });
 
-    // Ownership check
+    // Ownership check and get realmId
     const army = await prisma.army.findUnique({ where: { id: armyId } });
-    if (!army || army.ownerId !== user.id) return new Response("Not Found", { status: 404 });
+    if (!army || army.ownerId !== user.id) return NextResponse.json({ error: "Not Found" }, { status: 404 });
+    
+    if (!army.realmId) {
+      return NextResponse.json({ error: "Army is not in a realm" }, { status: 400 });
+    }
+    
+    // Get user's resources in this realm
+    const userResource = await prisma.resource.findUnique({
+      where: {
+        realmId_userId: {
+          realmId: army.realmId,
+          userId: user.id,
+        },
+      },
+    });
+    
+    if (!userResource) {
+      return NextResponse.json({ error: "Resource record not found for this realm" }, { status: 404 });
+    }
+    
+    // Get user's cities in this realm
+    const userCities = await prisma.city.findMany({
+      where: { ownerId: user.id, realmId: army.realmId },
+    });
 
     // Population cap check
-    const cap = user.cities.reduce((acc, c) => {
+    const cap = userCities.reduce((acc, c) => {
       const capForTier = (POPULATION_UNIT_CAP_BY_TIER as any)[c.upgradeTier] || 0;
       return acc + capForTier;
     }, 0);
     const currentUnits = await prisma.armyUnit.aggregate({
       _sum: { quantity: true },
-      where: { army: { ownerId: user.id } },
+      where: { army: { ownerId: user.id, realmId: army.realmId } },
     });
     const totalUnits = currentUnits._sum.quantity || 0;
     if (totalUnits + quantity > cap) {
@@ -53,9 +76,9 @@ export async function POST(
     }
 
     // Building requirement check
-    // Get all buildings from user's cities
+    // Get all buildings from user's cities in this realm
     const userCitiesWithBuildings = await prisma.city.findMany({
-      where: { ownerId: user.id },
+      where: { ownerId: user.id, realmId: army.realmId },
       include: { buildings: true },
     });
     const allBuildings = userCitiesWithBuildings.flatMap(city => city.buildings.map(b => b.name));
@@ -88,7 +111,7 @@ export async function POST(
     const totalCost = Object.fromEntries(
       Object.entries(costPer).map(([k, v]) => [k, (v as number) * quantity])
     ) as any;
-    const r = user.resources;
+    const r = userResource;
     if (
       r.currency < totalCost.currency ||
       r.wood < totalCost.wood ||
@@ -109,7 +132,12 @@ export async function POST(
         : await tx.armyUnit.create({ data: { armyId: army.id, unitType, quantity } });
 
       await tx.resource.update({
-        where: { userId: user.id },
+        where: {
+          realmId_userId: {
+            realmId: army.realmId,
+            userId: user.id,
+          },
+        },
         data: {
           currency: r.currency - totalCost.currency,
           wood: r.wood - totalCost.wood,

@@ -16,11 +16,10 @@ export async function POST(
 
     const user = await prisma.user.findUnique({
       where: { clerkUserId: clerkUser.id },
-      include: { resources: true },
     });
 
     if (!user) {
-      return new Response("User not found", { status: 404 });
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     const { targetTier } = await request.json();
@@ -42,7 +41,31 @@ export async function POST(
     });
 
     if (!city) {
-      return new Response("City not found", { status: 404 });
+      return NextResponse.json({ error: "City not found" }, { status: 404 });
+    }
+    
+    if (!city.realmId) {
+      return NextResponse.json(
+        { error: "City is not in a realm" },
+        { status: 400 }
+      );
+    }
+    
+    // Get user's resources in this realm
+    const userResource = await prisma.resource.findUnique({
+      where: {
+        realmId_userId: {
+          realmId: city.realmId,
+          userId: user.id,
+        },
+      },
+    });
+    
+    if (!userResource) {
+      return NextResponse.json(
+        { error: "User has no resource record in this realm" },
+        { status: 400 }
+      );
     }
 
     // Check if city is already at or above target tier
@@ -74,17 +97,10 @@ export async function POST(
     }
 
     // Check if user has enough resources
-    if (!user.resources) {
-      return NextResponse.json(
-        { error: "User has no resource record" },
-        { status: 400 }
-      );
-    }
-
     if (
-      user.resources.currency < costs.currency ||
-      user.resources.wood < costs.wood ||
-      user.resources.stone < costs.stone
+      userResource.currency < costs.currency ||
+      userResource.wood < costs.wood ||
+      userResource.stone < costs.stone
     ) {
       return NextResponse.json(
         {
@@ -96,9 +112,14 @@ export async function POST(
 
     // Execute the upgrade transaction
     await prisma.$transaction(async (tx) => {
-      // Deduct resources
+      // Deduct resources (using composite unique key)
       await tx.resource.update({
-        where: { userId: user.id },
+        where: {
+          realmId_userId: {
+            realmId: city.realmId,
+            userId: user.id,
+          },
+        },
         data: {
           currency: { decrement: costs.currency },
           wood: { decrement: costs.wood },

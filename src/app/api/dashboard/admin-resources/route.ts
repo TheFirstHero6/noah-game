@@ -17,16 +17,15 @@ export async function POST(req: Request) {
       where: { clerkUserId: clerkUser.id },
     });
 
-    // Check if user exists and has ADMIN role
-    if (!adminUser || adminUser.role !== "ADMIN") {
+    if (!adminUser) {
       return NextResponse.json(
-        { error: "Forbidden - Admin access required" },
-        { status: 403 }
+        { error: "User not found" },
+        { status: 404 }
       );
     }
 
     // Parse JSON body
-    const { targetUserId, wood, stone, food, currency, metal, livestock } =
+    const { targetUserId, realmId, wood, stone, food, currency, metal, livestock } =
       await req.json();
 
     // Validate input
@@ -34,6 +33,31 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { error: "Target user ID is required" },
         { status: 400 }
+      );
+    }
+
+    if (!realmId) {
+      return NextResponse.json(
+        { error: "realmId is required" },
+        { status: 400 }
+      );
+    }
+
+    // Verify realm exists and user is admin/owner of this realm
+    const realm = await prisma.realm.findFirst({
+      where: {
+        id: realmId,
+        OR: [
+          { ownerId: adminUser.id },
+          { members: { some: { userId: adminUser.id, role: "ADMIN" } } },
+        ],
+      },
+    });
+
+    if (!realm) {
+      return NextResponse.json(
+        { error: "Realm not found or you don't have admin access to this realm" },
+        { status: 403 }
       );
     }
 
@@ -62,7 +86,6 @@ export async function POST(req: Request) {
     // Find the target user
     const targetUser = await prisma.user.findUnique({
       where: { id: targetUserId },
-      include: { resources: true },
     });
 
     if (!targetUser) {
@@ -70,6 +93,50 @@ export async function POST(req: Request) {
         { error: "Target user not found" },
         { status: 404 }
       );
+    }
+
+    // Verify target user is a member of this realm
+    const targetMembership = await prisma.realmMember.findUnique({
+      where: {
+        realmId_userId: {
+          realmId,
+          userId: targetUserId,
+        },
+      },
+    });
+
+    const isOwner = realm.ownerId === targetUserId;
+    if (!isOwner && !targetMembership) {
+      return NextResponse.json(
+        { error: "Target user is not a member of this realm" },
+        { status: 400 }
+      );
+    }
+
+    // Get or create target user's resources in this realm
+    let targetResource = await prisma.resource.findUnique({
+      where: {
+        realmId_userId: {
+          realmId,
+          userId: targetUserId,
+        },
+      },
+    });
+
+    if (!targetResource) {
+      // Create resources if they don't exist
+      targetResource = await prisma.resource.create({
+        data: {
+          userId: targetUserId,
+          realmId,
+          wood: 0,
+          stone: 0,
+          food: 0,
+          currency: 0,
+          metal: 0,
+          livestock: 0,
+        },
+      });
     }
 
     // Prepare update data - only update resources that are provided
@@ -90,26 +157,19 @@ export async function POST(req: Request) {
     }
 
     // Execute the update
-    let updatedResources;
-    if (targetUser.resources) {
-      // Update existing resources
-      updatedResources = await prisma.resource.update({
-        where: { userId: targetUser.id },
-        data: updateData,
-      });
-    } else {
-      // Create new resources record
-      updatedResources = await prisma.resource.create({
-        data: {
-          userId: targetUser.id,
-          ...updateData,
+    const updatedResources = await prisma.resource.update({
+      where: { 
+        realmId_userId: {
+          realmId,
+          userId: targetUserId,
         },
-      });
-    }
+      },
+      data: updateData,
+    });
 
     return NextResponse.json({
       success: true,
-      message: `Successfully updated ${targetUser.name}'s resources`,
+      message: `Successfully updated ${targetUser.name}'s resources in ${realm.name}`,
       resources: updatedResources,
     });
   } catch (error) {

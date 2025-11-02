@@ -13,11 +13,13 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AnimatedButton } from "./AnimatedButton";
 import { cn } from "@/lib/design-system";
+import { useRealm } from "@/contexts/RealmContext";
 
 export default function Navbar() {
   const { user, isLoaded } = useUser();
   const [userRole, setUserRole] = useState<string>("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { currentRealm } = useRealm();
 
   useEffect(() => {
     if (isLoaded && user) {
@@ -66,6 +68,7 @@ export default function Navbar() {
     { href: "/pages/rules", label: "Rules", icon: "📜" },
     { href: "/pages/cities", label: "Cities", icon: "🏘️" },
     { href: "/pages/armies", label: "Armies", icon: "⚔️" },
+    { href: "/pages/realms", label: "Realms", icon: "🌍" },
     { href: "/pages/settings", label: "Settings", icon: "⚙️" },
     { href: "/", label: "Home", icon: "🏠" },
   ];
@@ -113,6 +116,21 @@ export default function Navbar() {
             </Link>
           ))}
         </div>
+
+        {/* Current Realm Indicator */}
+        {currentRealm && (
+          <div className="hidden lg:flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--theme-card-bg)]/50 border border-[var(--theme-border)]">
+            <span className="text-lg">🌍</span>
+            <div className="flex flex-col">
+              <span className="font-[Cinzel] text-xs text-[var(--theme-gold)] uppercase leading-tight">
+                {currentRealm.name}
+              </span>
+              <span className="text-[10px] text-[var(--theme-steel)] font-mono">
+                {currentRealm.code}
+              </span>
+            </div>
+          </div>
+        )}
 
         {/* Auth Section */}
         <div className="hidden lg:flex items-center space-x-3">
@@ -168,6 +186,21 @@ export default function Navbar() {
         {isMobileMenuOpen && (
           <div className="lg:hidden absolute top-full left-0 right-0 bg-[var(--theme-navbar-bg)] backdrop-blur-xl border-b border-[var(--theme-border)] shadow-2xl">
             <div className="px-6 py-6 space-y-3">
+              {/* Current Realm Indicator - Mobile */}
+              {currentRealm && (
+                <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[var(--theme-card-bg)]/50 border border-[var(--theme-border)] mb-2">
+                  <span className="text-xl">🌍</span>
+                  <div className="flex flex-col">
+                    <span className="font-[Cinzel] text-sm text-[var(--theme-gold)] uppercase leading-tight">
+                      {currentRealm.name}
+                    </span>
+                    <span className="text-xs text-[var(--theme-steel)] font-mono">
+                      {currentRealm.code}
+                    </span>
+                  </div>
+                </div>
+              )}
+
               {navItems.map((item, index) => (
                 <Link
                   key={item.href}

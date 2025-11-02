@@ -2,7 +2,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import prisma from "@/app/lib/db";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     console.log("API: Starting user-data fetch...");
 
@@ -20,9 +20,6 @@ export async function GET() {
     console.log("API: Looking up user with clerkUserId:", clerkUser.id);
     const user = await prisma.user.findUnique({
       where: { clerkUserId: clerkUser.id },
-      include: {
-        resources: true,
-      },
     });
     console.log("API: Database user found:", user ? "Yes" : "No");
 
@@ -32,19 +29,76 @@ export async function GET() {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    console.log("API: User from database:", {
-      name: user.name,
-      email: user.email,
-      role: user.role,
+    // Get realmId from query parameters
+    const { searchParams } = new URL(request.url);
+    const realmId = searchParams.get("realmId");
+
+    if (!realmId) {
+      return NextResponse.json(
+        { error: "realmId is required" },
+        { status: 400 }
+      );
+    }
+
+    // Verify user is a member of this realm
+    const realm = await prisma.realm.findFirst({
+      where: {
+        id: realmId,
+        OR: [{ ownerId: user.id }, { members: { some: { userId: user.id } } }],
+      },
     });
 
-    // Get all users for the user list
-    const allUsers = await prisma.user.findMany({
+    if (!realm) {
+      return NextResponse.json(
+        { error: "Realm not found or access denied" },
+        { status: 403 }
+      );
+    }
+
+    // Get user's resources in this realm
+    const userResource = await prisma.resource.findUnique({
+      where: {
+        realmId_userId: {
+          realmId,
+          userId: user.id,
+        },
+      },
+    });
+
+    // Get all users who are members of this realm
+    const realmMembers = await prisma.realmMember.findMany({
+      where: { realmId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            imageUrl: true,
+          },
+        },
+      },
+    });
+
+    // Also include the owner
+    const owner = await prisma.user.findUnique({
+      where: { id: realm.ownerId },
       select: {
         id: true,
         name: true,
         imageUrl: true,
       },
+    });
+
+    // Combine owner and members, deduplicate
+    const allUsers = [
+      ...(owner ? [owner] : []),
+      ...realmMembers.map((rm) => rm.user).filter((u) => u.id !== realm.ownerId),
+    ];
+
+    console.log("API: User from database:", {
+      name: user.name,
+      email: user.email,
+      role: user.role,
     });
 
     // Prepare user image URL (fallback to default if not available)
@@ -53,14 +107,14 @@ export async function GET() {
       : "https://img.clerk.com/eyJ0eXBlIjoiZGVmYXVsdCIsImlpZCI6Imluc18yc1lIekdxbW9QWnAxSE13SmZ0Q3FRTnk4bnciLCJyaWQiOiJ1c2VyXzJ0VnB1ajdGRFA4cEhWVzZ3cGFBd0RVMENNcyIsImluaXRpYWxzIjoiSCJ9";
 
     // Prepare resources (default to 0 if not available, handle null values)
-    const userResources = user.resources
+    const userResources = userResource
       ? {
-          wood: user.resources.wood || 0,
-          stone: user.resources.stone || 0,
-          food: user.resources.food || 0,
-          currency: user.resources.currency || 0.0,
-          metal: user.resources.metal || 0,
-          livestock: user.resources.livestock || 0,
+          wood: userResource.wood || 0,
+          stone: userResource.stone || 0,
+          food: userResource.food || 0,
+          currency: userResource.currency || 0.0,
+          metal: userResource.metal || 0,
+          livestock: userResource.livestock || 0,
         }
       : {
           wood: 0,

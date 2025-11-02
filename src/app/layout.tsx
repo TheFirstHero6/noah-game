@@ -5,6 +5,7 @@ import ConditionalNavbar from "@/components/ConditionalNavbar";
 import GameInfo from "@/components/game-info";
 import SplashScreen from "@/components/splash-screen";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import RealmProviderWrapper from "@/components/RealmProviderWrapper";
 import Chatbot from "@/components/Chatbot";
 import Script from "next/script";
 
@@ -37,13 +38,15 @@ export default function RootLayout({
         />
         <ThemeProvider>
           <ClerkProvider appearance={{ baseTheme: dark }}>
-            <SplashScreen>
-              <ConditionalNavbar />
-              <div className="pt-20">
-                {children}
-                <Chatbot />
-              </div>
-            </SplashScreen>
+            <RealmProviderWrapper>
+              <SplashScreen>
+                <ConditionalNavbar />
+                <div className="pt-20">
+                  {children}
+                  <Chatbot />
+                </div>
+              </SplashScreen>
+            </RealmProviderWrapper>
           </ClerkProvider>
         </ThemeProvider>
       </body>

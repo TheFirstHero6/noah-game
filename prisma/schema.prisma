@@ -8,18 +8,20 @@ datasource db {
 }
 
 model User {
-  id          String   @id @default(cuid())
-  clerkUserId String   @unique
-  email       String   @unique
-  name        String?
-  imageUrl    String?
-  theme       String   @default("royal-court")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  role        Role     @default(BASIC)
-  resources   Resource?
-  cities      City[]
-  armies      Army[]
+  id              String         @id @default(cuid())
+  clerkUserId     String         @unique
+  email           String         @unique
+  name            String?
+  imageUrl        String?
+  theme           String         @default("royal-court")
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  role            Role           @default(BASIC)
+  resources       Resource[]
+  cities          City[]
+  armies          Army[]
+  ownedRealms     Realm[]        @relation("RealmOwner")
+  realmMemberships RealmMember[]
 }
 
 enum Role {
@@ -27,23 +29,64 @@ enum Role {
   ADMIN
 }
 
+enum RealmRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+model Realm {
+  id          String   @id @default(cuid())
+  name        String
+  code        String   @unique
+  ownerId     String
+  owner       User     @relation("RealmOwner", fields: [ownerId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  members     RealmMember[]
+  cities      City[]
+  armies      Army[]
+  resources   Resource[]
+}
+
+model RealmMember {
+  id          String     @id @default(cuid())
+  realmId     String
+  userId      String
+  realm       Realm      @relation(fields: [realmId], references: [id], onDelete: Cascade)
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role        RealmRole  @default(MEMBER)
+  joinedAt    DateTime   @default(now())
+  
+  @@unique([realmId, userId])
+  @@index([userId])
+  @@index([realmId])
+}
+
 model Resource {
   id        String   @id @default(cuid())
-  userId    String   @unique
+  userId    String
+  realmId   String
   user      User     @relation(fields: [userId], references: [id])
+  realm     Realm    @relation(fields: [realmId], references: [id], onDelete: Cascade)
   wood      Int      @default(0)
   stone     Int      @default(0)
   food      Int      @default(0)
   currency  Float    @default(0)
   metal     Int      @default(0)
   livestock Int      @default(0)
+  
+  @@unique([realmId, userId])
 }
 
 model City {
   id            String     @id @default(cuid())
   name          String
   ownerId       String
+  realmId       String
   owner         User       @relation(fields: [ownerId], references: [id])
+  realm         Realm      @relation(fields: [realmId], references: [id], onDelete: Cascade)
   upgradeTier     Int        @default(1)
   localWealth   Float      @default(0)
   taxRate       Int        @default(5)
@@ -66,7 +109,9 @@ model Army {
   id        String     @id @default(cuid())
   name      String
   ownerId   String
+  realmId   String
   owner     User       @relation(fields: [ownerId], references: [id])
+  realm     Realm      @relation(fields: [realmId], references: [id], onDelete: Cascade)
   units     ArmyUnit[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt

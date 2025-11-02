@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     // Parse JSON body
-    const { toUserId, amount, resource } = await req.json();
+    const { toUserId, realmId, amount, resource } = await req.json();
     type ResourceType =
       | "wood"
       | "stone"
@@ -17,9 +17,9 @@ export async function POST(req: Request) {
     const resourceKey = resource as ResourceType;
 
     // Validate input
-    if (!toUserId || !amount || !resource) {
+    if (!toUserId || !realmId || !amount || !resource) {
       return NextResponse.json(
-        { error: "Missing required fields: toUserId, amount, or resource" },
+        { error: "Missing required fields: toUserId, realmId, amount, or resource" },
         { status: 400 }
       );
     }
@@ -38,28 +38,50 @@ export async function POST(req: Request) {
 
     const fromUser = await prisma.user.findUnique({
       where: { clerkUserId: user.id },
-      include: {
-        resources: true,
-      },
     });
 
     if (!fromUser) {
       return NextResponse.json({ error: "Sender not found" }, { status: 404 });
     }
 
-    if (!fromUser.resources) {
+    // Verify both users are members of the realm
+    const realm = await prisma.realm.findFirst({
+      where: {
+        id: realmId,
+        OR: [{ ownerId: fromUser.id }, { members: { some: { userId: fromUser.id } } }],
+      },
+    });
+
+    if (!realm) {
       return NextResponse.json(
-        { error: "Sender has no resources" },
+        { error: "Realm not found or access denied" },
+        { status: 403 }
+      );
+    }
+
+    // Get sender's resources in this realm
+    let fromResource = await prisma.resource.findUnique({
+      where: {
+        realmId_userId: {
+          realmId,
+          userId: fromUser.id,
+        },
+      },
+    });
+
+    if (!fromResource) {
+      return NextResponse.json(
+        { error: "Sender has no resources in this realm" },
         { status: 404 }
       );
     }
 
     // Pre-transaction validation: Check if sender has enough resources
-    if (fromUser.resources[resourceKey] < amount) {
+    if (fromResource[resourceKey] < amount) {
       return NextResponse.json(
         {
-          error: `Insufficient ${resourceKey}. You have ${fromUser.resources[resourceKey]} but need ${amount}.`,
-          currentAmount: fromUser.resources[resourceKey],
+          error: `Insufficient ${resourceKey}. You have ${fromResource[resourceKey]} but need ${amount}.`,
+          currentAmount: fromResource[resourceKey],
           requestedAmount: amount,
           resource: resourceKey,
         },
@@ -71,22 +93,60 @@ export async function POST(req: Request) {
     await prisma.$transaction(async (tx) => {
       const toUser = await tx.user.findUnique({
         where: { id: toUserId },
-        include: {
-          resources: true,
-        },
       });
 
       if (!toUser) {
         throw new Error("Receiver not found");
       }
 
-      if (!toUser.resources) {
-        throw new Error("Receiver has no resources");
+      // Verify receiver is a member of the realm
+      const receiverMembership = await tx.realmMember.findUnique({
+        where: {
+          realmId_userId: {
+            realmId,
+            userId: toUserId,
+          },
+        },
+      });
+
+      const isReceiverOwner = realm.ownerId === toUserId;
+      if (!isReceiverOwner && !receiverMembership) {
+        throw new Error("Receiver is not a member of this realm");
+      }
+
+      // Get or create receiver's resources
+      let toResource = await tx.resource.findUnique({
+        where: {
+          realmId_userId: {
+            realmId,
+            userId: toUserId,
+          },
+        },
+      });
+
+      if (!toResource) {
+        toResource = await tx.resource.create({
+          data: {
+            userId: toUserId,
+            realmId,
+            wood: 0,
+            stone: 0,
+            food: 0,
+            currency: 0,
+            metal: 0,
+            livestock: 0,
+          },
+        });
       }
 
       // Update sender's resources (subtract)
       await tx.resource.update({
-        where: { userId: fromUser.id },
+        where: {
+          realmId_userId: {
+            realmId,
+            userId: fromUser.id,
+          },
+        },
         data: {
           [resourceKey]: { decrement: amount },
         },
@@ -94,7 +154,12 @@ export async function POST(req: Request) {
 
       // Update receiver's resources (add)
       await tx.resource.update({
-        where: { userId: toUser.id },
+        where: {
+          realmId_userId: {
+            realmId,
+            userId: toUserId,
+          },
+        },
         data: {
           [resourceKey]: { increment: amount },
         },

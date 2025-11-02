@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import { User } from "@/types";
 
 import { useNotification } from "@/components/Notification";
+import RealmRequirement from "@/components/RealmRequirement";
+import { useRealm } from "@/contexts/RealmContext";
 
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -100,6 +102,7 @@ export default function Dashboard() {
   // Notification system
 
   const { addNotification, NotificationContainer } = useNotification();
+  const { currentRealm } = useRealm();
 
   let fetchedUsers = false;
 
@@ -110,10 +113,13 @@ export default function Dashboard() {
   let fetchedUserRole = false;
 
   const fetchUserData = async () => {
+    if (!currentRealm) {
+      return; // Don't fetch if no realm selected
+    }
     try {
       console.log("Dashboard: Fetching user data...");
 
-      const response = await fetch("/api/dashboard/user-data");
+      const response = await fetch(`/api/dashboard/user-data?realmId=${currentRealm.id}`);
 
       console.log("Dashboard: Response status:", response.status);
 
@@ -184,10 +190,10 @@ export default function Dashboard() {
   };
 
   const fetchAllUsersWithResources = async () => {
-    if (role !== "ADMIN") return;
+    if (role !== "ADMIN" || !currentRealm) return;
 
     try {
-      const response = await fetch("/api/dashboard/all-users-resources");
+      const response = await fetch(`/api/dashboard/all-users-resources?realmId=${currentRealm.id}`);
 
       if (!response.ok) {
         // Avoid parsing non-JSON responses (e.g., HTML for 401/403)
@@ -227,6 +233,11 @@ export default function Dashboard() {
     setIsTransferring(true);
 
     try {
+      if (!currentRealm) {
+        addNotification("error", "No realm selected");
+        return;
+      }
+
       const response = await fetch("/api/dashboard/transfering", {
         method: "POST",
 
@@ -236,9 +247,8 @@ export default function Dashboard() {
 
         body: JSON.stringify({
           toUserId: toUserId,
-
+          realmId: currentRealm.id,
           amount: amount,
-
           resource: resource,
         }),
       });
@@ -473,6 +483,11 @@ export default function Dashboard() {
     setIsUpdatingResources(true);
 
     try {
+      if (!currentRealm) {
+        addNotification("error", "No realm selected");
+        return;
+      }
+
       const response = await fetch("/api/dashboard/admin-resources", {
         method: "POST",
 
@@ -482,7 +497,7 @@ export default function Dashboard() {
 
         body: JSON.stringify({
           targetUserId: toUserId,
-
+          realmId: currentRealm.id,
           ...adminResourceValues,
         }),
       });
@@ -609,14 +624,16 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    fetchUserDataOnce();
-  }, []);
+    if (currentRealm) {
+      fetchUserDataOnce();
+    }
+  }, [currentRealm]);
 
   useEffect(() => {
-    if (role === "ADMIN") {
+    if (role === "ADMIN" && currentRealm) {
       fetchAllUsersWithResources();
     }
-  }, [role]);
+  }, [role, currentRealm]);
 
   // Clean up user names that might contain "null"
 
@@ -637,12 +654,13 @@ export default function Dashboard() {
   });
 
   return (
-    <motion.div
-      className="min-h-screen bg-[var(--theme-bg)] text-foreground p-4 sm:p-6 lg:p-8 flex flex-col items-center pt-20 relative overflow-hidden"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.6 }}
-    >
+    <RealmRequirement>
+      <motion.div
+        className="min-h-screen bg-[var(--theme-bg)] text-foreground p-4 sm:p-6 lg:p-8 flex flex-col items-center pt-20 relative overflow-hidden"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+      >
       {/* Notification Container */}
 
       <NotificationContainer />
@@ -1823,5 +1841,6 @@ export default function Dashboard() {
         </AnimatedCard>
       </div>
     </motion.div>
+    </RealmRequirement>
   );
 }
