@@ -22,20 +22,40 @@ export default function Navbar() {
   const { currentRealm } = useRealm();
 
   useEffect(() => {
-    if (isLoaded && user) {
+    if (isLoaded && user && currentRealm) {
       fetchUserRole();
+    } else if (isLoaded && user && !currentRealm) {
+      // If no realm is selected, user is not admin
+      setUserRole("");
     }
-  }, [isLoaded, user]);
+  }, [isLoaded, user, currentRealm]);
 
   const fetchUserRole = async () => {
+    if (!currentRealm) {
+      setUserRole("");
+      return;
+    }
+    
     try {
-      const response = await fetch("/api/dashboard/user-data");
+      const response = await fetch(`/api/dashboard/user-data?realmId=${currentRealm.id}`);
       if (response.ok) {
         const data = await response.json();
-        setUserRole(data.role);
+        // Check if user is OWNER or ADMIN in the current realm
+        const realmMember = currentRealm.members?.find((m: any) => m.user.id === user?.id);
+        const realmRole = currentRealm.memberRole || 
+                         (currentRealm.ownerId === user?.id ? "OWNER" : 
+                          (realmMember?.role === "OWNER" || realmMember?.role === "ADMIN" ? "ADMIN" : ""));
+        
+        // Set userRole to "ADMIN" if user is OWNER or ADMIN in this realm
+        if (realmRole === "OWNER" || realmRole === "ADMIN") {
+          setUserRole("ADMIN");
+        } else {
+          setUserRole("");
+        }
       }
     } catch (error) {
       console.error("Error fetching user role:", error);
+      setUserRole("");
     }
   };
 
