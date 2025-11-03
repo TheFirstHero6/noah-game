@@ -375,8 +375,14 @@ export default function Dashboard() {
     setIsLoadingUserResources(true);
 
     try {
+      if (!currentRealm) {
+        addNotification("error", "No realm selected");
+        setIsLoadingUserResources(false);
+        return;
+      }
+
       const response = await fetch(
-        `/api/dashboard/user-resources?userId=${userId}`
+        `/api/dashboard/user-resources?userId=${userId}&realmId=${currentRealm.id}`
       );
 
       if (response.ok) {

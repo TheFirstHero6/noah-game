@@ -5,14 +5,16 @@
 export const BUILDING_PRODUCTION_RATES = {
   // Common Buildings - Production rates by tier
   Sawmill: {
-    1: { food: 0, wood: 1, stone: 0, metal: 0, livestock: 0, currency: 0 }, // T1: 1 Wood
-    2: { food: 0, wood: 2, stone: 0, metal: 0, livestock: 0, currency: 0 }, // T2: 2 Wood
-    3: { food: 0, wood: 4, stone: 0, metal: 0, livestock: 0, currency: 0 }, // T3: 4 Wood
+    1: { food: 0, wood: 3, stone: 0, metal: 0, livestock: 0, currency: 0 }, // T1: 3 Wood (matches CSV Tier 2)
+    2: { food: 0, wood: 5, stone: 0, metal: 0, livestock: 0, currency: 0 }, // T2: 5 Wood (matches CSV Tier 3)
+    3: { food: 0, wood: 7, stone: 0, metal: 0, livestock: 0, currency: 0 }, // T3: 7 Wood (matches CSV Tier 4)
+    4: { food: 0, wood: 9, stone: 0, metal: 0, livestock: 0, currency: 0 }, // T4: 9 Wood (matches CSV Tier 5)
   },
   Quarry: {
-    1: { food: 0, wood: 0, stone: 1, metal: 0, livestock: 0, currency: 0 }, // T1: 1 Stone
-    2: { food: 0, wood: 0, stone: 2, metal: 0, livestock: 0, currency: 0 }, // T2: 2 Stone
-    3: { food: 0, wood: 0, stone: 3, metal: 0, livestock: 0, currency: 0 }, // T3: 3 Stone
+    1: { food: 0, wood: 0, stone: 3, metal: 0, livestock: 0, currency: 0 }, // T1: 3 Stone (matches CSV Tier 2)
+    2: { food: 0, wood: 0, stone: 5, metal: 0, livestock: 0, currency: 0 }, // T2: 5 Stone (matches CSV Tier 3)
+    3: { food: 0, wood: 0, stone: 7, metal: 0, livestock: 0, currency: 0 }, // T3: 7 Stone (matches CSV Tier 4)
+    4: { food: 0, wood: 0, stone: 9, metal: 0, livestock: 0, currency: 0 }, // T4: 9 Stone (matches CSV Tier 5)
   },
   Forge: {
     1: { food: 0, wood: 0, stone: 0, metal: 1, livestock: 0, currency: 0 }, // T1: 1 Metal
@@ -34,34 +36,40 @@ export const BUILDING_PRODUCTION_RATES = {
 
   // Additional buildings from Imperium Fragmentum ruleset
   Fields: {
-    1: { food: 2, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // T1: 2 Food
-    2: { food: 4, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // T2: 4 Food
-    3: { food: 6, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // T3: 6 Food
+    1: { food: 3, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // T1: 3 Crops (matches CSV Tier 2)
+    2: { food: 5, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // T2: 5 Crops (matches CSV Tier 3)
+    3: { food: 7, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // T3: 7 Crops (matches CSV Tier 4)
+    4: { food: 9, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // T4: 9 Crops (matches CSV Tier 5)
   },
   Pastures: {
-    1: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 5, currency: 0 }, // T1: 5 Livestock per turn
-    2: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 5, currency: 0 }, // T2: 5 Livestock per turn
-    3: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 5, currency: 0 }, // T3: 5 Livestock per turn
+    1: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 3, currency: 0 }, // T1: 3 Livestock (matches CSV Tier 2)
+    2: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 5, currency: 0 }, // T2: 5 Livestock (matches CSV Tier 3)
+    3: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 7, currency: 0 }, // T3: 7 Livestock (matches CSV Tier 4)
+    4: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 9, currency: 0 }, // T4: 9 Livestock (matches CSV Tier 5)
   },
   Mine: {
-    1: { food: 0, wood: 0, stone: 0, metal: 2, livestock: 0, currency: 0 }, // T1: 2 Metal (rare)
-    2: { food: 0, wood: 0, stone: 0, metal: 4, livestock: 0, currency: 0 }, // T2: 4 Metal
-    3: { food: 0, wood: 0, stone: 0, metal: 6, livestock: 0, currency: 0 }, // T3: 6 Metal
+    1: { food: 0, wood: 0, stone: 0, metal: 3, livestock: 0, currency: 0 }, // T1: 3 Metal (matches CSV Tier 2)
+    2: { food: 0, wood: 0, stone: 0, metal: 5, livestock: 0, currency: 0 }, // T2: 5 Metal (matches CSV Tier 3)
+    3: { food: 0, wood: 0, stone: 0, metal: 7, livestock: 0, currency: 0 }, // T3: 7 Metal (matches CSV Tier 4)
+    4: { food: 0, wood: 0, stone: 0, metal: 9, livestock: 0, currency: 0 }, // T4: 9 Metal (matches CSV Tier 5)
   },
   "Infantry Barracks": {
     1: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // Military - no production
     2: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // Military - no production
     3: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // Military - no production
+    4: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // Military - no production
   },
   "Ranged Barracks": {
     1: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // Military - no production
     2: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // Military - no production
     3: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // Military - no production
+    4: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // Military - no production
   },
   "Cavalry Barracks": {
     1: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // Military - no production
     2: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // Military - no production
     3: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // Military - no production
+    4: { food: 0, wood: 0, stone: 0, metal: 0, livestock: 0, currency: 0 }, // Military - no production
   },
 };
 
@@ -113,6 +121,7 @@ export const BUILDING_COSTS = {
 export const BUILDING_UPGRADE_COSTS = {
   2: { currency: 50, wood: 20, stone: 10, metal: 0, food: 0, livestock: 0 }, // Level 2 upgrade
   3: { currency: 100, wood: 20, stone: 20, metal: 0, food: 0, livestock: 0 }, // Level 3 upgrade
+  4: { currency: 100, wood: 20, stone: 20, metal: 0, food: 0, livestock: 0 }, // Level 4 upgrade
 };
 
 // Unit recruitment costs from official Unit Costs Table

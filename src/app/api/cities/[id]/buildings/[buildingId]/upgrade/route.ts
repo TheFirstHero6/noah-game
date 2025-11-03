@@ -67,10 +67,10 @@ export async function POST(
     
     const resources = userResource;
 
-    // Check if building can be upgraded (max tier 3)
-    if (building.tier >= 3) {
+    // Check if building can be upgraded (max tier 4)
+    if (building.tier >= 4) {
       return NextResponse.json(
-        { error: "Building is already at maximum tier (3)" },
+        { error: "Building is already at maximum tier (4)" },
         { status: 400 }
       );
     }

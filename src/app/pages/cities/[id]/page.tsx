@@ -12,6 +12,7 @@ interface City {
   upgradeTier: number;
   localWealth: number;
   taxRate: number;
+  realmId?: string;
   buildings: Building[];
 }
 
@@ -155,9 +156,14 @@ export default function CityDetailsPage() {
   useEffect(() => {
     if (cityId) {
       fetchCity();
-      fetchResources();
     }
   }, [cityId]);
+
+  useEffect(() => {
+    if (city?.realmId) {
+      fetchResources(city.realmId);
+    }
+  }, [city]);
 
   const fetchCity = async () => {
     try {
@@ -179,18 +185,18 @@ export default function CityDetailsPage() {
     }
   };
 
-  const fetchResources = async () => {
+  const fetchResources = async (realmId: string) => {
     try {
-      const response = await fetch("/api/dashboard/user-data");
+      const response = await fetch(`/api/dashboard/resources?realmId=${realmId}`);
       if (response.ok) {
         const data = await response.json();
-        setResources(data.resources || {
-          wood: 0,
-          stone: 0,
-          food: 0,
-          currency: 0,
-          metal: 0,
-          livestock: 0,
+        setResources({
+          wood: data.wood || 0,
+          stone: data.stone || 0,
+          food: data.food || 0,
+          currency: data.currency || 0,
+          metal: data.metal || 0,
+          livestock: data.livestock || 0,
         });
       }
     } catch (error) {
@@ -274,7 +280,7 @@ export default function CityDetailsPage() {
       if (response.ok) {
         addNotification("success", data.message);
         fetchCity(); // Refresh city data
-        fetchResources(); // Refresh resources
+        // Resources will be refreshed automatically via useEffect when city.realmId is updated
       } else {
         addNotification("error", data.error || "Failed to build structure");
       }
@@ -336,8 +342,8 @@ export default function CityDetailsPage() {
   };
 
   const upgradeBuilding = async (buildingId: string, currentTier: number) => {
-    if (currentTier >= 3) {
-      addNotification("error", "Building is already at maximum tier (3)");
+    if (currentTier >= 4) {
+      addNotification("error", "Building is already at maximum tier (4)");
       return;
     }
 
@@ -599,7 +605,7 @@ export default function CityDetailsPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      {building.tier < 3 && (
+                      {building.tier < 4 && (
                         <button
                           onClick={() =>
                             upgradeBuilding(building.id, building.tier)
@@ -612,7 +618,7 @@ export default function CityDetailsPage() {
                             : `Upgrade to T${building.tier + 1}`}
                         </button>
                       )}
-                      {building.tier >= 3 && (
+                      {building.tier >= 4 && (
                         <span className="text-xs text-medieval-gold-400 bg-medieval-gold-600/20 px-3 py-1 rounded-full border border-medieval-gold-600">
                           Max Tier
                         </span>
