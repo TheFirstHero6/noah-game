@@ -16,7 +16,6 @@ model User {
   theme           String         @default("royal-court")
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
-  role            Role           @default(BASIC)
   resources       Resource[]
   cities          City[]
   armies          Army[]
@@ -24,21 +23,17 @@ model User {
   realmMemberships RealmMember[]
 }
 
-enum Role {
+enum RealmRole {
   BASIC
   ADMIN
-}
-
-enum RealmRole {
   OWNER
-  ADMIN
-  MEMBER
 }
 
 model Realm {
   id          String   @id @default(cuid())
   name        String
   code        String   @unique
+  logo        String?  // URL or path to realm logo
   ownerId     String
   owner       User     @relation("RealmOwner", fields: [ownerId], references: [id])
   createdAt   DateTime @default(now())
@@ -56,7 +51,7 @@ model RealmMember {
   userId      String
   realm       Realm      @relation(fields: [realmId], references: [id], onDelete: Cascade)
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  role        RealmRole  @default(MEMBER)
+  role        RealmRole  @default(BASIC)
   joinedAt    DateTime   @default(now())
   
   @@unique([realmId, userId])

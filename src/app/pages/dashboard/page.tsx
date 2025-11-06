@@ -119,7 +119,9 @@ export default function Dashboard() {
     try {
       console.log("Dashboard: Fetching user data...");
 
-      const response = await fetch(`/api/dashboard/user-data?realmId=${currentRealm.id}`);
+      const response = await fetch(
+        `/api/dashboard/user-data?realmId=${currentRealm.id}`
+      );
 
       console.log("Dashboard: Response status:", response.status);
 
@@ -190,10 +192,12 @@ export default function Dashboard() {
   };
 
   const fetchAllUsersWithResources = async () => {
-    if (role !== "ADMIN" || !currentRealm) return;
+    if ((role !== "ADMIN" && role !== "OWNER") || !currentRealm) return;
 
     try {
-      const response = await fetch(`/api/dashboard/all-users-resources?realmId=${currentRealm.id}`);
+      const response = await fetch(
+        `/api/dashboard/all-users-resources?realmId=${currentRealm.id}`
+      );
 
       if (!response.ok) {
         // Avoid parsing non-JSON responses (e.g., HTML for 401/403)
@@ -556,9 +560,9 @@ export default function Dashboard() {
 
       fetchUserData();
 
-      // Refresh admin dashboard if user is admin
+      // Refresh admin dashboard if user is admin or owner
 
-      if (role === "ADMIN") {
+      if (role === "ADMIN" || role === "OWNER") {
         fetchAllUsersWithResources();
       }
     } catch (error) {
@@ -577,7 +581,7 @@ export default function Dashboard() {
   };
 
   const cleanupUserNames = async () => {
-    if (role !== "ADMIN") return;
+    if (role !== "ADMIN" && role !== "OWNER") return;
 
     setIsCleaningNames(true);
 
@@ -636,7 +640,7 @@ export default function Dashboard() {
   }, [currentRealm]);
 
   useEffect(() => {
-    if (role === "ADMIN" && currentRealm) {
+    if ((role === "ADMIN" || role === "OWNER") && currentRealm) {
       fetchAllUsersWithResources();
     }
   }, [role, currentRealm]);
@@ -667,700 +671,1051 @@ export default function Dashboard() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6 }}
       >
-      {/* Notification Container */}
+        {/* Notification Container */}
 
-      <NotificationContainer />
+        <NotificationContainer />
 
-      {/* Animated background pattern - Figma style */}
+        {/* Animated background pattern - Figma style */}
 
-      <div className="fixed inset-0 opacity-5 pointer-events-none">
-        {Array.from({ length: 16 }).map((_, i) => (
-          <div
-            key={i}
-            className="absolute"
-            style={{ left: `${(i * 61) % 100}%`, top: `${(i * 37) % 100}%` }}
-          >
-            <svg className="h-12 w-12" fill="none" viewBox="0 0 40 40">
-              <path
-                d="M36 34V30H34V34H30V36H34V40H36V36H40V34H36ZM36 4V0H34V4H30V6H34V10H36V6H40V4H36ZM6 34V30H4V34H0V36H4V40H6V36H10V34H6ZM6 4V0H4V4H0V6H4V10H6V6H10V4H6Z"
-                fill="var(--theme-gold)"
-                fillRule="evenodd"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-        ))}
-      </div>
-
-      <div className="relative w-full max-w-7xl space-y-8">
-        {/* Main Dashboard Card */}
-
-        <AnimatedCard
-          className="p-6 sm:p-8 lg:p-12"
-          variant="interactive"
-          delay={0.1}
-        >
-          {/* Header Section */}
-
-          <motion.div
-            className="flex flex-col lg:flex-row items-center justify-center space-y-6 lg:space-y-0 lg:space-x-12 mb-12"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            <motion.div
-              className="relative group"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+        <div className="fixed inset-0 opacity-5 pointer-events-none">
+          {Array.from({ length: 16 }).map((_, i) => (
+            <div
+              key={i}
+              className="absolute"
+              style={{ left: `${(i * 61) % 100}%`, top: `${(i * 37) % 100}%` }}
             >
-              <motion.div
-                className="absolute -inset-3 bg-gradient-to-r from-[var(--theme-gold)]/20 via-[var(--theme-accent)]/30 to-[var(--theme-gold)]/20 rounded-full blur-lg"
-                initial={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-              />
+              <svg className="h-12 w-12" fill="none" viewBox="0 0 40 40">
+                <path
+                  d="M36 34V30H34V34H30V36H34V40H36V36H40V34H36ZM36 4V0H34V4H30V6H34V10H36V6H40V4H36ZM6 34V30H4V34H0V36H4V40H6V36H10V34H6ZM6 4V0H4V4H0V6H4V10H6V6H10V4H6Z"
+                  fill="var(--theme-gold)"
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+          ))}
+        </div>
 
-              <motion.img
-                src={userpic || "/logo.png"}
-                alt="Noble Portrait"
-                className="relative rounded-full border-2 border-[var(--theme-accent)] object-cover"
-                style={{
-                  aspectRatio: "1/1",
+        <div className="relative w-full max-w-7xl space-y-8">
+          {/* Main Dashboard Card */}
 
-                  width: "120px",
-
-                  height: "120px",
-
-                  minWidth: "120px",
-
-                  minHeight: "120px",
-
-                  maxWidth: "120px",
-
-                  maxHeight: "120px",
-                }}
-                whileHover={{ rotate: 3, scale: 1.1 }}
-                transition={{ duration: 0.3 }}
-              />
-
-              <motion.div
-                className="absolute inset-0 rounded-full bg-gradient-to-br from-[var(--theme-gold)]/20 to-transparent"
-                initial={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-              />
-            </motion.div>
+          <AnimatedCard
+            className="p-6 sm:p-8 lg:p-12"
+            variant="interactive"
+            delay={0.1}
+          >
+            {/* Header Section */}
 
             <motion.div
-              className="text-center lg:text-left"
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
+              className="flex flex-col lg:flex-row items-center justify-center space-y-6 lg:space-y-0 lg:space-x-12 mb-12"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <motion.h1
-                className="font-[Cinzel] text-4xl sm:text-5xl lg:text-6xl text-[var(--theme-gold)] tracking-wider mb-4 uppercase"
-                whileHover={{ textShadow: "0 0 20px rgba(234, 179, 8, 0.5)" }}
-              >
-                {username || "Noble"}'s Royal Court
-              </motion.h1>
-
-              <motion.p
-                className="font-[Playfair_Display] text-xl md:text-2xl text-[var(--theme-gold)]/80 italic"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-              >
-                {role === "ADMIN"
-                  ? "Your Majesty, the realm bows to your royal authority... Command your subjects with wisdom and justice."
-                  : "Make your decisions carefully, young lord... The realm depends on your wisdom."}
-              </motion.p>
-            </motion.div>
-          </motion.div>
-
-          <motion.div
-            className="relative my-8"
-            initial={{ opacity: 0, scaleX: 0 }}
-            animate={{ opacity: 1, scaleX: 1 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-          >
-            <div className="absolute inset-0 flex items-center">
-              <div className="flex-1 border-t border-[var(--theme-border)]"></div>
-            </div>
-          </motion.div>
-
-          {/* Resources Section */}
-
-          <motion.div
-            className="mb-12"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.0 }}
-          >
-            <motion.h2
-              className="font-[Cinzel] text-3xl sm:text-4xl text-[var(--theme-gold)] mb-8 text-center uppercase"
-              whileHover={{ textShadow: "0 0 20px rgba(234, 179, 8, 0.5)" }}
-            >
-              💰 Royal Treasury
-            </motion.h2>
-
-            <StaggeredContainer
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6"
-              staggerDelay={0.1}
-            >
-              {[
-                {
-                  icon: "🌲",
-
-                  label: "Wood",
-
-                  value: resources.wood,
-
-                  color: "emerald",
-                },
-
-                {
-                  icon: "🗿",
-
-                  label: "Stone",
-
-                  value: resources.stone,
-
-                  color: "steel",
-                },
-
-                {
-                  icon: "🍞",
-
-                  label: "Food",
-
-                  value: resources.food,
-
-                  color: "amber",
-                },
-
-                {
-                  icon: "💰",
-
-                  label: "Currency",
-
-                  value: (resources.currency || 0).toFixed(1),
-
-                  color: "gold",
-                },
-
-                {
-                  icon: "⚒️",
-
-                  label: "Metal",
-
-                  value: resources.metal,
-
-                  color: "steel",
-                },
-
-                {
-                  icon: "🐄",
-
-                  label: "Livestock",
-
-                  value: resources.livestock,
-
-                  color: "emerald",
-                },
-              ].map((resource, index) => (
-                <Card
-                  key={resource.label}
-                  className="relative cursor-pointer overflow-hidden rounded-lg p-6 backdrop-blur-sm bg-[var(--theme-card-bg)] border border-[var(--theme-border)] hover:border-[var(--theme-accent)] transition-all duration-300 group"
-                >
-                  <motion.div
-                    className="text-4xl sm:text-5xl mb-4 text-center"
-                    whileHover={{ y: -4 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    {resource.icon}
-                  </motion.div>
-
-                  <motion.span
-                    className="block text-2xl sm:text-3xl font-[Cinzel] font-bold text-white mb-2 text-center"
-                    initial={{ scale: 0.8 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                  >
-                    {resource.value}
-                  </motion.span>
-
-                  <span className="text-base sm:text-lg text-gray-300 font-[Playfair_Display] text-center block">
-                    {resource.label}
-                  </span>
-                </Card>
-              ))}
-            </StaggeredContainer>
-          </motion.div>
-
-          <motion.div
-            className="relative my-8"
-            initial={{ opacity: 0, scaleX: 0 }}
-            animate={{ opacity: 1, scaleX: 1 }}
-            transition={{ duration: 0.8, delay: 1.2 }}
-          >
-            <div className="absolute inset-0 flex items-center">
-              <div className="flex-1 border-t border-[var(--theme-border)]"></div>
-            </div>
-          </motion.div>
-
-          {/* Admin Dashboard - Replace normal list for admins */}
-
-          {role === "ADMIN" ? (
-            <AnimatedCard className="p-8" variant="interactive" delay={1.4}>
               <motion.div
-                className="flex flex-col lg:flex-row justify-between items-center mb-8"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 1.6 }}
+                className="relative group"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <motion.h2
-                  className="font-[Cinzel] text-3xl text-[var(--theme-gold)] text-center lg:text-left uppercase"
-                  whileHover={{
-                    textShadow: "0 0 20px rgba(245, 158, 11, 0.5)",
+                <motion.div
+                  className="absolute -inset-3 bg-gradient-to-r from-[var(--theme-gold)]/20 via-[var(--theme-accent)]/30 to-[var(--theme-gold)]/20 rounded-full blur-lg"
+                  initial={{ opacity: 0 }}
+                  whileHover={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                />
+
+                <motion.img
+                  src={userpic || "/logo.png"}
+                  alt="Noble Portrait"
+                  className="relative rounded-full border-2 border-[var(--theme-accent)] object-cover"
+                  style={{
+                    aspectRatio: "1/1",
+
+                    width: "120px",
+
+                    height: "120px",
+
+                    minWidth: "120px",
+
+                    minHeight: "120px",
+
+                    maxWidth: "120px",
+
+                    maxHeight: "120px",
                   }}
-                >
-                  👑 Noble Houses of the Realm
-                </motion.h2>
+                  whileHover={{ rotate: 3, scale: 1.1 }}
+                  transition={{ duration: 0.3 }}
+                />
+
+                <motion.div
+                  className="absolute inset-0 rounded-full bg-gradient-to-br from-[var(--theme-gold)]/20 to-transparent"
+                  initial={{ opacity: 0 }}
+                  whileHover={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                />
               </motion.div>
 
-              {/* Admin Search Section */}
+              <motion.div
+                className="text-center lg:text-left"
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                <motion.h1
+                  className="font-[Cinzel] text-4xl sm:text-5xl lg:text-6xl text-[var(--theme-gold)] tracking-wider mb-4 uppercase"
+                  whileHover={{ textShadow: "0 0 20px rgba(234, 179, 8, 0.5)" }}
+                >
+                  {username || "Noble"}'s Royal Court
+                </motion.h1>
 
-              <div className="mb-8">
-                <h3 className="font-[Cinzel] text-2xl text-[var(--theme-gold)] mb-6 text-center uppercase">
-                  👑 Search Amongst the Noble Houses
-                </h3>
+                <motion.p
+                  className="font-[Playfair_Display] text-xl md:text-2xl text-[var(--theme-gold)]/80 italic"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                >
+                  {role === "ADMIN" || role === "OWNER"
+                    ? "Your Majesty, the realm bows to your royal authority... Command your subjects with wisdom and justice."
+                    : "Make your decisions carefully, young lord... The realm depends on your wisdom."}
+                </motion.p>
+              </motion.div>
+            </motion.div>
 
-                <div className="relative">
-                  <Input
-                    type="text"
-                    placeholder="Seek out your allies and rivals..."
-                    className="w-full text-lg bg-[var(--theme-card-bg)] border-[var(--theme-border)] text-[var(--theme-gold)]/80 placeholder:text-[var(--theme-gold)]/50 rounded-xl backdrop-blur-sm"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-
-                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[var(--theme-gold)] pointer-events-none">
-                    🔍
-                  </div>
-                </div>
+            <motion.div
+              className="relative my-8"
+              initial={{ opacity: 0, scaleX: 0 }}
+              animate={{ opacity: 1, scaleX: 1 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+            >
+              <div className="absolute inset-0 flex items-center">
+                <div className="flex-1 border-t border-[var(--theme-border)]"></div>
               </div>
+            </motion.div>
 
-              {/* Admin Resource Cards Grid */}
+            {/* Resources Section */}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {allUsersWithResources
+            <motion.div
+              className="mb-12"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.0 }}
+            >
+              <motion.h2
+                className="font-[Cinzel] text-3xl sm:text-4xl text-[var(--theme-gold)] mb-8 text-center uppercase"
+                whileHover={{ textShadow: "0 0 20px rgba(234, 179, 8, 0.5)" }}
+              >
+                💰 Royal Treasury
+              </motion.h2>
 
-                  .filter((user) => {
-                    const cleanName = cleanUserName(user.name);
+              <StaggeredContainer
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6"
+                staggerDelay={0.1}
+              >
+                {[
+                  {
+                    icon: "🌲",
 
-                    return (
-                      cleanName &&
-                      cleanName
+                    label: "Wood",
 
-                        .toLowerCase()
+                    value: resources.wood,
 
-                        .includes(searchQuery.toLowerCase())
-                    );
-                  })
+                    color: "emerald",
+                  },
 
-                  .map((user) => (
-                    <Card
-                      key={user.id}
-                      className="backdrop-blur-sm bg-[var(--theme-card-bg)] rounded-lg border border-[var(--theme-border)] p-6 hover:border-[var(--theme-accent)] transition-all duration-300 group"
+                  {
+                    icon: "🗿",
+
+                    label: "Stone",
+
+                    value: resources.stone,
+
+                    color: "steel",
+                  },
+
+                  {
+                    icon: "🍞",
+
+                    label: "Food",
+
+                    value: resources.food,
+
+                    color: "amber",
+                  },
+
+                  {
+                    icon: "💰",
+
+                    label: "Currency",
+
+                    value: (resources.currency || 0).toFixed(1),
+
+                    color: "gold",
+                  },
+
+                  {
+                    icon: "⚒️",
+
+                    label: "Metal",
+
+                    value: resources.metal,
+
+                    color: "steel",
+                  },
+
+                  {
+                    icon: "🐄",
+
+                    label: "Livestock",
+
+                    value: resources.livestock,
+
+                    color: "emerald",
+                  },
+                ].map((resource, index) => (
+                  <Card
+                    key={resource.label}
+                    className="relative cursor-pointer overflow-hidden rounded-lg p-6 backdrop-blur-sm bg-[var(--theme-card-bg)] border border-[var(--theme-border)] hover:border-[var(--theme-accent)] transition-all duration-300 group"
+                  >
+                    <motion.div
+                      className="text-4xl sm:text-5xl mb-4 text-center"
+                      whileHover={{ y: -4 }}
+                      transition={{ duration: 0.2 }}
                     >
-                      <div className="flex items-center space-x-4 mb-4">
-                        <div className="relative group/avatar">
-                          <img
-                            src={user.imageUrl}
-                            alt={user.name || "Noble"}
-                            className="h-16 w-16 rounded-full border-2 border-[var(--theme-accent)] transform transition-all duration-300 group-hover/avatar:scale-110"
-                          />
+                      {resource.icon}
+                    </motion.div>
 
-                          <div className="absolute -inset-1 bg-gradient-to-r from-[var(--theme-gold)] to-[var(--theme-accent)] rounded-full opacity-0 group-hover/avatar:opacity-20 blur-lg transition-opacity duration-300"></div>
-                        </div>
+                    <motion.span
+                      className="block text-2xl sm:text-3xl font-[Cinzel] font-bold text-white mb-2 text-center"
+                      initial={{ scale: 0.8 }}
+                      animate={{ scale: 1 }}
+                      transition={{ duration: 0.3, delay: index * 0.1 }}
+                    >
+                      {resource.value}
+                    </motion.span>
 
-                        <div className="flex-1">
-                          <h3 className="font-[Cinzel] text-lg text-[var(--theme-gold)] mb-1 uppercase">
-                            {cleanUserName(user.name)}
-                          </h3>
+                    <span className="text-base sm:text-lg text-gray-300 font-[Playfair_Display] text-center block">
+                      {resource.label}
+                    </span>
+                  </Card>
+                ))}
+              </StaggeredContainer>
+            </motion.div>
 
-                          <p className="text-sm text-gray-400 font-[Playfair_Display]">
-                            {user.role === "ADMIN" ? "👑 Admin" : "🏰 Noble"}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-3 gap-3 mb-4">
-                        <div className="text-center">
-                          <div className="text-2xl mb-1">🌲</div>
-
-                          <div className="text-sm font-[Cinzel] text-[var(--theme-gold)]">
-                            {user.resources.wood}
-                          </div>
-
-                          <div className="text-xs text-gray-400">Wood</div>
-                        </div>
-
-                        <div className="text-center">
-                          <div className="text-2xl mb-1">🗿</div>
-
-                          <div className="text-sm font-[Cinzel] text-[var(--theme-gold)]">
-                            {user.resources.stone}
-                          </div>
-
-                          <div className="text-xs text-gray-400">Stone</div>
-                        </div>
-
-                        <div className="text-center">
-                          <div className="text-2xl mb-1">🍞</div>
-
-                          <div className="text-sm font-[Cinzel] text-[var(--theme-gold)]">
-                            {user.resources.food}
-                          </div>
-
-                          <div className="text-xs text-gray-400">Food</div>
-                        </div>
-
-                        <div className="text-center">
-                          <div className="text-2xl mb-1">💰</div>
-
-                          <div className="text-sm font-[Cinzel] text-[var(--theme-gold)]">
-                            {(user.resources.currency || 0).toFixed(1)}
-                          </div>
-
-                          <div className="text-xs text-gray-400">Currency</div>
-                        </div>
-
-                        <div className="text-center">
-                          <div className="text-2xl mb-1">⚒️</div>
-
-                          <div className="text-sm font-[Cinzel] text-[var(--theme-gold)]">
-                            {user.resources.metal}
-                          </div>
-
-                          <div className="text-xs text-gray-400">Metal</div>
-                        </div>
-
-                        <div className="text-center">
-                          <div className="text-2xl mb-1">🐄</div>
-
-                          <div className="text-sm font-[Cinzel] text-[var(--theme-gold)]">
-                            {user.resources.livestock}
-                          </div>
-
-                          <div className="text-xs text-gray-400">Livestock</div>
-                        </div>
-                      </div>
-
-                      {/* Action Buttons */}
-
-                      <div className="flex flex-col gap-2">
-                        <AnimatedButton
-                          onClick={() =>
-                            openModal(cleanUserName(user.name), user.id)
-                          }
-                          variant="success"
-                          size="sm"
-                          className="w-full"
-                        >
-                          <span className="flex items-center justify-center gap-2">
-                            <span>🎁</span>
-
-                            <span>SEND BOON</span>
-                          </span>
-                        </AnimatedButton>
-
-                        <AnimatedButton
-                          onClick={() =>
-                            openAdminModal(cleanUserName(user.name), user.id)
-                          }
-                          variant="secondary"
-                          size="sm"
-                          className="w-full"
-                        >
-                          <span className="flex items-center justify-center gap-2">
-                            <span>⚡</span>
-
-                            <span>Manage Resources</span>
-                          </span>
-                        </AnimatedButton>
-                      </div>
-                    </Card>
-                  ))}
+            <motion.div
+              className="relative my-8"
+              initial={{ opacity: 0, scaleX: 0 }}
+              animate={{ opacity: 1, scaleX: 1 }}
+              transition={{ duration: 0.8, delay: 1.2 }}
+            >
+              <div className="absolute inset-0 flex items-center">
+                <div className="flex-1 border-t border-[var(--theme-border)]"></div>
               </div>
-            </AnimatedCard>
-          ) : (
-            /* Normal User List for Non-Admins */
+            </motion.div>
 
-            <AnimatedCard className="p-8" variant="interactive" delay={1.4}>
-              {/* Noble Search Section */}
+            {/* Admin Dashboard - Replace normal list for admins */}
 
-              <div className="mb-12">
-                <h2 className="font-[Cinzel] text-2xl text-[var(--theme-gold)] mb-6 text-center uppercase">
-                  🔍 Search Amongst the Noble Houses
-                </h2>
-
-                <div className="relative">
-                  <Input
-                    type="text"
-                    placeholder="Seek out your allies and rivals..."
-                    className="w-full text-lg bg-[var(--theme-card-bg)] border-[var(--theme-border)] text-[var(--theme-gold)]/80 placeholder:text-[var(--theme-gold)]/50 rounded-xl backdrop-blur-sm"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-
-                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[var(--theme-gold)] pointer-events-none">
-                    🔍
-                  </div>
-                </div>
-              </div>
-
-              {/* Noble Houses List */}
-
-              <div className="backdrop-blur-sm bg-[var(--theme-card-bg)] rounded-lg border border-[var(--theme-border)] p-8">
-                <div className="flex flex-col lg:flex-row justify-between items-center mb-8">
-                  <h2 className="font-[Cinzel] text-3xl text-[var(--theme-gold)] text-center lg:text-left uppercase">
+            {role === "ADMIN" || role === "OWNER" ? (
+              <AnimatedCard className="p-8" variant="interactive" delay={1.4}>
+                <motion.div
+                  className="flex flex-col lg:flex-row justify-between items-center mb-8"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 1.6 }}
+                >
+                  <motion.h2
+                    className="font-[Cinzel] text-3xl text-[var(--theme-gold)] text-center lg:text-left uppercase"
+                    whileHover={{
+                      textShadow: "0 0 20px rgba(245, 158, 11, 0.5)",
+                    }}
+                  >
                     👑 Noble Houses of the Realm
-                  </h2>
+                  </motion.h2>
+                </motion.div>
+
+                {/* Admin Search Section */}
+
+                <div className="mb-8">
+                  <h3 className="font-[Cinzel] text-2xl text-[var(--theme-gold)] mb-6 text-center uppercase">
+                    👑 Search Amongst the Noble Houses
+                  </h3>
+
+                  <div className="relative">
+                    <Input
+                      type="text"
+                      placeholder="Seek out your allies and rivals..."
+                      className="w-full text-lg bg-[var(--theme-card-bg)] border-[var(--theme-border)] text-[var(--theme-gold)]/80 placeholder:text-[var(--theme-gold)]/50 rounded-xl backdrop-blur-sm"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+
+                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[var(--theme-gold)] pointer-events-none">
+                      🔍
+                    </div>
+                  </div>
                 </div>
 
-                <div className="grid gap-6">
-                  {filteredUsers.map((user) => (
-                    <Card
-                      key={user.id}
-                      className="backdrop-blur-sm bg-[var(--theme-card-bg)] rounded-lg border border-[var(--theme-border)] p-6 hover:border-[var(--theme-accent)] transition-all duration-300 group"
-                    >
-                      <div className="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-6">
-                        <div className="relative group/avatar">
-                          <img
-                            src={user.imageUrl}
-                            alt={user.name || "Noble"}
-                            className="h-24 w-24 rounded-full border-4 border-[var(--theme-accent)] transform transition-all duration-300 group-hover/avatar:scale-110 group-hover/avatar:rotate-3"
-                          />
+                {/* Admin Resource Cards Grid */}
 
-                          <div className="absolute -inset-1 bg-gradient-to-r from-[var(--theme-gold)] to-[var(--theme-accent)] rounded-full opacity-0 group-hover/avatar:opacity-20 blur-lg transition-opacity duration-300"></div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {allUsersWithResources
+
+                    .filter((user) => {
+                      const cleanName = cleanUserName(user.name);
+
+                      return (
+                        cleanName &&
+                        cleanName
+
+                          .toLowerCase()
+
+                          .includes(searchQuery.toLowerCase())
+                      );
+                    })
+
+                    .map((user) => (
+                      <Card
+                        key={user.id}
+                        className="backdrop-blur-sm bg-[var(--theme-card-bg)] rounded-lg border border-[var(--theme-border)] p-6 hover:border-[var(--theme-accent)] transition-all duration-300 group"
+                      >
+                        <div className="flex items-center space-x-4 mb-4">
+                          <div className="relative group/avatar">
+                            <img
+                              src={user.imageUrl || "/logo.png"}
+                              alt={user.name || "Noble"}
+                              className="rounded-full border-2 border-[var(--theme-accent)] object-cover transform transition-all duration-300 group-hover/avatar:scale-110"
+                              style={{
+                                aspectRatio: "1/1",
+                                width: "64px",
+                                height: "64px",
+                                minWidth: "64px",
+                                minHeight: "64px",
+                                maxWidth: "64px",
+                                maxHeight: "64px",
+                              }}
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = "/logo.png";
+                              }}
+                            />
+
+                            <div className="absolute -inset-1 bg-gradient-to-r from-[var(--theme-gold)] to-[var(--theme-accent)] rounded-full opacity-0 group-hover/avatar:opacity-20 blur-lg transition-opacity duration-300"></div>
+                          </div>
+
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-[Cinzel] text-lg text-[var(--theme-gold)] mb-1 uppercase truncate">
+                              {cleanUserName(user.name)}
+                            </h3>
+
+                            <p className="text-sm text-gray-400 font-[Playfair_Display]">
+                              {user.role === "OWNER" ? "👑 Owner" : user.role === "ADMIN" ? "⚔️ Admin" : "🏰 Noble"}
+                            </p>
+                          </div>
                         </div>
 
-                        <div className="flex-1 text-center lg:text-left">
-                          <h3 className="font-[Cinzel] text-2xl text-white mb-2 uppercase">
-                            {cleanUserName(user.name)}
-                          </h3>
+                        <div className="grid grid-cols-3 gap-3 mb-4">
+                          <div className="text-center">
+                            <div className="text-2xl mb-1">🌲</div>
 
-                          <p className="text-gray-300 font-[Playfair_Display] italic">
-                            "A noble house of great renown"
-                          </p>
+                            <div className="text-sm font-[Cinzel] text-[var(--theme-gold)]">
+                              {user.resources.wood}
+                            </div>
+
+                            <div className="text-xs text-gray-400">Wood</div>
+                          </div>
+
+                          <div className="text-center">
+                            <div className="text-2xl mb-1">🗿</div>
+
+                            <div className="text-sm font-[Cinzel] text-[var(--theme-gold)]">
+                              {user.resources.stone}
+                            </div>
+
+                            <div className="text-xs text-gray-400">Stone</div>
+                          </div>
+
+                          <div className="text-center">
+                            <div className="text-2xl mb-1">🍞</div>
+
+                            <div className="text-sm font-[Cinzel] text-[var(--theme-gold)]">
+                              {user.resources.food}
+                            </div>
+
+                            <div className="text-xs text-gray-400">Food</div>
+                          </div>
+
+                          <div className="text-center">
+                            <div className="text-2xl mb-1">💰</div>
+
+                            <div className="text-sm font-[Cinzel] text-[var(--theme-gold)]">
+                              {(user.resources.currency || 0).toFixed(1)}
+                            </div>
+
+                            <div className="text-xs text-gray-400">
+                              Currency
+                            </div>
+                          </div>
+
+                          <div className="text-center">
+                            <div className="text-2xl mb-1">⚒️</div>
+
+                            <div className="text-sm font-[Cinzel] text-[var(--theme-gold)]">
+                              {user.resources.metal}
+                            </div>
+
+                            <div className="text-xs text-gray-400">Metal</div>
+                          </div>
+
+                          <div className="text-center">
+                            <div className="text-2xl mb-1">🐄</div>
+
+                            <div className="text-sm font-[Cinzel] text-[var(--theme-gold)]">
+                              {user.resources.livestock}
+                            </div>
+
+                            <div className="text-xs text-gray-400">
+                              Livestock
+                            </div>
+                          </div>
                         </div>
 
-                        <div className="flex flex-col sm:flex-row gap-3">
+                        {/* Action Buttons */}
+
+                        <div className="flex flex-col gap-2">
                           <AnimatedButton
                             onClick={() =>
                               openModal(cleanUserName(user.name), user.id)
                             }
                             variant="success"
+                            size="sm"
+                            className="w-full"
                           >
-                            <span className="flex items-center gap-2">
-                              <span>🎁</span>
+                            <span className="flex items-center justify-center gap-2">
+                              <span>🎁</span>
 
                               <span>SEND BOON</span>
                             </span>
                           </AnimatedButton>
+
+                          <AnimatedButton
+                            onClick={() =>
+                              openAdminModal(cleanUserName(user.name), user.id)
+                            }
+                            variant="secondary"
+                            size="sm"
+                            className="w-full"
+                          >
+                            <span className="flex items-center justify-center gap-2">
+                              <span>⚡</span>
+
+                              <span>Manage Resources</span>
+                            </span>
+                          </AnimatedButton>
                         </div>
-                      </div>
-                    </Card>
-                  ))}
+                      </Card>
+                    ))}
                 </div>
-              </div>
-            </AnimatedCard>
-          )}
+              </AnimatedCard>
+            ) : (
+              /* Normal User List for Non-Admins */
 
-          {/* Transfer Modal */}
+              <AnimatedCard className="p-8" variant="interactive" delay={1.4}>
+                {/* Noble Search Section */}
 
-          {modalOpen && (
-            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-              <div className="relative backdrop-blur-sm bg-[var(--theme-card-bg)]/95 border border-[var(--theme-border)] rounded-lg shadow-2xl max-w-lg w-full mx-4 p-8 overflow-hidden">
-                <button
-                  className="absolute top-4 right-4 text-[var(--theme-gold)] hover:text-red-400 text-3xl transition-colors duration-300"
-                  onClick={() => setModalOpen(false)}
-                >
-                  ✕
-                </button>
-
-                <div className="text-center mb-8">
-                  <h2 className="font-[Cinzel] text-3xl text-[var(--theme-gold)] mb-4 uppercase">
-                    🎁 Send Your Boon to {toUser}
+                <div className="mb-12">
+                  <h2 className="font-[Cinzel] text-2xl text-[var(--theme-gold)] mb-6 text-center uppercase">
+                    🔍 Search Amongst the Noble Houses
                   </h2>
 
-                  <p className="font-[Playfair_Display] text-gray-200 text-lg italic">
-                    "A gift from one noble house to another strengthens the
-                    bonds of the realm"
-                  </p>
-                </div>
-
-                <div className="space-y-6">
-                  <div>
-                    <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
-                      💰 Enter the Amount
-                    </label>
-
+                  <div className="relative">
                     <Input
-                      type="number"
+                      type="text"
+                      placeholder="Seek out your allies and rivals..."
                       className="w-full text-lg bg-[var(--theme-card-bg)] border-[var(--theme-border)] text-[var(--theme-gold)]/80 placeholder:text-[var(--theme-gold)]/50 rounded-xl backdrop-blur-sm"
-                      value={amount}
-                      onChange={(e) => setAmount(Number(e.target.value))}
-                      placeholder="How many shall you bestow?"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
                     />
-                  </div>
 
-                  <div>
-                    <label className="block font-[Cinzel] text-lg text-[var(--theme-gold)] mb-3">
-                      👑 Choose the Type of Boon
-                    </label>
-
-                    <select
-                      value={resource}
-                      onChange={(e) => setResource(e.target.value)}
-                      className="w-full text-lg bg-[var(--theme-card-bg)] border border-[var(--theme-border)] text-[var(--theme-gold)]/80 rounded-xl backdrop-blur-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--theme-accent)]"
-                    >
-                      <option value="">Select a resource...</option>
-
-                      <option value="wood">🌲 Wood</option>
-
-                      <option value="stone">🗿 Stone</option>
-
-                      <option value="food">🍞 Food</option>
-
-                      <option value="currency">💰 Currency</option>
-
-                      <option value="metal">⚒️ Metal</option>
-
-                      <option value="livestock">🐄 Livestock</option>
-                    </select>
-                  </div>
-
-                  <div className="flex justify-center pt-4">
-                    <AnimatedButton
-                      onClick={transferResources}
-                      disabled={isTransferring}
-                      variant="primary"
-                      loading={isTransferring}
-                    >
-                      <span className="flex items-center gap-2">
-                        <span>{isTransferring ? "â³" : "âš”ï¸"}</span>
-
-                        <span>
-                          {isTransferring ? "Sending..." : "Send Your Boon"}
-                        </span>
-                      </span>
-                    </AnimatedButton>
+                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[var(--theme-gold)] pointer-events-none">
+                      🔍
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          )}
 
-          {/* Admin Modal */}
+                {/* Noble Houses List */}
 
-          {adminModalOpen && (
-            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-              <div className="relative backdrop-blur-sm bg-[var(--theme-card-bg)]/95 border border-[var(--theme-border)] rounded-lg shadow-2xl max-w-2xl w-full mx-4 p-8 overflow-hidden">
-                <button
-                  className="absolute top-4 right-4 text-[var(--theme-gold)] hover:text-red-400 text-3xl transition-colors duration-300"
-                  onClick={() => closeAdminModal()}
-                >
-                  ✕
-                </button>
+                <div className="backdrop-blur-sm bg-[var(--theme-card-bg)] rounded-lg border border-[var(--theme-border)] p-8">
+                  <div className="flex flex-col lg:flex-row justify-between items-center mb-8">
+                    <h2 className="font-[Cinzel] text-3xl text-[var(--theme-gold)] text-center lg:text-left uppercase">
+                      👑 Noble Houses of the Realm
+                    </h2>
+                  </div>
 
-                <div className="text-center mb-8">
-                  <h2 className="font-[Cinzel] text-3xl text-[var(--theme-gold)] mb-4 uppercase">
-                    ⚡ Manage {toUser}'s Resources
-                  </h2>
+                  <div className="grid gap-6">
+                    {filteredUsers.map((user) => (
+                      <Card
+                        key={user.id}
+                        className="backdrop-blur-sm bg-[var(--theme-card-bg)] rounded-lg border border-[var(--theme-border)] p-6 hover:border-[var(--theme-accent)] transition-all duration-300 group"
+                      >
+                        <div className="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-6">
+                          <div className="relative group/avatar">
+                            <img
+                              src={user.imageUrl || "/logo.png"}
+                              alt={user.name || "Noble"}
+                              className="rounded-full border-4 border-[var(--theme-accent)] object-cover transform transition-all duration-300 group-hover/avatar:scale-110 group-hover/avatar:rotate-3"
+                              style={{
+                                aspectRatio: "1/1",
+                                width: "96px",
+                                height: "96px",
+                                minWidth: "96px",
+                                minHeight: "96px",
+                                maxWidth: "96px",
+                                maxHeight: "96px",
+                              }}
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = "/logo.png";
+                              }}
+                            />
 
-                  <p className="font-[Playfair_Display] text-gray-200 text-lg italic">
-                    "As the realm's overseer, you hold the power to shape the
-                    fortunes of noble houses"
-                  </p>
+                            <div className="absolute -inset-1 bg-gradient-to-r from-[var(--theme-gold)] to-[var(--theme-accent)] rounded-full opacity-0 group-hover/avatar:opacity-20 blur-lg transition-opacity duration-300"></div>
+                          </div>
 
-                  {isLoadingUserResources ? (
-                    <div className="mt-4 text-[var(--theme-gold)]">
-                      <span className="animate-pulse">
-                        â³ Loading current resources...
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="mt-4 p-4 bg-[var(--theme-card-bg)] rounded-lg border border-[var(--theme-border)]">
-                      <p className="text-[var(--theme-gold)] font-[Cinzel] text-lg mb-2">
-                        Current Resources:
-                      </p>
+                          <div className="flex-1 text-center lg:text-left min-w-0">
+                            <h3 className="font-[Cinzel] text-2xl text-white mb-2 uppercase break-words">
+                              {cleanUserName(user.name)}
+                            </h3>
 
-                      <div className="grid grid-cols-3 md:grid-cols-6 gap-4 text-sm">
-                        <div className="text-center">
-                          <span className="text-[var(--theme-gold)]">🌲</span>
+                            <p className="text-gray-300 font-[Playfair_Display] italic">
+                              "A noble house of great renown"
+                            </p>
+                          </div>
 
-                          <div className="text-gray-300">
-                            {targetUserResources.wood}
+                          <div className="flex flex-col sm:flex-row gap-3">
+                            <AnimatedButton
+                              onClick={() =>
+                                openModal(cleanUserName(user.name), user.id)
+                              }
+                              variant="success"
+                            >
+                              <span className="flex items-center gap-2">
+                                <span>🎁</span>
+
+                                <span>SEND BOON</span>
+                              </span>
+                            </AnimatedButton>
                           </div>
                         </div>
-
-                        <div className="text-center">
-                          <span className="text-[var(--theme-gold)]">🗿</span>
-
-                          <div className="text-gray-300">
-                            {targetUserResources.stone}
-                          </div>
-                        </div>
-
-                        <div className="text-center">
-                          <span className="text-[var(--theme-gold)]">🍞</span>
-
-                          <div className="text-gray-300">
-                            {targetUserResources.food}
-                          </div>
-                        </div>
-
-                        <div className="text-center">
-                          <span className="text-[var(--theme-gold)]">💰</span>
-
-                          <div className="text-gray-300">
-                            {(targetUserResources.currency || 0).toFixed(1)}
-                          </div>
-                        </div>
-
-                        <div className="text-center">
-                          <span className="text-[var(--theme-gold)]">⚒️</span>
-
-                          <div className="text-gray-300">
-                            {targetUserResources.metal}
-                          </div>
-                        </div>
-
-                        <div className="text-center">
-                          <span className="text-[var(--theme-gold)]">👑</span>
-
-                          <div className="text-gray-300">
-                            {targetUserResources.livestock}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
+                      </Card>
+                    ))}
+                  </div>
                 </div>
+              </AnimatedCard>
+            )}
 
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Transfer Modal */}
+
+            {modalOpen && (
+              <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+                <div className="relative backdrop-blur-sm bg-[var(--theme-card-bg)]/95 border border-[var(--theme-border)] rounded-lg shadow-2xl max-w-lg w-full mx-4 p-8 overflow-hidden">
+                  <button
+                    className="absolute top-4 right-4 text-[var(--theme-gold)] hover:text-red-400 text-3xl transition-colors duration-300"
+                    onClick={() => setModalOpen(false)}
+                  >
+                    ✕
+                  </button>
+
+                  <div className="text-center mb-8">
+                    <h2 className="font-[Cinzel] text-3xl text-[var(--theme-gold)] mb-4 uppercase">
+                      🎁 Send Your Boon to {toUser}
+                    </h2>
+
+                    <p className="font-[Playfair_Display] text-gray-200 text-lg italic">
+                      "A gift from one noble house to another strengthens the
+                      bonds of the realm"
+                    </p>
+                  </div>
+
+                  <div className="space-y-6">
                     <div>
-                      <label className="block font-[Cinzel] text-lg text-[var(--theme-gold)] mb-3">
-                        🌲 Wood
+                      <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
+                        💰 Enter the Amount
                       </label>
 
                       <Input
                         type="number"
-                        min="0"
                         className="w-full text-lg bg-[var(--theme-card-bg)] border-[var(--theme-border)] text-[var(--theme-gold)]/80 placeholder:text-[var(--theme-gold)]/50 rounded-xl backdrop-blur-sm"
+                        value={amount}
+                        onChange={(e) => setAmount(Number(e.target.value))}
+                        placeholder="How many shall you bestow?"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-[Cinzel] text-lg text-[var(--theme-gold)] mb-3">
+                        👑 Choose the Type of Boon
+                      </label>
+
+                      <select
+                        value={resource}
+                        onChange={(e) => setResource(e.target.value)}
+                        className="w-full text-lg bg-[var(--theme-card-bg)] border border-[var(--theme-border)] text-[var(--theme-gold)]/80 rounded-xl backdrop-blur-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--theme-accent)]"
+                      >
+                        <option value="">Select a resource...</option>
+
+                        <option value="wood">🌲 Wood</option>
+
+                        <option value="stone">🗿 Stone</option>
+
+                        <option value="food">🍞 Food</option>
+
+                        <option value="currency">💰 Currency</option>
+
+                        <option value="metal">⚒️ Metal</option>
+
+                        <option value="livestock">🐄 Livestock</option>
+                      </select>
+                    </div>
+
+                    <div className="flex justify-center pt-4">
+                      <AnimatedButton
+                        onClick={transferResources}
+                        disabled={isTransferring}
+                        variant="primary"
+                        loading={isTransferring}
+                      >
+                        <span className="flex items-center gap-2">
+                          <span>{isTransferring ? "" : ""}</span>
+
+                          <span>
+                            {isTransferring ? "Sending..." : "Send Your Boon"}
+                          </span>
+                        </span>
+                      </AnimatedButton>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Admin Modal */}
+
+            {adminModalOpen && (
+              <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+                <div className="relative backdrop-blur-sm bg-[var(--theme-card-bg)]/95 border border-[var(--theme-border)] rounded-lg shadow-2xl max-w-2xl w-full mx-4 p-8 overflow-hidden">
+                  <button
+                    className="absolute top-4 right-4 text-[var(--theme-gold)] hover:text-red-400 text-3xl transition-colors duration-300"
+                    onClick={() => closeAdminModal()}
+                  >
+                    ✕
+                  </button>
+
+                  <div className="text-center mb-8">
+                    <h2 className="font-[Cinzel] text-3xl text-[var(--theme-gold)] mb-4 uppercase">
+                      ⚡ Manage {toUser}'s Resources
+                    </h2>
+
+                    <p className="font-[Playfair_Display] text-gray-200 text-lg italic">
+                      "As the realm's overseer, you hold the power to shape the
+                      fortunes of noble houses"
+                    </p>
+
+                    {isLoadingUserResources ? (
+                      <div className="mt-4 text-[var(--theme-gold)]">
+                        <span className="animate-pulse">
+                          â³ Loading current resources...
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="mt-4 p-4 bg-[var(--theme-card-bg)] rounded-lg border border-[var(--theme-border)]">
+                        <p className="text-[var(--theme-gold)] font-[Cinzel] text-lg mb-2">
+                          Current Resources:
+                        </p>
+
+                        <div className="grid grid-cols-3 md:grid-cols-6 gap-4 text-sm">
+                          <div className="text-center">
+                            <span className="text-[var(--theme-gold)]">🌲</span>
+
+                            <div className="text-gray-300">
+                              {targetUserResources.wood}
+                            </div>
+                          </div>
+
+                          <div className="text-center">
+                            <span className="text-[var(--theme-gold)]">🗿</span>
+
+                            <div className="text-gray-300">
+                              {targetUserResources.stone}
+                            </div>
+                          </div>
+
+                          <div className="text-center">
+                            <span className="text-[var(--theme-gold)]">🍞</span>
+
+                            <div className="text-gray-300">
+                              {targetUserResources.food}
+                            </div>
+                          </div>
+
+                          <div className="text-center">
+                            <span className="text-[var(--theme-gold)]">💰</span>
+
+                            <div className="text-gray-300">
+                              {(targetUserResources.currency || 0).toFixed(1)}
+                            </div>
+                          </div>
+
+                          <div className="text-center">
+                            <span className="text-[var(--theme-gold)]">⚒️</span>
+
+                            <div className="text-gray-300">
+                              {targetUserResources.metal}
+                            </div>
+                          </div>
+
+                          <div className="text-center">
+                            <span className="text-[var(--theme-gold)]">👑</span>
+
+                            <div className="text-gray-300">
+                              {targetUserResources.livestock}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      <div>
+                        <label className="block font-[Cinzel] text-lg text-[var(--theme-gold)] mb-3">
+                          🌲 Wood
+                        </label>
+
+                        <Input
+                          type="number"
+                          min="0"
+                          className="w-full text-lg bg-[var(--theme-card-bg)] border-[var(--theme-border)] text-[var(--theme-gold)]/80 placeholder:text-[var(--theme-gold)]/50 rounded-xl backdrop-blur-sm"
+                          value={adminResourceValues.wood}
+                          onChange={(e) =>
+                            setAdminResourceValues((prev) => ({
+                              ...prev,
+
+                              wood: Number(e.target.value) || 0,
+                            }))
+                          }
+                          placeholder="Set wood amount"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block font-[Cinzel] text-lg text-[var(--theme-gold)] mb-3">
+                          🗿 Stone
+                        </label>
+
+                        <Input
+                          type="number"
+                          min="0"
+                          className="w-full text-lg bg-[var(--theme-card-bg)] border-[var(--theme-border)] text-[var(--theme-gold)]/80 placeholder:text-[var(--theme-gold)]/50 rounded-xl backdrop-blur-sm"
+                          value={adminResourceValues.stone}
+                          onChange={(e) =>
+                            setAdminResourceValues((prev) => ({
+                              ...prev,
+
+                              stone: Number(e.target.value) || 0,
+                            }))
+                          }
+                          placeholder="Set stone amount"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block font-[Cinzel] text-lg text-[var(--theme-gold)] mb-3">
+                          🍞 Food
+                        </label>
+
+                        <Input
+                          type="number"
+                          min="0"
+                          className="w-full text-lg bg-[var(--theme-card-bg)] border-[var(--theme-border)] text-[var(--theme-gold)]/80 placeholder:text-[var(--theme-gold)]/50 rounded-xl backdrop-blur-sm"
+                          value={adminResourceValues.food}
+                          onChange={(e) =>
+                            setAdminResourceValues((prev) => ({
+                              ...prev,
+
+                              food: Number(e.target.value) || 0,
+                            }))
+                          }
+                          placeholder="Set food amount"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block font-[Cinzel] text-lg text-[var(--theme-gold)] mb-3">
+                          💰 Currency
+                        </label>
+
+                        <Input
+                          type="number"
+                          min="0"
+                          className="w-full text-lg bg-[var(--theme-card-bg)] border-[var(--theme-border)] text-[var(--theme-gold)]/80 placeholder:text-[var(--theme-gold)]/50 rounded-xl backdrop-blur-sm"
+                          value={adminResourceValues.currency}
+                          onChange={(e) =>
+                            setAdminResourceValues((prev) => ({
+                              ...prev,
+
+                              currency: Number(e.target.value) || 0,
+                            }))
+                          }
+                          placeholder="Set currency amount"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block font-[Cinzel] text-lg text-[var(--theme-gold)] mb-3">
+                          ⚒️ Metal
+                        </label>
+
+                        <Input
+                          type="number"
+                          min="0"
+                          className="w-full text-lg bg-[var(--theme-card-bg)] border-[var(--theme-border)] text-[var(--theme-gold)]/80 placeholder:text-[var(--theme-gold)]/50 rounded-xl backdrop-blur-sm"
+                          value={adminResourceValues.metal}
+                          onChange={(e) =>
+                            setAdminResourceValues((prev) => ({
+                              ...prev,
+
+                              metal: Number(e.target.value) || 0,
+                            }))
+                          }
+                          placeholder="Set metal amount"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block font-[Cinzel] text-lg text-[var(--theme-gold)] mb-3">
+                          👑 Livestock
+                        </label>
+
+                        <Input
+                          type="number"
+                          min="0"
+                          className="w-full text-lg bg-[var(--theme-card-bg)] border-[var(--theme-border)] text-[var(--theme-gold)]/80 placeholder:text-[var(--theme-gold)]/50 rounded-xl backdrop-blur-sm"
+                          value={adminResourceValues.livestock}
+                          onChange={(e) =>
+                            setAdminResourceValues((prev) => ({
+                              ...prev,
+
+                              livestock: Number(e.target.value) || 0,
+                            }))
+                          }
+                          placeholder="Set livestock amount"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex justify-center pt-4">
+                      <AnimatedButton
+                        onClick={updateUserResources}
+                        disabled={isUpdatingResources}
+                        variant="secondary"
+                        loading={isUpdatingResources}
+                      >
+                        <span className="flex items-center gap-2">
+                          <span>{isUpdatingResources ? "â³" : "👑"}</span>
+
+                          <span>
+                            {isUpdatingResources
+                              ? "Proclaiming..."
+                              : "Make Executive Proclamation"}
+                          </span>
+                        </span>
+                      </AnimatedButton>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Transfer Modal */}
+
+            {modalOpen && (
+              <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+                <div className="relative backdrop-blur-sm bg-[var(--theme-card-bg)]/95 border border-[var(--theme-border)] rounded-lg shadow-2xl max-w-lg w-full mx-4 p-8 overflow-hidden">
+                  <button
+                    className="absolute top-4 right-4 text-[var(--theme-gold)] hover:text-red-400 text-3xl transition-colors duration-300"
+                    onClick={() => setModalOpen(false)}
+                  >
+                    ✕
+                  </button>
+
+                  <div className="text-center mb-8">
+                    <h2 className="font-[Cinzel] text-3xl text-[var(--theme-gold)] mb-4 uppercase">
+                      🎁 Send Your Boon to {toUser}
+                    </h2>
+
+                    <p className="font-[Playfair_Display] text-gray-200 text-lg italic">
+                      "A gift from one noble house to another strengthens the
+                      bonds of the realm"
+                    </p>
+                  </div>
+
+                  <div className="space-y-6">
+                    <div>
+                      <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
+                        💰 Enter the Amount
+                      </label>
+
+                      <Input
+                        type="number"
+                        className="w-full text-lg bg-[var(--theme-card-bg)] border-[var(--theme-border)] text-[var(--theme-gold)]/80 placeholder:text-[var(--theme-gold)]/50 rounded-xl backdrop-blur-sm"
+                        value={amount}
+                        onChange={(e) => setAmount(Number(e.target.value))}
+                        placeholder="How many shall you bestow?"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-[Cinzel] text-lg text-[var(--theme-gold)] mb-3">
+                        👑 Choose the Type of Boon
+                      </label>
+
+                      <select
+                        value={resource}
+                        onChange={(e) => setResource(e.target.value)}
+                        className="w-full text-lg bg-[var(--theme-card-bg)] border border-[var(--theme-border)] text-[var(--theme-gold)]/80 rounded-xl backdrop-blur-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--theme-accent)]"
+                      >
+                        <option value="">Select a resource...</option>
+
+                        <option value="wood">🌲 Wood</option>
+
+                        <option value="stone">🗿 Stone</option>
+
+                        <option value="food">🍞 Food</option>
+
+                        <option value="currency">👑Currency</option>
+
+                        <option value="metal">⚒️ Metal</option>
+
+                        <option value="livestock">👑 Livestock</option>
+                      </select>
+                    </div>
+
+                    <div className="flex justify-center pt-4">
+                      <AnimatedButton
+                        onClick={transferResources}
+                        disabled={isTransferring}
+                        variant="primary"
+                        loading={isTransferring}
+                      >
+                        <span className="flex items-center gap-2">
+                          <span>{isTransferring ? "" : ""}</span>
+
+                          <span>
+                            {isTransferring ? "Sending..." : "Send Your Boon"}
+                          </span>
+                        </span>
+                      </AnimatedButton>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Admin Modal */}
+
+            {adminModalOpen && (
+              <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+                <div className="relative backdrop-blur-sm bg-[var(--theme-card-bg)]/95 border border-[var(--theme-border)] rounded-lg shadow-2xl max-w-2xl w-full mx-4 p-8 overflow-hidden">
+                  <button
+                    className="absolute top-4 right-4 text-[var(--theme-gold)] hover:text-red-400 text-3xl transition-colors duration-300"
+                    onClick={() => closeAdminModal()}
+                  >
+                    ✕
+                  </button>
+
+                  <div className="text-center mb-8">
+                    <h2 className="font-[Cinzel] text-3xl text-[var(--theme-gold)] mb-4 uppercase">
+                      ⚡ Manage {toUser}'s Resources
+                    </h2>
+
+                    <p className="font-[Playfair_Display] text-gray-200 text-lg italic">
+                      "As the realm's overseer, you hold the power to shape the
+                      fortunes of noble houses"
+                    </p>
+
+                    {isLoadingUserResources ? (
+                      <div className="mt-4 text-[var(--theme-gold)]">
+                        <span className="animate-pulse">
+                          â³ Loading current resources...
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="mt-4 p-4 bg-[var(--theme-card-bg)] rounded-lg border border-[var(--theme-border)]">
+                        <p className="text-[var(--theme-gold)] font-[Cinzel] text-lg mb-2">
+                          Current Resources:
+                        </p>
+
+                        <div className="grid grid-cols-3 md:grid-cols-6 gap-4 text-sm">
+                          <div className="text-center">
+                            <span className="text-[var(--theme-gold)]">🌲</span>
+
+                            <div className="text-gray-300">
+                              {targetUserResources.wood}
+                            </div>
+                          </div>
+
+                          <div className="text-center">
+                            <span className="text-[var(--theme-gold)]">🗿</span>
+
+                            <div className="text-gray-300">
+                              {targetUserResources.stone}
+                            </div>
+                          </div>
+
+                          <div className="text-center">
+                            <span className="text-[var(--theme-gold)]">🍞</span>
+
+                            <div className="text-gray-300">
+                              {targetUserResources.food}
+                            </div>
+                          </div>
+
+                          <div className="text-center">
+                            <span className="text-[var(--theme-gold)]">💰</span>
+
+                            <div className="text-gray-300">
+                              {(targetUserResources.currency || 0).toFixed(1)}
+                            </div>
+                          </div>
+
+                          <div className="text-center">
+                            <span className="text-[var(--theme-gold)]">⚒️</span>
+
+                            <div className="text-gray-300">
+                              {targetUserResources.metal}
+                            </div>
+                          </div>
+
+                          <div className="text-center">
+                            <span className="text-[var(--theme-gold)]">👑</span>
+
+                            <div className="text-gray-300">
+                              {targetUserResources.livestock}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div>
+                      <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
+                        🌲 Wood
+                      </label>
+
+                      <input
+                        type="number"
+                        min="0"
+                        className="medieval-input w-full text-lg"
                         value={adminResourceValues.wood}
                         onChange={(e) =>
                           setAdminResourceValues((prev) => ({
@@ -1395,7 +1750,7 @@ export default function Dashboard() {
                     </div>
 
                     <div>
-                      <label className="block font-[Cinzel] text-lg text-[var(--theme-gold)] mb-3">
+                      <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
                         🍞 Food
                       </label>
 
@@ -1416,8 +1771,8 @@ export default function Dashboard() {
                     </div>
 
                     <div>
-                      <label className="block font-[Cinzel] text-lg text-[var(--theme-gold)] mb-3">
-                        💰 Currency
+                      <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
+                        👑 Currency
                       </label>
 
                       <Input
@@ -1437,7 +1792,7 @@ export default function Dashboard() {
                     </div>
 
                     <div>
-                      <label className="block font-[Cinzel] text-lg text-[var(--theme-gold)] mb-3">
+                      <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
                         ⚒️ Metal
                       </label>
 
@@ -1458,7 +1813,7 @@ export default function Dashboard() {
                     </div>
 
                     <div>
-                      <label className="block font-[Cinzel] text-lg text-[var(--theme-gold)] mb-3">
+                      <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
                         👑 Livestock
                       </label>
 
@@ -1480,13 +1835,12 @@ export default function Dashboard() {
                   </div>
 
                   <div className="flex justify-center pt-4">
-                    <AnimatedButton
+                    <button
                       onClick={updateUserResources}
                       disabled={isUpdatingResources}
-                      variant="secondary"
-                      loading={isUpdatingResources}
+                      className="medieval-button-secondary group disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <span className="flex items-center gap-2">
+                      <span className="flex items-center space-x-2">
                         <span>{isUpdatingResources ? "â³" : "👑"}</span>
 
                         <span>
@@ -1495,358 +1849,36 @@ export default function Dashboard() {
                             : "Make Executive Proclamation"}
                         </span>
                       </span>
-                    </AnimatedButton>
+                    </button>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Transfer Modal */}
+            {/* Non-Admin Section */}
 
-          {modalOpen && (
-            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-              <div className="relative backdrop-blur-sm bg-[var(--theme-card-bg)]/95 border border-[var(--theme-border)] rounded-lg shadow-2xl max-w-lg w-full mx-4 p-8 overflow-hidden">
-                <button
-                  className="absolute top-4 right-4 text-[var(--theme-gold)] hover:text-red-400 text-3xl transition-colors duration-300"
-                  onClick={() => setModalOpen(false)}
+            {role !== "ADMIN" && role !== "OWNER" && (
+              <AnimatedCard className="p-8" variant="interactive" delay={1.4}>
+                <motion.div
+                  className="text-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 1.6 }}
                 >
-                  ✕
-                </button>
-
-                <div className="text-center mb-8">
                   <h2 className="font-[Cinzel] text-3xl text-[var(--theme-gold)] mb-4 uppercase">
-                    🎁 Send Your Boon to {toUser}
+                    🏰 Your Noble House
                   </h2>
 
-                  <p className="font-[Playfair_Display] text-gray-200 text-lg italic">
-                    "A gift from one noble house to another strengthens the
-                    bonds of the realm"
+                  <p className="text-gray-300 text-lg font-[Playfair_Display]">
+                    Welcome to your personal realm. Manage your resources and
+                    build your legacy.
                   </p>
-                </div>
-
-                <div className="space-y-6">
-                  <div>
-                    <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
-                      💰 Enter the Amount
-                    </label>
-
-                    <Input
-                      type="number"
-                      className="w-full text-lg bg-[var(--theme-card-bg)] border-[var(--theme-border)] text-[var(--theme-gold)]/80 placeholder:text-[var(--theme-gold)]/50 rounded-xl backdrop-blur-sm"
-                      value={amount}
-                      onChange={(e) => setAmount(Number(e.target.value))}
-                      placeholder="How many shall you bestow?"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block font-[Cinzel] text-lg text-[var(--theme-gold)] mb-3">
-                      👑 Choose the Type of Boon
-                    </label>
-
-                    <select
-                      value={resource}
-                      onChange={(e) => setResource(e.target.value)}
-                      className="w-full text-lg bg-[var(--theme-card-bg)] border border-[var(--theme-border)] text-[var(--theme-gold)]/80 rounded-xl backdrop-blur-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--theme-accent)]"
-                    >
-                      <option value="">Select a resource...</option>
-
-                      <option value="wood">🌲 Wood</option>
-
-                      <option value="stone">🗿 Stone</option>
-
-                      <option value="food">🍞 Food</option>
-
-                      <option value="currency">👑Currency</option>
-
-                      <option value="metal">⚒️ Metal</option>
-
-                      <option value="livestock">👑 Livestock</option>
-                    </select>
-                  </div>
-
-                  <div className="flex justify-center pt-4">
-                    <AnimatedButton
-                      onClick={transferResources}
-                      disabled={isTransferring}
-                      variant="primary"
-                      loading={isTransferring}
-                    >
-                      <span className="flex items-center gap-2">
-                        <span>{isTransferring ? "â³" : "âš”ï¸"}</span>
-
-                        <span>
-                          {isTransferring ? "Sending..." : "Send Your Boon"}
-                        </span>
-                      </span>
-                    </AnimatedButton>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Admin Modal */}
-
-          {adminModalOpen && (
-            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-              <div className="relative backdrop-blur-sm bg-[var(--theme-card-bg)]/95 border border-[var(--theme-border)] rounded-lg shadow-2xl max-w-2xl w-full mx-4 p-8 overflow-hidden">
-                <button
-                  className="absolute top-4 right-4 text-[var(--theme-gold)] hover:text-red-400 text-3xl transition-colors duration-300"
-                  onClick={() => closeAdminModal()}
-                >
-                  ✕
-                </button>
-
-                <div className="text-center mb-8">
-                  <h2 className="font-[Cinzel] text-3xl text-[var(--theme-gold)] mb-4 uppercase">
-                    ⚡ Manage {toUser}'s Resources
-                  </h2>
-
-                  <p className="font-[Playfair_Display] text-gray-200 text-lg italic">
-                    "As the realm's overseer, you hold the power to shape the
-                    fortunes of noble houses"
-                  </p>
-
-                  {isLoadingUserResources ? (
-                    <div className="mt-4 text-[var(--theme-gold)]">
-                      <span className="animate-pulse">
-                        â³ Loading current resources...
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="mt-4 p-4 bg-[var(--theme-card-bg)] rounded-lg border border-[var(--theme-border)]">
-                      <p className="text-[var(--theme-gold)] font-[Cinzel] text-lg mb-2">
-                        Current Resources:
-                      </p>
-
-                      <div className="grid grid-cols-3 md:grid-cols-6 gap-4 text-sm">
-                        <div className="text-center">
-                          <span className="text-[var(--theme-gold)]">🌲</span>
-
-                          <div className="text-gray-300">
-                            {targetUserResources.wood}
-                          </div>
-                        </div>
-
-                        <div className="text-center">
-                          <span className="text-[var(--theme-gold)]">🗿</span>
-
-                          <div className="text-gray-300">
-                            {targetUserResources.stone}
-                          </div>
-                        </div>
-
-                        <div className="text-center">
-                          <span className="text-[var(--theme-gold)]">🍞</span>
-
-                          <div className="text-gray-300">
-                            {targetUserResources.food}
-                          </div>
-                        </div>
-
-                        <div className="text-center">
-                          <span className="text-[var(--theme-gold)]">💰</span>
-
-                          <div className="text-gray-300">
-                            {(targetUserResources.currency || 0).toFixed(1)}
-                          </div>
-                        </div>
-
-                        <div className="text-center">
-                          <span className="text-[var(--theme-gold)]">⚒️</span>
-
-                          <div className="text-gray-300">
-                            {targetUserResources.metal}
-                          </div>
-                        </div>
-
-                        <div className="text-center">
-                          <span className="text-[var(--theme-gold)]">👑</span>
-
-                          <div className="text-gray-300">
-                            {targetUserResources.livestock}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  <div>
-                    <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
-                      🌲 Wood
-                    </label>
-
-                    <input
-                      type="number"
-                      min="0"
-                      className="medieval-input w-full text-lg"
-                      value={adminResourceValues.wood}
-                      onChange={(e) =>
-                        setAdminResourceValues((prev) => ({
-                          ...prev,
-
-                          wood: Number(e.target.value) || 0,
-                        }))
-                      }
-                      placeholder="Set wood amount"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block font-[Cinzel] text-lg text-[var(--theme-gold)] mb-3">
-                      🗿 Stone
-                    </label>
-
-                    <Input
-                      type="number"
-                      min="0"
-                      className="w-full text-lg bg-[var(--theme-card-bg)] border-[var(--theme-border)] text-[var(--theme-gold)]/80 placeholder:text-[var(--theme-gold)]/50 rounded-xl backdrop-blur-sm"
-                      value={adminResourceValues.stone}
-                      onChange={(e) =>
-                        setAdminResourceValues((prev) => ({
-                          ...prev,
-
-                          stone: Number(e.target.value) || 0,
-                        }))
-                      }
-                      placeholder="Set stone amount"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
-                      🍞 Food
-                    </label>
-
-                    <Input
-                      type="number"
-                      min="0"
-                      className="w-full text-lg bg-[var(--theme-card-bg)] border-[var(--theme-border)] text-[var(--theme-gold)]/80 placeholder:text-[var(--theme-gold)]/50 rounded-xl backdrop-blur-sm"
-                      value={adminResourceValues.food}
-                      onChange={(e) =>
-                        setAdminResourceValues((prev) => ({
-                          ...prev,
-
-                          food: Number(e.target.value) || 0,
-                        }))
-                      }
-                      placeholder="Set food amount"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
-                      👑 Currency
-                    </label>
-
-                    <Input
-                      type="number"
-                      min="0"
-                      className="w-full text-lg bg-[var(--theme-card-bg)] border-[var(--theme-border)] text-[var(--theme-gold)]/80 placeholder:text-[var(--theme-gold)]/50 rounded-xl backdrop-blur-sm"
-                      value={adminResourceValues.currency}
-                      onChange={(e) =>
-                        setAdminResourceValues((prev) => ({
-                          ...prev,
-
-                          currency: Number(e.target.value) || 0,
-                        }))
-                      }
-                      placeholder="Set currency amount"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
-                      ⚒️ Metal
-                    </label>
-
-                    <Input
-                      type="number"
-                      min="0"
-                      className="w-full text-lg bg-[var(--theme-card-bg)] border-[var(--theme-border)] text-[var(--theme-gold)]/80 placeholder:text-[var(--theme-gold)]/50 rounded-xl backdrop-blur-sm"
-                      value={adminResourceValues.metal}
-                      onChange={(e) =>
-                        setAdminResourceValues((prev) => ({
-                          ...prev,
-
-                          metal: Number(e.target.value) || 0,
-                        }))
-                      }
-                      placeholder="Set metal amount"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block font-medieval text-lg text-medieval-gold-300 mb-3">
-                      👑 Livestock
-                    </label>
-
-                    <Input
-                      type="number"
-                      min="0"
-                      className="w-full text-lg bg-[var(--theme-card-bg)] border-[var(--theme-border)] text-[var(--theme-gold)]/80 placeholder:text-[var(--theme-gold)]/50 rounded-xl backdrop-blur-sm"
-                      value={adminResourceValues.livestock}
-                      onChange={(e) =>
-                        setAdminResourceValues((prev) => ({
-                          ...prev,
-
-                          livestock: Number(e.target.value) || 0,
-                        }))
-                      }
-                      placeholder="Set livestock amount"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex justify-center pt-4">
-                  <button
-                    onClick={updateUserResources}
-                    disabled={isUpdatingResources}
-                    className="medieval-button-secondary group disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <span className="flex items-center space-x-2">
-                      <span>{isUpdatingResources ? "â³" : "👑"}</span>
-
-                      <span>
-                        {isUpdatingResources
-                          ? "Proclaiming..."
-                          : "Make Executive Proclamation"}
-                      </span>
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Non-Admin Section */}
-
-          {role !== "ADMIN" && (
-            <AnimatedCard className="p-8" variant="interactive" delay={1.4}>
-              <motion.div
-                className="text-center"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 1.6 }}
-              >
-                <h2 className="font-[Cinzel] text-3xl text-[var(--theme-gold)] mb-4 uppercase">
-                  🏰 Your Noble House
-                </h2>
-
-                <p className="text-gray-300 text-lg font-[Playfair_Display]">
-                  Welcome to your personal realm. Manage your resources and
-                  build your legacy.
-                </p>
-              </motion.div>
-            </AnimatedCard>
-          )}
-        </AnimatedCard>
-      </div>
-    </motion.div>
+                </motion.div>
+              </AnimatedCard>
+            )}
+          </AnimatedCard>
+        </div>
+      </motion.div>
     </RealmRequirement>
   );
 }

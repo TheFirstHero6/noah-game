@@ -62,7 +62,6 @@ export async function GET(request: Request) {
             id: true,
             name: true,
             imageUrl: true,
-            role: true,
           },
         },
       },
@@ -75,14 +74,15 @@ export async function GET(request: Request) {
         id: true,
         name: true,
         imageUrl: true,
-        role: true,
       },
     });
 
-    // Combine owner and members
+    // Combine owner and members with their roles
     const allRealmUsers = [
-      ...(owner ? [owner] : []),
-      ...realmMembers.map((rm) => rm.user).filter((u) => u.id !== realm.ownerId),
+      ...(owner ? [{ ...owner, role: "OWNER" }] : []),
+      ...realmMembers
+        .map((rm) => ({ ...rm.user, role: rm.role }))
+        .filter((u) => u.id !== realm.ownerId),
     ];
 
     // Get resources for each user in this realm
@@ -101,7 +101,7 @@ export async function GET(request: Request) {
           id: user.id,
           name: user.name,
           imageUrl: user.imageUrl,
-          role: user.role,
+          role: (user as any).role || "BASIC",
           resources: resource
             ? {
                 wood: resource.wood || 0,
@@ -129,10 +129,12 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error("Error fetching all users with resources:", error);
+    console.error("Error stack:", error instanceof Error ? error.stack : "No stack trace");
     return NextResponse.json(
       {
         error: "Failed to fetch users with resources. Please try again.",
         details: error instanceof Error ? error.message : "Unknown error",
+        stack: error instanceof Error ? error.stack : undefined,
       },
       { status: 500 }
     );

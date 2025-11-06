@@ -44,22 +44,12 @@ export async function POST(
       );
     }
 
-    // Check if user is owner or admin
+    // Check if user is owner (only owners can kick)
     const isOwner = realm.ownerId === user.id;
-    const membership = await prisma.realmMember.findUnique({
-      where: {
-        realmId_userId: {
-          realmId,
-          userId: user.id,
-        },
-      },
-    });
 
-    const isAdmin = membership?.role === "ADMIN";
-
-    if (!isOwner && !isAdmin) {
+    if (!isOwner) {
       return NextResponse.json(
-        { error: "Only realm owners and admins can kick players" },
+        { error: "Only realm owners can kick players" },
         { status: 403 }
       );
     }

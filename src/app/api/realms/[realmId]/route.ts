@@ -72,7 +72,7 @@ export async function GET(
     const memberRole =
       realm.ownerId === user.id
         ? "OWNER"
-        : membership?.role || "MEMBER";
+        : membership?.role || "BASIC";
 
     return NextResponse.json({
       success: true,

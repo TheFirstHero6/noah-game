@@ -1,606 +1,385 @@
-@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Uncial+Antiqua&family=Dancing+Script:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Figma Design System Tokens */
-:root {
-  --font-size: 16px;
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
-  --radius: 0.625rem;
-  
-  /* Figma Light Theme (base) */
-  --background: #ffffff;
-  --foreground: oklch(0.145 0 0);
-  --card: #ffffff;
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: #030213;
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.95 0.0058 264.53);
-  --secondary-foreground: #030213;
-  --muted: #ececf0;
-  --muted-foreground: #717182;
-  --accent: #e9ebef;
-  --accent-foreground: #030213;
-  --destructive: #d4183d;
-  --destructive-foreground: #ffffff;
-  --border: rgba(0, 0, 0, 0.1);
-  --input: transparent;
-  --input-background: #f3f3f5;
-  --switch-background: #cbced4;
-  --ring: oklch(0.708 0 0);
-}
+/* Modern Design System - 2025 */
+@layer base {
+  :root {
+    /* Fluid Typography Scale */
+    --font-size-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+    --font-size-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+    --font-size-base: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+    --font-size-lg: clamp(1.125rem, 1rem + 0.625vw, 1.25rem);
+    --font-size-xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
+    --font-size-2xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+    --font-size-3xl: clamp(1.875rem, 1.6rem + 1.375vw, 2.5rem);
+    --font-size-4xl: clamp(2.25rem, 1.9rem + 1.75vw, 3rem);
+    --font-size-5xl: clamp(3rem, 2.5rem + 2.5vw, 4rem);
 
-/* Dark theme (default for our app) - Uses theme variables from below */
-.dark,
-:root {
-  --background: var(--background);
-  --foreground: var(--foreground);
-  --card: oklch(0.145 0 0);
-  --card-foreground: var(--foreground);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: var(--foreground);
-  --primary: var(--primary);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: var(--foreground);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: var(--accent);
-  --accent-foreground: var(--foreground);
-  --destructive: var(--error);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: var(--primary);
-}
+    /* Spacing Scale */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+    --spacing-3xl: 4rem;
 
-/* NOTE: The following v4-only directives were removed for Tailwind v3 compatibility.
-   We use CSS variables directly without @theme and custom variants. */
+    /* Border Radius */
+    --radius-sm: 0.5rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.5rem;
+    --radius-2xl: 2rem;
+    --radius-full: 9999px;
 
-/* Modern CSS Custom Properties */
-:root {
-  /* Fluid Color System */
-  --gold-50: #fefce8;
-  --gold-100: #fef3c7;
-  --gold-200: #fde68a;
-  --gold-300: #fcd34d;
-  --gold-400: #fbbf24;
-  --gold-500: #f59e0b;
-  --gold-600: #d97706;
-  --gold-700: #b45309;
-  --gold-800: #92400e;
-  --gold-900: #78350f;
+    /* Modern Color Palette */
+    --gold-50: #fefce8;
+    --gold-100: #fef3c7;
+    --gold-200: #fde68a;
+    --gold-300: #fcd34d;
+    --gold-400: #fbbf24;
+    --gold-500: #f59e0b;
+    --gold-600: #d97706;
+    --gold-700: #b45309;
+    --gold-800: #92400e;
+    --gold-900: #78350f;
 
-  --steel-50: #f8fafc;
-  --steel-100: #f1f5f9;
-  --steel-200: #e2e8f0;
-  --steel-300: #cbd5e1;
-  --steel-400: #94a3b8;
-  --steel-500: #64748b;
-  --steel-600: #475569;
-  --steel-700: #334155;
-  --steel-800: #1e293b;
-  --steel-900: #0f172a;
+    --steel-50: #f8fafc;
+    --steel-100: #f1f5f9;
+    --steel-200: #e2e8f0;
+    --steel-300: #cbd5e1;
+    --steel-400: #94a3b8;
+    --steel-500: #64748b;
+    --steel-600: #475569;
+    --steel-700: #334155;
+    --steel-800: #1e293b;
+    --steel-900: #0f172a;
 
-  --royal-50: #eff6ff;
-  --royal-100: #dbeafe;
-  --royal-200: #bfdbfe;
-  --royal-300: #93c5fd;
-  --royal-400: #60a5fa;
-  --royal-500: #3b82f6;
-  --royal-600: #2563eb;
-  --royal-700: #1d4ed8;
-  --royal-800: #1e40af;
-  --royal-900: #1e3a8a;
+    --royal-50: #eff6ff;
+    --royal-100: #dbeafe;
+    --royal-200: #bfdbfe;
+    --royal-300: #93c5fd;
+    --royal-400: #60a5fa;
+    --royal-500: #3b82f6;
+    --royal-600: #2563eb;
+    --royal-700: #1d4ed8;
+    --royal-800: #1e40af;
+    --royal-900: #1e3a8a;
 
-  --emerald-50: #ecfdf5;
-  --emerald-100: #d1fae5;
-  --emerald-200: #a7f3d0;
-  --emerald-300: #6ee7b7;
-  --emerald-400: #34d399;
-  --emerald-500: #10b981;
-  --emerald-600: #059669;
-  --emerald-700: #047857;
-  --emerald-800: #065f46;
-  --emerald-900: #064e3b;
+    --emerald-50: #ecfdf5;
+    --emerald-100: #d1fae5;
+    --emerald-200: #a7f3d0;
+    --emerald-300: #6ee7b7;
+    --emerald-400: #34d399;
+    --emerald-500: #10b981;
+    --emerald-600: #059669;
+    --emerald-700: #047857;
+    --emerald-800: #065f46;
+    --emerald-900: #064e3b;
 
-  --crimson-50: #fef2f2;
-  --crimson-100: #fee2e2;
-  --crimson-200: #fecaca;
-  --crimson-300: #fca5a5;
-  --crimson-400: #f87171;
-  --crimson-500: #ef4444;
-  --crimson-600: #dc2626;
-  --crimson-700: #b91c1c;
-  --crimson-800: #991b1b;
-  --crimson-900: #7f1d1d;
+    --crimson-50: #fef2f2;
+    --crimson-100: #fee2e2;
+    --crimson-200: #fecaca;
+    --crimson-300: #fca5a5;
+    --crimson-400: #f87171;
+    --crimson-500: #ef4444;
+    --crimson-600: #dc2626;
+    --crimson-700: #b91c1c;
+    --crimson-800: #991b1b;
+    --crimson-900: #7f1d1d;
 
-  /* Modern Shadows */
-  --shadow-glow: 0 0 20px rgba(245, 158, 11, 0.3);
-  --shadow-glow-lg: 0 0 40px rgba(245, 158, 11, 0.4);
-  --shadow-glow-xl: 0 0 60px rgba(245, 158, 11, 0.5);
+    /* Shadows - Modern Elevation System */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    --shadow-glow: 0 0 20px rgba(245, 158, 11, 0.3);
+    --shadow-glow-lg: 0 0 40px rgba(245, 158, 11, 0.4);
+    --shadow-glow-xl: 0 0 60px rgba(245, 158, 11, 0.5);
 
-  /* Animation Timing */
-  --timing-fast: 0.15s;
-  --timing-normal: 0.3s;
-  --timing-slow: 0.5s;
-  --timing-slower: 0.8s;
+    /* Animation Timing */
+    --timing-fast: 150ms;
+    --timing-normal: 300ms;
+    --timing-slow: 500ms;
+    --timing-slower: 800ms;
 
-  /* Easing Functions */
-  --ease-out-cubic: cubic-bezier(0.33, 1, 0.68, 1);
-  --ease-in-out-cubic: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-:root {
-  /* Royal Court Theme (Default) - Figma Gold Theme */
-  --background: #0f172a;
-  --foreground: #f1f5f9;
-  --primary: #eab308; /* Gold yellow for buttons and accents */
-  --secondary: #64748b;
-  --accent: #dc2626;
-  --success: #10b981;
-  --info: #0ea5e9;
-  --warning: #f59e0b;
-  --error: #ef4444;
-  
-  /* Figma-specific theme colors for components */
-  --theme-gold: #eab308;
-  --theme-gold-dark: #ca8a04;
-  --theme-accent: #eab308;
-  --theme-bg: #0f172a;
-  --theme-navbar-bg: rgba(15, 23, 42, 0.95);
-  --theme-card-bg: rgba(15, 23, 42, 0.4);
-  --theme-border: rgba(234, 179, 8, 0.3);
-}
-
-/* Forest Kingdom Theme */
-.forest-kingdom {
-  --background: #0a1a0a;
-  --foreground: #f0fdf4;
-  --primary: #22c55e; /* Green for forest theme */
-  --secondary: #65a30d;
-  --accent: #eab308;
-  --success: #16a34a;
-  --info: #0ea5e9;
-  --warning: #f59e0b;
-  --error: #ef4444;
-  
-  /* Theme-specific colors */
-  --theme-gold: #22c55e;
-  --theme-gold-dark: #16a34a;
-  --theme-accent: #22c55e;
-  --theme-bg: #0a1a0a;
-  --theme-navbar-bg: rgba(10, 26, 10, 0.95);
-  --theme-card-bg: rgba(10, 26, 10, 0.4);
-  --theme-border: rgba(34, 197, 94, 0.3);
-}
-
-/* Mystical Wizard Theme */
-.mystical-wizard {
-  --background: #0f0a2e;
-  --foreground: #f8fafc;
-  --primary: #a855f7; /* Purple for mystical theme */
-  --secondary: #c084fc;
-  --accent: #06b6d4;
-  --success: #10b981;
-  --info: #3b82f6;
-  --warning: #f59e0b;
-  --error: #ef4444;
-  
-  /* Theme-specific colors */
-  --theme-gold: #a855f7;
-  --theme-gold-dark: #9333ea;
-  --theme-accent: #a855f7;
-  --theme-bg: #0f0a2e;
-  --theme-navbar-bg: rgba(15, 10, 46, 0.95);
-  --theme-card-bg: rgba(15, 10, 46, 0.4);
-  --theme-border: rgba(168, 85, 247, 0.3);
-}
-
-/* Dragon's Lair Theme */
-.dragons-lair {
-  --background: #0f0a0a;
-  --foreground: #fef2f2;
-  --primary: #dc2626; /* Red for dragon theme */
-  --secondary: #991b1b;
-  --accent: #ea580c;
-  --success: #10b981;
-  --info: #0ea5e9;
-  --warning: #f59e0b;
-  --error: #ef4444;
-  
-  /* Theme-specific colors */
-  --theme-gold: #dc2626;
-  --theme-gold-dark: #b91c1c;
-  --theme-accent: #dc2626;
-  --theme-bg: #0f0a0a;
-  --theme-navbar-bg: rgba(15, 10, 10, 0.95);
-  --theme-card-bg: rgba(15, 10, 10, 0.4);
-  --theme-border: rgba(220, 38, 38, 0.3);
-}
-
-/* Body styles are handled in @layer base above */
-
-/* Royal Court Theme Background */
-.royal-court body {
-  background-image: radial-gradient(
-      circle at 20% 80%,
-      rgba(234, 179, 8, 0.2) 0%,
-      rgba(202, 138, 4, 0.15) 30%,
-      transparent 60%
-    ),
-    radial-gradient(
-      circle at 80% 20%,
-      rgba(220, 38, 38, 0.2) 0%,
-      rgba(185, 28, 28, 0.15) 40%,
-      transparent 70%
-    ),
-    radial-gradient(
-      circle at 40% 40%,
-      rgba(16, 185, 129, 0.15) 0%,
-      rgba(5, 150, 105, 0.1) 50%,
-      transparent 80%
-    ),
-    linear-gradient(
-      45deg,
-      rgba(234, 179, 8, 0.06) 0%,
-      transparent 30%,
-      rgba(220, 38, 38, 0.06) 70%,
-      transparent 100%
-    );
-}
-
-/* Forest Kingdom Theme Background */
-.forest-kingdom body {
-  background-image: radial-gradient(
-      circle at 20% 80%,
-      rgba(34, 197, 94, 0.25) 0%,
-      rgba(16, 185, 129, 0.15) 30%,
-      transparent 60%
-    ),
-    radial-gradient(
-      circle at 80% 20%,
-      rgba(101, 163, 13, 0.2) 0%,
-      rgba(132, 204, 22, 0.1) 40%,
-      transparent 70%
-    ),
-    radial-gradient(
-      circle at 40% 40%,
-      rgba(234, 179, 8, 0.15) 0%,
-      rgba(202, 138, 4, 0.1) 50%,
-      transparent 80%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(16, 185, 129, 0.05) 0%,
-      transparent 50%,
-      rgba(34, 197, 94, 0.05) 100%
-    );
-}
-
-/* Mystical Wizard Theme Background */
-.mystical-wizard body {
-  background-image: radial-gradient(
-      circle at 20% 80%,
-      rgba(168, 85, 247, 0.3) 0%,
-      rgba(139, 92, 246, 0.2) 30%,
-      transparent 60%
-    ),
-    radial-gradient(
-      circle at 80% 20%,
-      rgba(192, 132, 252, 0.25) 0%,
-      rgba(168, 85, 247, 0.15) 40%,
-      transparent 70%
-    ),
-    radial-gradient(
-      circle at 40% 40%,
-      rgba(6, 182, 212, 0.2) 0%,
-      rgba(59, 130, 246, 0.15) 50%,
-      transparent 80%
-    ),
-    linear-gradient(
-      45deg,
-      rgba(168, 85, 247, 0.08) 0%,
-      transparent 30%,
-      rgba(6, 182, 212, 0.08) 70%,
-      transparent 100%
-    ),
-    linear-gradient(
-      -45deg,
-      rgba(192, 132, 252, 0.06) 0%,
-      transparent 50%,
-      rgba(59, 130, 246, 0.06) 100%
-    );
-}
-
-/* Dragon's Lair Theme Background */
-.dragons-lair body {
-  background-image: radial-gradient(
-      circle at 20% 80%,
-      rgba(220, 38, 38, 0.3) 0%,
-      rgba(185, 28, 28, 0.2) 30%,
-      transparent 60%
-    ),
-    radial-gradient(
-      circle at 80% 20%,
-      rgba(234, 88, 12, 0.25) 0%,
-      rgba(220, 38, 38, 0.15) 40%,
-      transparent 70%
-    ),
-    radial-gradient(
-      circle at 40% 40%,
-      rgba(239, 68, 68, 0.2) 0%,
-      rgba(153, 27, 27, 0.15) 50%,
-      transparent 80%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(220, 38, 38, 0.08) 0%,
-      transparent 30%,
-      rgba(234, 88, 12, 0.08) 70%,
-      transparent 100%
-    ),
-    linear-gradient(
-      -135deg,
-      rgba(185, 28, 28, 0.06) 0%,
-      transparent 50%,
-      rgba(239, 68, 68, 0.06) 100%
-    );
-}
-
-.game-info-header {
-  font-size: 3rem;
-  font-weight: bold;
-  text-align: center;
-  color: rgb(24, 48, 182);
-}
-
-.game-info-description {
-  font-size: 1.5rem;
-  text-align: center;
-}
-.game-info-description {
-  font-size: 1.5rem;
-  text-align: center;
-  color: rgb(24, 48, 182);
-}
-.game-info-img {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-.game-info-container {
-  position: relative;
-  top: 300px;
-}
-.game-info-container span {
-  border-right: 2px solid #000;
-  animation: blink 0.75s step-end infinite;
-}
-
-@keyframes blink {
-  from,
-  to {
-    border-color: transparent;
+    /* Easing Functions */
+    --ease-out-cubic: cubic-bezier(0.33, 1, 0.68, 1);
+    --ease-in-out-cubic: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
-  50% {
-    border-color: black;
+
+  /* Royal Court Theme (Default) */
+  :root {
+    --background: #0a0e1a;
+    --foreground: #f1f5f9;
+    --primary: #eab308;
+    --secondary: #64748b;
+    --accent: #dc2626;
+    --success: #10b981;
+    --info: #0ea5e9;
+    --warning: #f59e0b;
+    --error: #ef4444;
+    
+    --theme-gold: #eab308;
+    --theme-gold-dark: #ca8a04;
+    --theme-accent: #eab308;
+    --theme-bg: #0a0e1a;
+    --theme-navbar-bg: rgba(10, 14, 26, 0.95);
+    --theme-card-bg: rgba(15, 23, 42, 0.6);
+    --theme-border: rgba(234, 179, 8, 0.2);
+    --theme-steel: #64748b;
+  }
+
+  /* Forest Kingdom Theme - Inspired by Legend of Zelda with warm golden sunlight and rich earth tones */
+  .forest-kingdom {
+    --background: #0d1410;
+    --foreground: #f0fdf4;
+    --primary: #b8cc7a;
+    --secondary: #6e9047;
+    --accent: #a06b3a;
+    --success: #6e9047;
+    --theme-gold: #a06b3a;
+    --theme-gold-dark: #7d5428;
+    --theme-accent: #b8cc7a;
+    --theme-bg: #0d1410;
+    --theme-navbar-bg: rgba(13, 20, 16, 0.95);
+    --theme-card-bg: rgba(20, 30, 24, 0.6);
+    --theme-border: rgba(160, 107, 58, 0.3);
+    --theme-steel: #6b7c5d;
+    
+    /* Forest-specific colors - Zelda inspired */
+    --forest-brown: #a06b3a;
+    --forest-green: #b8cc7a;
+    --forest-moss: #6e9047;
+    --forest-bark: #7d5428;
+    --forest-golden: #a0845c;
+    --forest-teal: #4fd1c7;
+  }
+
+  /* Mystical Wizard Theme - Enhanced with deeper purples and mystical blues */
+  .mystical-wizard {
+    --background: #0f0a2e;
+    --foreground: #faf5ff;
+    --primary: #a855f7;
+    --secondary: #c084fc;
+    --accent: #06b6d4;
+    --success: #10b981;
+    --theme-gold: #c084fc;
+    --theme-gold-dark: #a855f7;
+    --theme-accent: #06b6d4;
+    --theme-bg: #0f0a2e;
+    --theme-navbar-bg: rgba(15, 10, 46, 0.95);
+    --theme-card-bg: rgba(20, 15, 50, 0.6);
+    --theme-border: rgba(192, 132, 252, 0.25);
+    --theme-steel: #6b7280;
+    
+    /* Mystical-specific colors */
+    --mystic-purple: #9333ea;
+    --mystic-cyan: #06b6d4;
+    --mystic-indigo: #4f46e5;
+  }
+
+  /* Dragon's Lair Theme - Enhanced with fiery oranges and molten reds */
+  .dragons-lair {
+    --background: #1a0f0a;
+    --foreground: #fef2f2;
+    --primary: #dc2626;
+    --secondary: #ea580c;
+    --accent: #f59e0b;
+    --success: #10b981;
+    --theme-gold: #f59e0b;
+    --theme-gold-dark: #d97706;
+    --theme-accent: #dc2626;
+    --theme-bg: #1a0f0a;
+    --theme-navbar-bg: rgba(26, 15, 10, 0.95);
+    --theme-card-bg: rgba(30, 20, 15, 0.6);
+    --theme-border: rgba(245, 158, 11, 0.25);
+    --theme-steel: #78716c;
+    
+    /* Dragon-specific colors */
+    --dragon-fire: #dc2626;
+    --dragon-ember: #ea580c;
+    --dragon-gold: #f59e0b;
+    --dragon-ash: #57534e;
+  }
+
+  body {
+    @apply bg-[var(--theme-bg)] text-foreground antialiased;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(234, 179, 8, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(220, 38, 38, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.08) 0%, transparent 60%);
+    background-attachment: fixed;
+  }
+
+  .forest-kingdom body {
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(160, 107, 58, 0.25) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(184, 204, 122, 0.2) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(110, 144, 71, 0.15) 0%, transparent 60%),
+      radial-gradient(circle at 60% 60%, rgba(160, 132, 92, 0.1) 0%, transparent 70%),
+      radial-gradient(circle at 50% 30%, rgba(79, 209, 199, 0.08) 0%, transparent 60%);
+  }
+
+  .mystical-wizard body {
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(192, 132, 252, 0.25) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.2) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(6, 182, 212, 0.15) 0%, transparent 60%),
+      radial-gradient(circle at 60% 10%, rgba(79, 70, 229, 0.12) 0%, transparent 70%);
+  }
+
+  .dragons-lair body {
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(245, 158, 11, 0.2) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(234, 88, 12, 0.25) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(220, 38, 38, 0.18) 0%, transparent 60%),
+      radial-gradient(circle at 60% 60%, rgba(239, 68, 68, 0.12) 0%, transparent 70%);
   }
 }
 
-.auth-container {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  z-index: 50;
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-}
-
-.auth-container button {
-  background-color: rgb(24, 48, 182);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  transition: all 0.2s ease;
-}
-
-.auth-container button:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-/* Add new class for centering the sign-in form */
-.sign-in-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  width: 100%;
-}
-.typewriter {
-  animation: typewriter;
-}
-
-/* Modern Fantasy UI Components */
+/* Modern Component System */
 @layer components {
-  /* Enhanced Card System */
-  .medieval-card {
-    @apply relative bg-gradient-to-br from-medieval-steel-800/90 to-medieval-steel-900/90 backdrop-blur-sm border border-medieval-gold-600 rounded-2xl shadow-2xl overflow-hidden;
-    border-color: rgba(234, 179, 8, 0.5);
-    background: linear-gradient(
-      135deg,
-      rgba(30, 41, 59, 0.95) 0%,
-      rgba(15, 23, 42, 0.95) 100%
-    );
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3),
-      0 10px 10px -5px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(234, 179, 8, 0.1),
-      0 0 0 1px rgba(234, 179, 8, 0.1);
+  /* Card System - Glassmorphism */
+  .modern-card {
+    @apply relative rounded-2xl backdrop-blur-xl border transition-all duration-300;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border-color: var(--theme-border);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
-  .medieval-card::before {
-    content: "";
-    @apply absolute inset-0 bg-gradient-to-br from-medieval-gold-600/5 to-transparent pointer-events-none;
+  .modern-card:hover {
+    border-color: var(--theme-accent);
+    transform: translateY(-4px);
+    box-shadow: 
+      0 20px 40px rgba(0, 0, 0, 0.3),
+      0 0 0 1px var(--theme-border),
+      0 0 30px rgba(234, 179, 8, 0.2);
   }
 
-  .medieval-card:hover {
-    @apply border-medieval-gold-500 shadow-glow-gold;
-    border-color: rgba(234, 179, 8, 0.7);
-    transform: translateY(-2px) scale(1.01);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4),
-      0 0 0 1px rgba(234, 179, 8, 0.2), 0 0 30px rgba(234, 179, 8, 0.3);
+  /* Button System - Modern & Accessible */
+  .modern-button {
+    @apply relative inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-medium transition-all duration-300 overflow-hidden;
+    background: linear-gradient(135deg, var(--theme-gold) 0%, var(--theme-gold-dark) 100%);
+    color: #0a0e1a;
+    box-shadow: 
+      0 4px 12px rgba(234, 179, 8, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
 
-  /* Premium Button System */
-  .medieval-button {
-    @apply relative inline-flex items-center justify-center px-8 py-4 text-medieval-steel-900 font-medieval font-bold text-lg rounded-xl border-2 border-medieval-gold-500 overflow-hidden;
-    background: linear-gradient(
-      135deg,
-      rgba(234, 179, 8, 0.9) 0%,
-      rgba(202, 138, 4, 0.9) 50%,
-      rgba(234, 179, 8, 0.9) 100%
-    );
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 0 1px rgba(234, 179, 8, 0.3);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .medieval-button::before {
-    content: "";
+  .modern-button::before {
+    content: '';
     @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent;
     transform: translateX(-100%);
     transition: transform 0.6s ease;
   }
 
-  .medieval-button:hover::before {
+  .modern-button:hover::before {
     transform: translateX(100%);
   }
 
-  .medieval-button:hover {
-    @apply border-medieval-gold-400 shadow-glow-gold;
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(234, 179, 8, 0.4),
-      0 0 40px rgba(234, 179, 8, 0.4);
+  .modern-button:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 
+      0 8px 24px rgba(234, 179, 8, 0.4),
+      0 0 0 1px rgba(234, 179, 8, 0.3);
   }
 
-  .medieval-button:active {
-    transform: translateY(-1px) scale(1.02);
+  .modern-button:active {
+    transform: translateY(0) scale(0.98);
   }
 
-  .medieval-button-secondary {
-    @apply relative inline-flex items-center justify-center px-8 py-4 text-medieval-gold-300 font-medieval font-bold text-lg rounded-xl border-2 border-medieval-steel-500 overflow-hidden;
-    background: linear-gradient(
-      135deg,
-      rgba(71, 85, 105, 0.8) 0%,
-      rgba(51, 65, 85, 0.8) 50%,
-      rgba(71, 85, 105, 0.8) 100%
-    );
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 0 1px rgba(100, 116, 139, 0.3);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  .modern-button-secondary {
+    @apply relative inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-medium transition-all duration-300;
+    background: transparent;
+    border: 2px solid var(--theme-border);
+    color: var(--theme-gold);
   }
 
-  .medieval-button-secondary:hover {
-    @apply border-medieval-steel-400 shadow-glow-silver;
-    transform: translateY(-3px) scale(1.05);
-    background: linear-gradient(
-      135deg,
-      rgba(100, 116, 139, 0.9) 0%,
-      rgba(71, 85, 105, 0.9) 50%,
-      rgba(100, 116, 139, 0.9) 100%
-    );
+  .modern-button-secondary:hover {
+    border-color: var(--theme-accent);
+    background: rgba(234, 179, 8, 0.1);
+    transform: translateY(-2px);
   }
 
-  /* Enhanced Input System */
-  .medieval-input {
-    @apply w-full px-6 py-4 text-medieval-gold-100 placeholder-medieval-steel-400 rounded-xl border-2 border-medieval-gold-600 bg-medieval-steel-800/80 backdrop-blur-sm;
-    border-color: rgba(234, 179, 8, 0.5);
-    background: linear-gradient(
-      135deg,
-      rgba(30, 41, 59, 0.8) 0%,
-      rgba(15, 23, 42, 0.8) 100%
-    );
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3),
-      0 0 0 1px rgba(234, 179, 8, 0.2);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* Ensure selects inherit dark styling */
-  select.medieval-input {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
+  /* Input System - Clean & Modern */
+  .modern-input {
+    @apply w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 backdrop-blur-sm;
+    background: rgba(15, 23, 42, 0.5);
+    border-color: var(--theme-border);
     color: var(--foreground);
-    background-color: rgba(15, 23, 42, 0.9);
-    background-image: none;
-  }
-  select.medieval-input::-ms-expand {
-    display: none;
-  }
-  select.medieval-input option {
-    color: var(--foreground);
-    background-color: var(--steel-800);
   }
 
-  .medieval-input:focus {
-    @apply border-medieval-gold-400 ring-4 outline-none;
-    ring-color: rgba(234, 179, 8, 0.2);
-    background: linear-gradient(
-      135deg,
-      rgba(30, 41, 59, 0.95) 0%,
-      rgba(15, 23, 42, 0.95) 100%
-    );
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2),
-      0 0 0 1px rgba(234, 179, 8, 0.4), 0 0 20px rgba(234, 179, 8, 0.2);
-    transform: translateY(-1px);
+  .modern-input::placeholder {
+    color: rgba(241, 245, 249, 0.4);
   }
 
-  /* Typography System */
-  .medieval-title {
-    @apply font-medieval text-5xl md:text-6xl lg:text-7xl text-medieval-gold-300 tracking-wider leading-tight;
-    text-shadow: 0 0 20px rgba(234, 179, 8, 0.3), 0 2px 4px rgba(0, 0, 0, 0.5);
+  .modern-input:focus {
+    outline: none;
+    border-color: var(--theme-accent);
+    background: rgba(15, 23, 42, 0.7);
+    box-shadow: 0 0 0 4px rgba(234, 179, 8, 0.1);
   }
 
-  .medieval-subtitle {
-    @apply font-serif text-xl md:text-2xl text-medieval-gold-200 tracking-wide leading-relaxed;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  /* Typography System - Enhanced Medieval Styling */
+  .heading-1 {
+    @apply font-[Cinzel] text-4xl md:text-5xl lg:text-6xl font-bold text-[var(--theme-gold)] tracking-wide leading-tight;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    letter-spacing: 0.05em;
   }
 
-  .medieval-text {
-    @apply text-medieval-steel-200 leading-relaxed text-lg;
+  .heading-2 {
+    @apply font-[Cinzel] text-3xl md:text-4xl font-bold text-[var(--theme-gold)] tracking-wide leading-tight;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    letter-spacing: 0.03em;
   }
 
-  /* Enhanced Resource Cards */
+  .heading-3 {
+    @apply font-[Cinzel] text-2xl md:text-3xl font-semibold text-[var(--theme-gold)] leading-snug;
+    letter-spacing: 0.02em;
+  }
+
+  .heading-4 {
+    @apply font-[Cinzel] text-xl md:text-2xl font-semibold text-[var(--theme-gold)] leading-snug;
+  }
+
+  .body-text {
+    @apply font-[Merriweather] text-base md:text-lg text-gray-200 leading-relaxed;
+    font-weight: 400;
+  }
+
+  .body-text-serif {
+    @apply font-[Cormorant_Garamond] text-lg md:text-xl text-gray-200 leading-relaxed;
+    font-weight: 400;
+  }
+
+  .caption-text {
+    @apply font-[Inter] text-sm text-gray-400 tracking-wide;
+  }
+
+  .label-text {
+    @apply font-[Cinzel] text-xs md:text-sm text-[var(--theme-gold)] uppercase tracking-wider font-medium;
+  }
+
+  /* Resource Card - Modern Design */
   .resource-card {
-    @apply relative cursor-pointer overflow-hidden;
-    background: linear-gradient(
-      135deg,
-      rgba(30, 41, 59, 0.9) 0%,
-      rgba(15, 23, 42, 0.9) 100%
-    );
-    border: 1px solid rgba(234, 179, 8, 0.3);
-    border-radius: 1.5rem;
-    padding: 2rem;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2),
-      inset 0 1px 0 rgba(234, 179, 8, 0.1);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    @apply relative rounded-2xl p-6 backdrop-blur-xl border transition-all duration-300 cursor-pointer;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border-color: var(--theme-border);
   }
 
   .resource-card::before {
-    content: "";
-    @apply absolute inset-0 bg-gradient-to-br from-medieval-gold-600/10 to-transparent opacity-0;
-    transition: opacity 0.4s ease;
+    content: '';
+    @apply absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300;
+    background: linear-gradient(135deg, rgba(234, 179, 8, 0.1) 0%, transparent 100%);
   }
 
   .resource-card:hover::before {
@@ -608,287 +387,209 @@
   }
 
   .resource-card:hover {
-    @apply border-medieval-gold-500 shadow-glow-gold;
-    border-color: rgba(234, 179, 8, 0.6);
+    border-color: var(--theme-accent);
     transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(234, 179, 8, 0.3),
-      0 0 40px rgba(234, 179, 8, 0.2);
+    box-shadow: 
+      0 20px 40px rgba(0, 0, 0, 0.3),
+      0 0 30px rgba(234, 179, 8, 0.2);
   }
 
-  /* City Cards */
-  .city-card {
-    @apply relative cursor-pointer overflow-hidden rounded-2xl p-6 transition-all duration-500 ease-out;
-    background: linear-gradient(
-      135deg,
-      rgba(30, 41, 59, 0.9) 0%,
-      rgba(15, 23, 42, 0.9) 100%
-    );
-    border: 1px solid rgba(234, 179, 8, 0.2);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15),
-      inset 0 1px 0 rgba(234, 179, 8, 0.1);
-  }
-
-  .city-card::before {
-    content: "";
-    @apply absolute inset-0 bg-gradient-to-r from-medieval-gold-600/5 via-transparent to-medieval-gold-600/5;
-    transform: translateX(-100%);
-    transition: transform 0.6s ease;
-  }
-
-  .city-card:hover::before {
-    transform: translateX(100%);
-  }
-
-  .city-card:hover {
-    @apply border-medieval-gold-500 shadow-glow-gold;
-    border-color: rgba(234, 179, 8, 0.5);
-    transform: translateY(-4px) scale(1.01);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25),
-      0 0 0 1px rgba(234, 179, 8, 0.3), 0 0 30px rgba(234, 179, 8, 0.2);
-  }
-
-  /* Modal System */
-  .modal-overlay {
-    @apply fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50;
-    animation: fadeIn 0.3s ease-out;
-  }
-
-  .modal-content {
-    @apply relative bg-gradient-to-br from-medieval-steel-800/95 to-medieval-steel-900/95 backdrop-blur-md border border-medieval-gold-600 rounded-3xl shadow-2xl max-w-lg w-full mx-4 overflow-hidden;
-    border-color: rgba(234, 179, 8, 0.5);
-    animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(234, 179, 8, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  }
-
-  /* Enhanced Dividers */
-  .medieval-divider {
-    @apply relative my-8;
-  }
-
-  .medieval-divider::before {
-    content: "";
-    @apply absolute inset-0 flex items-center;
-  }
-
-  .medieval-divider::after {
-    content: "";
-    @apply flex-1 border-t border-medieval-gold-600;
-    border-color: rgba(234, 179, 8, 0.3);
-  }
-
-  /* Glow Effects */
-  .glow-text {
-    @apply text-medieval-gold-300;
-    text-shadow: 0 0 10px rgba(234, 179, 8, 0.5),
-      0 0 20px rgba(234, 179, 8, 0.3), 0 0 30px rgba(234, 179, 8, 0.1);
-  }
-
-  /* Theme Cards */
-  .theme-card {
-    @apply relative cursor-pointer overflow-hidden rounded-2xl transition-all duration-500 ease-out;
-    background: linear-gradient(
-      135deg,
-      rgba(30, 41, 59, 0.9) 0%,
-      rgba(15, 23, 42, 0.9) 100%
-    );
-    border: 2px solid rgba(234, 179, 8, 0.3);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2),
-      inset 0 1px 0 rgba(234, 179, 8, 0.1);
-  }
-
-  .theme-card:hover {
-    @apply border-medieval-gold-500 shadow-glow-gold;
-    border-color: rgba(234, 179, 8, 0.7);
-    transform: translateY(-6px) scale(1.02);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(234, 179, 8, 0.4),
-      0 0 40px rgba(234, 179, 8, 0.3);
-  }
-
-  /* Loading States */
-  .loading-skeleton {
-    @apply animate-pulse bg-gradient-to-r from-medieval-steel-700 via-medieval-steel-600 to-medieval-steel-700 rounded-lg;
-    background-size: 200% 100%;
-    animation: shimmer 1.5s ease-in-out infinite;
-  }
-
-  /* Interactive Elements */
-  .interactive-hover {
-    @apply transition-all duration-300 ease-out;
-  }
-
-  .interactive-hover:hover {
-    @apply transform scale-105 shadow-lg;
-  }
-
-  /* Status Indicators */
-  .status-indicator {
-    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  /* Status Badge */
+  .status-badge {
+    @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium backdrop-blur-sm;
+    border: 1px solid;
   }
 
   .status-success {
-    @apply bg-emerald-500/20 text-emerald-300 border border-emerald-500/30;
+    @apply bg-emerald-500/10 text-emerald-300 border-emerald-500/30;
   }
 
   .status-warning {
-    @apply bg-yellow-500/20 text-yellow-300 border border-yellow-500/30;
+    @apply bg-yellow-500/10 text-yellow-300 border-yellow-500/30;
   }
 
   .status-error {
-    @apply bg-red-500/20 text-red-300 border border-red-500/30;
+    @apply bg-red-500/10 text-red-300 border-red-500/30;
   }
 
-  /* Responsive Grid System */
-  .responsive-grid {
+  .status-info {
+    @apply bg-blue-500/10 text-blue-300 border-blue-500/30;
+  }
+
+  /* Grid System - Responsive */
+  .grid-auto-fit {
     @apply grid gap-6;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   }
 
-  .responsive-grid-sm {
-    @apply grid gap-4;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  }
-
-  .responsive-grid-lg {
-    @apply grid gap-8;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  .grid-auto-fill {
+    @apply grid gap-6;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   }
 }
 
 /* Modern Animations */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-40px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slideLeft {
-  from {
-    opacity: 0;
-    transform: translateX(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes slideRight {
-  from {
-    opacity: 0;
-    transform: translateX(-40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes scale {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 @keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
 @keyframes glow {
-  0%,
-  100% {
-    box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(245, 158, 11, 0.6);
-  }
+  /* Glow animation removed */
+  0%, 100% { box-shadow: none; }
+  50% { box-shadow: none; }
 }
 
 @keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
 }
 
 @keyframes pulse-glow {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 0 20px rgba(245, 158, 11, 0);
-  }
+  /* Pulse glow animation removed */
+  0%, 100% { box-shadow: none; }
+  50% { box-shadow: none; }
 }
 
-/* Custom scrollbar */
+/* Custom Scrollbar - Modern */
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1e293b;
-  border-radius: 6px;
+  background: rgba(15, 23, 42, 0.3);
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #eab308, #ca8a04);
-  border-radius: 6px;
-  border: 2px solid #1e293b;
+  background: linear-gradient(180deg, var(--theme-gold), var(--theme-gold-dark));
+  border-radius: 10px;
+  border: 2px solid rgba(15, 23, 42, 0.3);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #facc15, #eab308);
+  background: linear-gradient(180deg, var(--theme-gold-dark), var(--theme-gold));
 }
 
-/* Selection styling */
+/* Thin scrollbar for chatbot */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(234, 179, 8, 0.3);
+  border-radius: 10px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(234, 179, 8, 0.5);
+}
+
+/* Selection Styling */
 ::selection {
   background: rgba(234, 179, 8, 0.3);
   color: #f1f5f9;
 }
 
-/* Focus styles */
-*:focus {
-  outline: 2px solid #eab308;
+/* Focus Styles - Accessible */
+*:focus-visible {
+  outline: 2px solid var(--theme-accent);
   outline-offset: 2px;
+  border-radius: 4px;
 }
+
+/* Loading Skeleton */
+.loading-skeleton {
+  @apply animate-pulse rounded-lg;
+  background: linear-gradient(
+    90deg,
+    rgba(100, 116, 139, 0.1) 0%,
+    rgba(100, 116, 139, 0.2) 50%,
+    rgba(100, 116, 139, 0.1) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* Utility Classes */
+.text-glow {
+  /* Glow effect removed */
+}
+
+.text-glow-strong {
+  /* Glow effect removed */
+}
+
+/* Smooth Transitions */
+.transition-smooth {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-bounce {
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Enhanced Hover Effects */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+.hover-glow {
+  transition: all 0.3s ease;
+}
+
+.hover-glow:hover {
+  /* Glow effect removed */
+  box-shadow: none;
+}
+
+/* Legacy Support - Keep for backward compatibility */
+.medieval-card { @apply modern-card; }
+.medieval-button { @apply modern-button; }
+.medieval-button-secondary { @apply modern-button-secondary; }
+.medieval-input { @apply modern-input; }
+.medieval-title { @apply heading-1; }
+.medieval-subtitle { @apply heading-2; }
+.medieval-text { @apply body-text; }
+.city-card { @apply resource-card; }
+.glow-text { @apply text-glow; }

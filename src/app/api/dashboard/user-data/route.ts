@@ -95,10 +95,22 @@ export async function GET(request: Request) {
       ...realmMembers.map((rm) => rm.user).filter((u) => u.id !== realm.ownerId),
     ];
 
+    // Get user's role in this realm
+    const membership = await prisma.realmMember.findUnique({
+      where: {
+        realmId_userId: {
+          realmId,
+          userId: user.id,
+        },
+      },
+    });
+
+    const userRole = realm.ownerId === user.id ? "OWNER" : (membership?.role || "BASIC");
+
     console.log("API: User from database:", {
       name: user.name,
       email: user.email,
-      role: user.role,
+      role: userRole,
     });
 
     // Prepare user image URL (fallback to default if not available)
@@ -130,7 +142,7 @@ export async function GET(request: Request) {
       // User profile data
       userpic: userImageUrl,
       username: user.name,
-      role: user.role,
+      role: userRole,
 
       // User resources
       resources: userResources,

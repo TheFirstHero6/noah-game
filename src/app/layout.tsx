@@ -7,7 +7,6 @@ import SplashScreen from "@/components/splash-screen";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import RealmProviderWrapper from "@/components/RealmProviderWrapper";
 import Chatbot from "@/components/Chatbot";
-import Script from "next/script";
 
 export default function RootLayout({
   children,
@@ -32,10 +31,6 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.webmanifest" />
       </head>
       <body suppressHydrationWarning>
-        <Script
-          src="https://cdn.jotfor.ms/agent/embedjs/019a267959c1778582f0a76622404cfdbfe3/embed.js"
-          strategy="afterInteractive"
-        />
         <ThemeProvider>
           <ClerkProvider appearance={{ baseTheme: dark }}>
             <RealmProviderWrapper>

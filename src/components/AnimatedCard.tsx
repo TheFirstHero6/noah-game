@@ -22,10 +22,10 @@ export function AnimatedCard({
 }: AnimatedCardProps) {
   const variants = {
     default:
-      "backdrop-blur-sm bg-[var(--theme-card-bg)] border border-[var(--theme-border)]",
+      "backdrop-blur-xl bg-[var(--theme-card-bg)] border border-[var(--theme-border)]",
     glass: "bg-white/5 backdrop-blur-md border border-white/10",
     interactive:
-      "backdrop-blur-sm bg-[var(--theme-card-bg)] border border-[var(--theme-border)] hover:border-[var(--theme-accent)] cursor-pointer",
+      "backdrop-blur-xl bg-[var(--theme-card-bg)] border border-[var(--theme-border)] hover:border-[var(--theme-accent)] cursor-pointer",
   };
 
   return (
@@ -35,14 +35,14 @@ export function AnimatedCard({
       transition={{
         duration: 0.6,
         delay,
-        ease: "easeOut",
+        ease: [0.33, 1, 0.68, 1],
       }}
       whileHover={
         hover
           ? {
-              y: -8,
-              scale: 1.02,
-              transition: { duration: 0.3 },
+              y: -6,
+              scale: 1.01,
+              transition: { duration: 0.3, ease: [0.33, 1, 0.68, 1] },
             }
           : {}
       }
@@ -50,9 +50,10 @@ export function AnimatedCard({
     >
       <Card 
         className={cn(
-          "rounded-3xl shadow-[0px_20px_25px_-5px_rgba(0,0,0,0.3)] transition-all duration-300",
+          "rounded-2xl transition-all duration-300",
+          "shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.1)]",
           variants[variant],
-          hover && "hover:shadow-[0px_25px_50px_-12px_rgba(0,0,0,0.4)]"
+          hover && "hover:shadow-[0_20px_40px_rgba(0,0,0,0.3),0_0_30px_rgba(234,179,8,0.2)]"
         )}
       >
         {children}

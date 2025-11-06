@@ -36,7 +36,7 @@ export default function GameInfo() {
       {/* Full-Screen Hero Section */}
       <section className="h-screen flex flex-col relative">
         <LoggedOutNavbar />
-        
+
         {/* Centered Hero Content */}
         <div className="flex-1 flex items-center justify-center px-4">
           <div className="text-center max-w-4xl">
@@ -55,34 +55,35 @@ export default function GameInfo() {
             </div>
 
             {/* Heading */}
-            <h1 className="font-[Cinzel] text-[var(--theme-gold)] text-4xl md:text-5xl lg:text-6xl mb-6 uppercase tracking-wide">
-              WELCOME TO THE WAR OF THE ELECTOR{welcomeSuffix.toUpperCase()}!
+            <h1 className="heading-1 mb-6 uppercase">
+              War of the Elector{welcomeSuffix}
             </h1>
 
             {/* Subtitle */}
-            <p className="font-[Playfair_Display] text-[var(--theme-gold)] italic text-lg md:text-xl mb-12">
-              "In the realm of nobles and knights, your destiny awaits..."
+            <p className="font-[Cormorant_Garamond] text-gray-300 italic text-xl md:text-2xl mb-4 leading-relaxed">
+              "Forge thy kingdom in fire and steel"
+            </p>
+            <p className="body-text-serif text-gray-400 mb-12 max-w-2xl mx-auto">
+              Command armies, build mighty cities, and shape the fate of realms
+              in this grand strategy of medieval conquest and diplomacy.
             </p>
 
             {/* Call-to-Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <Link
-                href="/pages/dashboard"
-                className="group relative px-8 py-4 rounded-xl overflow-hidden font-[Cinzel] text-lg bg-[var(--theme-gold)] text-slate-900 hover:bg-[var(--theme-gold-dark)] transition-all duration-300"
-              >
-                <span className="relative flex items-center gap-3">
-                  <span>🏰</span>
-                  <span>ENTER YOUR CASTLE</span>
+              <Link href="/pages/dashboard" className="modern-button group">
+                <span className="relative flex items-center gap-3 font-[Cinzel] text-base md:text-lg uppercase tracking-wider">
+                  <span className="text-xl">⚔️</span>
+                  <span>Begin Your Conquest</span>
                 </span>
               </Link>
 
               <Link
                 href="/pages/rules"
-                className="group relative px-8 py-4 rounded-xl overflow-hidden font-[Cinzel] text-lg border-2 border-[var(--theme-border)] hover:border-[var(--theme-accent)] transition-colors text-[var(--theme-gold)]"
+                className="modern-button-secondary group"
               >
-                <span className="relative flex items-center gap-3">
-                  <span>📜</span>
-                  <span>LEARN THE RULES</span>
+                <span className="relative flex items-center gap-3 font-[Cinzel] text-base md:text-lg uppercase tracking-wider">
+                  <span className="text-xl">📜</span>
+                  <span>Study the Codex</span>
                 </span>
               </Link>
             </div>
@@ -93,133 +94,143 @@ export default function GameInfo() {
       {/* Features Section */}
       <section id="features" className="relative py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto space-y-16">
-
           {/* Main Features Card */}
-          <div className="border border-[var(--theme-border)] rounded-lg p-8 md:p-12">
-            <h2 className="font-[Cinzel] text-[var(--theme-gold)] text-3xl md:text-4xl mb-8 text-center uppercase">
-              🏰 THE REALM AWAITS YOUR COMMAND
+          <div className="modern-card p-8 md:p-12">
+            <h2 className="heading-2 mb-8 text-center uppercase">
+              ⚔️ Master the Art of Medieval Warfare
             </h2>
 
             <div className="grid lg:grid-cols-2 gap-12">
-              <div className="space-y-6">
-                <h3 className="font-[Cinzel] text-[var(--theme-gold)] text-2xl mb-4">
-                  🏰 CITY MANAGEMENT & BUILDING
-                </h3>
-                <p className="font-[Playfair_Display] text-gray-200 leading-relaxed">
-                  War of the Elector features comprehensive city management where
-                  you can construct buildings, set tax rates, and manage local
-                  wealth. Build sawmills, quarries, forges, farms, and markets to
-                  generate resources and grow your economy.
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-4xl">🏰</span>
+                  <h3 className="heading-3">City Dominion</h3>
+                </div>
+                <p className="body-text-serif">
+                  Establish and expand your settlements across the realm.
+                  Construct mighty fortifications, bustling markets, and
+                  productive workshops. Each structure serves your grand
+                  strategy— from humble sawmills to imposing forges that arm
+                  your legions.
                 </p>
               </div>
 
-              <div className="space-y-6">
-                <h3 className="font-[Cinzel] text-[var(--theme-gold)] text-2xl mb-4">
-                  💰 TURN-BASED ECONOMY
-                </h3>
-                <p className="font-[Playfair_Display] text-gray-200 leading-relaxed">
-                  Experience a dynamic turn-based economy with seven core
-                  resources: Wood, Stone, Food, Currency, Metal, and Livestock.
-                  Manage your cities' local wealth, set tax rates, and watch your
-                  realm prosper through strategic resource management.
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-4xl">💰</span>
+                  <h3 className="heading-3">Economic Mastery</h3>
+                </div>
+                <p className="body-text-serif">
+                  Command a sophisticated economy of seven vital resources.
+                  Balance the flow of timber, stone, provisions, coin, metal,
+                  and livestock. Set taxation wisely, for a prosperous realm
+                  breeds loyal subjects and formidable armies.
                 </p>
               </div>
             </div>
           </div>
 
           {/* Four-Card Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="group relative h-[280px] w-full">
-              <div className="relative h-full border border-[var(--theme-border)] rounded-lg p-8 flex flex-col items-center justify-center text-center group-hover:border-[var(--theme-accent)] transition-all duration-300">
-                <div className="text-5xl mb-4 group-hover:animate-float">🏘️</div>
-                <h3 className="font-[Cinzel] text-[var(--theme-gold)] text-xl mb-3 uppercase">
-                  CITY MANAGEMENT
-                </h3>
-                <p className="font-[Playfair_Display] text-gray-200">
-                  Build and manage cities with customizable names and tax rates
-                </p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="resource-card group">
+              <div className="text-5xl mb-4 transition-transform duration-500 group-hover:scale-110">
+                🏘️
               </div>
+              <h3 className="heading-4 mb-3">Settlements</h3>
+              <p className="body-text text-sm">
+                Establish thriving cities and govern with wisdom. Name your
+                domains and levy taxes to fund your ambitions.
+              </p>
             </div>
 
-            <div className="group relative h-[280px] w-full">
-              <div className="relative h-full border border-[var(--theme-border)] rounded-lg p-8 flex flex-col items-center justify-center text-center group-hover:border-[var(--theme-accent)] transition-all duration-300">
-                <div className="text-5xl mb-4 group-hover:animate-float">🏗️</div>
-                <h3 className="font-[Cinzel] text-[var(--theme-gold)] text-xl mb-3 uppercase">
-                  BUILDING CONSTRUCTION
-                </h3>
-                <p className="font-[Playfair_Display] text-gray-200">
-                  Construct sawmills, quarries, forges, farms, and markets
-                </p>
+            <div className="resource-card group">
+              <div className="text-5xl mb-4 transition-transform duration-500 group-hover:scale-110">
+                🏗️
               </div>
+              <h3 className="heading-4 mb-3">Infrastructure</h3>
+              <p className="body-text text-sm">
+                Erect sawmills, quarries, forges, granaries, and marketplaces.
+                Each building strengthens your realm.
+              </p>
             </div>
 
-            <div className="group relative h-[280px] w-full">
-              <div className="relative h-full border border-[var(--theme-border)] rounded-lg p-8 flex flex-col items-center justify-center text-center group-hover:border-[var(--theme-accent)] transition-all duration-300">
-                <div className="text-5xl mb-4 group-hover:animate-float">💰</div>
-                <h3 className="font-[Cinzel] text-[var(--theme-gold)] text-xl mb-3 uppercase">
-                  RESOURCE MANAGEMENT
-                </h3>
-                <p className="font-[Playfair_Display] text-gray-200">
-                  Manage Wood, Stone, Food, Currency, Metal, and Livestock
-                </p>
+            <div className="resource-card group">
+              <div className="text-5xl mb-4 transition-transform duration-500 group-hover:scale-110">
+                💎
               </div>
+              <h3 className="heading-4 mb-3">Resources</h3>
+              <p className="body-text text-sm">
+                Master the flow of timber, stone, grain, gold, iron, and beasts.
+                Wealth fuels conquest.
+              </p>
             </div>
 
-            <div className="group relative h-[280px] w-full">
-              <div className="relative h-full border border-[var(--theme-border)] rounded-lg p-8 flex flex-col items-center justify-center text-center group-hover:border-[var(--theme-accent)] transition-all duration-300">
-                <div className="text-5xl mb-4 group-hover:animate-float">👑</div>
-                <h3 className="font-[Cinzel] text-[var(--theme-gold)] text-xl mb-3 uppercase">
-                  TURN-BASED INCOME
-                </h3>
-                <p className="font-[Playfair_Display] text-gray-200">
-                  Experience turn-based economy with income and taxation
-                </p>
+            <div className="resource-card group">
+              <div className="text-5xl mb-4 transition-transform duration-500 group-hover:scale-110">
+                ⏳
               </div>
+              <h3 className="heading-4 mb-3">Strategy</h3>
+              <p className="body-text text-sm">
+                Plan each turn with care. Balance growth, defense, and expansion
+                in this grand campaign.
+              </p>
             </div>
           </div>
 
           {/* Version 1.0 Card */}
-          <div className="border border-[var(--theme-border)] rounded-lg p-8 md:p-12 text-center">
-            <h2 className="font-[Cinzel] text-[var(--theme-gold)] text-3xl md:text-4xl mb-8 uppercase [text-shadow:var(--theme-accent)_0_0_30px,var(--theme-accent)_0_0_20px,var(--theme-accent)_0_0_10px]">
-              🚀 VERSION 1.0 - NOW AVAILABLE
-            </h2>
+          <div className="modern-card p-8 md:p-12 text-center">
+            <div className="inline-block px-6 py-2 rounded-full bg-[var(--theme-gold)]/10 border border-[var(--theme-gold)]/30 mb-6">
+              <span className="label-text text-[var(--theme-gold)]">
+                Version 1.4 Released
+              </span>
+            </div>
+
+            <h2 className="heading-2 mb-4 text-glow">Start Your Journey</h2>
+
+            <p className="body-text-serif text-gray-300 mb-12 max-w-3xl mx-auto text-xl">
+              The First Edition of War of the Elector is live! Invite your
+              friends, build cities, armies, and alliances. Vie for dominance in
+              this epic medieval strategy game.
+            </p>
 
             <div className="grid md:grid-cols-3 gap-8 mb-12">
               <div className="space-y-4">
-                <div className="text-4xl mb-4">🏘️</div>
-                <h3 className="font-[Cinzel] text-[var(--theme-gold)] text-xl uppercase">
-                  CITY MANAGEMENT
-                </h3>
-                <p className="font-[Playfair_Display] text-gray-200">
-                  Build cities, construct buildings, and manage local wealth
+                <div className="text-5xl mb-4">🏛️</div>
+                <h3 className="heading-4">Realm Creation</h3>
+                <p className="body-text">
+                  Create your game by making a realm and inviting your friends
+                  with the invite code
                 </p>
               </div>
 
               <div className="space-y-4">
-                <div className="text-4xl mb-4">💰</div>
-                <h3 className="font-[Cinzel] text-[var(--theme-gold)] text-xl uppercase">
-                  TURN-BASED ECONOMY
-                </h3>
-                <p className="font-[Playfair_Display] text-gray-200">
-                  Experience income generation and taxation systems
+                <div className="text-5xl mb-4">⚖️</div>
+                <h3 className="heading-4">Resource Management</h3>
+                <p className="body-text">
+                  The core building block of the game. Send resources between
+                  your realm in the Dashboard, or manage other players resources
+                  as the Owner
                 </p>
               </div>
 
               <div className="space-y-4">
-                <div className="text-4xl mb-4">👑</div>
-                <h3 className="font-[Cinzel] text-[var(--theme-gold)] text-xl uppercase">
-                  ADMIN CONTROLS
-                </h3>
-                <p className="font-[Playfair_Display] text-gray-200">
-                  Grant cities and advance turns for all players
+                <div className="text-5xl mb-4">👑</div>
+                <h3 className="heading-4">Building Your Civilization</h3>
+                <p className="body-text">
+                  Create Cities and Buildings through the Cities section, and
+                  use your resources and buildings to contruct armies in the
+                  Armies section
                 </p>
               </div>
             </div>
-
-            {/* Footer Quote */}
-            <p className="font-[Dancing_Script] text-2xl text-[var(--theme-gold)]/80 italic">
-              "The realm awaits your command, noble lord..."
-            </p>
+            <div className="flex justify-center mt-8">
+              <Link href="/pages/dashboard" className="modern-button group">
+                <span className="relative flex items-center gap-3 font-[Cinzel] text-base md:text-lg uppercase tracking-wider">
+                  <span className="text-xl">⚔️</span>
+                  <span>Start Playing</span>
+                </span>
+              </Link>
+            </div>
           </div>
         </div>
       </section>

@@ -6,15 +6,33 @@ export async function POST(req: Request) {
   const clerkUser = await currentUser();
   if (!clerkUser) return new Response("Unauthorized", { status: 401 });
 
-  const admin = await prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: { clerkUserId: clerkUser.id },
-    select: { id: true, role: true },
+    select: { id: true },
   });
 
-  if (!admin || admin.role !== "ADMIN")
-    return new Response("Forbidden", { status: 403 });
+  if (!user) return new Response("User not found", { status: 404 });
 
-  const { type, itemID, toUserID } = await req.json();
+  const { type, itemID, toUserID, realmId } = await req.json();
+
+  if (!realmId) {
+    return new Response("realmId is required", { status: 400 });
+  }
+
+  // Verify user is admin/owner of this realm
+  const realm = await prisma.realm.findFirst({
+    where: {
+      id: realmId,
+      OR: [
+        { ownerId: user.id },
+        { members: { some: { userId: user.id, role: { in: ["ADMIN", "OWNER"] } } } },
+      ],
+    },
+  });
+
+  if (!realm) {
+    return new Response("Realm not found or you don't have admin access", { status: 403 });
+  }
 
   if (!type || !itemID || !toUserID)
     return new Response("Missing required fields", { status: 400 });
@@ -29,6 +47,10 @@ export async function POST(req: Request) {
   if (type === "city") {
     const city = await prisma.city.findUnique({ where: { id: itemID } });
     if (!city) return new Response("City not found", { status: 404 });
+    
+    if (city.realmId !== realmId) {
+      return new Response("City does not belong to this realm", { status: 403 });
+    }
 
     await prisma.city.update({
       where: { id: itemID },
@@ -44,6 +66,10 @@ export async function POST(req: Request) {
   if (type === "army") {
     const army = await prisma.army.findUnique({ where: { id: itemID } });
     if (!army) return new Response("Army not found", { status: 404 });
+    
+    if (army.realmId !== realmId) {
+      return new Response("Army does not belong to this realm", { status: 403 });
+    }
 
     await prisma.army.update({
       where: { id: itemID },

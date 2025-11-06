@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRealm } from "@/contexts/RealmContext";
 import { useUser } from "@clerk/nextjs";
 
@@ -9,6 +10,7 @@ interface Realm {
   id: string;
   name: string;
   code: string;
+  logo: string | null;
   ownerId: string;
   createdAt: string;
   updatedAt: string;
@@ -19,7 +21,7 @@ interface Realm {
   };
   members: Array<{
     id: string;
-    role: "OWNER" | "ADMIN" | "MEMBER";
+    role: "OWNER" | "ADMIN" | "BASIC";
     joinedAt: string;
     user: {
       id: string;
@@ -27,11 +29,17 @@ interface Realm {
       imageUrl: string | null;
     };
   }>;
-  memberRole?: "OWNER" | "ADMIN" | "MEMBER";
+  memberRole?: "OWNER" | "ADMIN" | "BASIC";
 }
 
 export default function RealmsPage() {
-  const { currentRealm, setCurrentRealm, userRealms, refreshRealms, isLoading } = useRealm();
+  const {
+    currentRealm,
+    setCurrentRealm,
+    userRealms,
+    refreshRealms,
+    isLoading,
+  } = useRealm();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showJoinModal, setShowJoinModal] = useState(false);
   const [realmName, setRealmName] = useState("");
@@ -40,6 +48,8 @@ export default function RealmsPage() {
   const [isJoining, setIsJoining] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Refresh realms on mount to ensure we have the latest data
   useEffect(() => {
@@ -140,7 +150,11 @@ export default function RealmsPage() {
   };
 
   const handleLeaveRealm = async (realmId: string) => {
-    if (!confirm("Are you sure you want to leave this realm? All your cities, armies, and resources in this realm will be deleted.")) {
+    if (
+      !confirm(
+        "Are you sure you want to leave this realm? All your cities, armies, and resources in this realm will be deleted."
+      )
+    ) {
       return;
     }
 
@@ -168,8 +182,16 @@ export default function RealmsPage() {
     }
   };
 
-  const handleKickPlayer = async (realmId: string, userId: string, userName: string) => {
-    if (!confirm(`Are you sure you want to kick ${userName} from this realm? All their cities, armies, and resources in this realm will be deleted.`)) {
+  const handleKickPlayer = async (
+    realmId: string,
+    userId: string,
+    userName: string
+  ) => {
+    if (
+      !confirm(
+        `Are you sure you want to kick ${userName} from this realm? All their cities, armies, and resources in this realm will be deleted.`
+      )
+    ) {
       return;
     }
 
@@ -197,8 +219,16 @@ export default function RealmsPage() {
     }
   };
 
-  const handlePromoteToAdmin = async (realmId: string, userId: string, userName: string) => {
-    if (!confirm(`Are you sure you want to promote ${userName} to admin? They will be able to manage members and kick players.`)) {
+  const handlePromoteToAdmin = async (
+    realmId: string,
+    userId: string,
+    userName: string
+  ) => {
+    if (
+      !confirm(
+        `Are you sure you want to promote ${userName} to admin? They will be able to manage members and kick players.`
+      )
+    ) {
       return;
     }
 
@@ -223,6 +253,60 @@ export default function RealmsPage() {
     } catch (error) {
       console.error("Error promoting player:", error);
       setError("Failed to promote player. Please try again.");
+    }
+  };
+
+  const handleLogoUpload = async (realmId: string, file: File) => {
+    setIsUploadingLogo(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      const formData = new FormData();
+      formData.append("logo", file);
+
+      const response = await fetch(`/api/realms/${realmId}/logo`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        console.error("Non-JSON response:", text);
+        setError("Server returned an invalid response. Please try again.");
+        setIsUploadingLogo(false);
+        return;
+      }
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setSuccess("Logo uploaded successfully!");
+        await refreshRealms();
+        // Update current realm if it's the one being updated
+        if (currentRealm?.id === realmId) {
+          setCurrentRealm(data.realm);
+        }
+        setTimeout(() => setSuccess(""), 3000);
+      } else {
+        setError(data.error || "Failed to upload logo");
+      }
+    } catch (error) {
+      console.error("Error uploading logo:", error);
+      setError("Failed to upload logo. Please try again.");
+    } finally {
+      setIsUploadingLogo(false);
+    }
+  };
+
+  const handleFileChange = (
+    realmId: string,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      handleLogoUpload(realmId, file);
     }
   };
 
@@ -261,20 +345,65 @@ export default function RealmsPage() {
               </h2>
               <div className="medieval-card bg-medieval-gold-900/20 border-2 border-medieval-gold-600">
                 <div className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medieval text-xl text-medieval-gold-300 mb-2">
-                        {currentRealm.name}
-                      </h3>
-                      {(currentRealm.memberRole === "OWNER" || currentRealm.memberRole === "ADMIN") && (
-                        <p className="text-sm text-foreground mb-1">
-                          Code: <span className="font-mono font-bold">{currentRealm.code}</span>
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                      {/* Realm Logo */}
+                      <div className="relative">
+                        {currentRealm.logo ? (
+                          <Image
+                            src={currentRealm.logo}
+                            alt={`${currentRealm.name} logo`}
+                            width={64}
+                            height={64}
+                            className="rounded-full border-2 border-medieval-gold-600 object-cover"
+                          />
+                        ) : (
+                          <div className="w-16 h-16 rounded-full border-2 border-medieval-gold-600 bg-medieval-gold-900/30 flex items-center justify-center text-2xl">
+                            🌍
+                          </div>
+                        )}
+                      </div>
+                      <div>
+                        <h3 className="font-medieval text-xl text-medieval-gold-300 mb-2">
+                          {currentRealm.name}
+                        </h3>
+                        {(currentRealm.memberRole === "OWNER" ||
+                          currentRealm.memberRole === "ADMIN") && (
+                          <p className="text-sm text-foreground mb-1">
+                            Code:{" "}
+                            <span className="font-mono font-bold">
+                              {currentRealm.code}
+                            </span>
+                          </p>
+                        )}
+                        <p className="text-sm text-foreground mt-1">
+                          Role:{" "}
+                          <span className="capitalize">
+                            {currentRealm.memberRole || "BASIC"}
+                          </span>
                         </p>
-                      )}
-                      <p className="text-sm text-foreground mt-1">
-                        Role: <span className="capitalize">{currentRealm.memberRole || "MEMBER"}</span>
-                      </p>
+                      </div>
                     </div>
+                    {/* Logo Upload Button (Owner Only) */}
+                    {currentRealm.memberRole === "OWNER" && (
+                      <div className="flex flex-col items-end gap-2">
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/png,image/jpeg,image/jpg,image/webp,image/gif"
+                          className="hidden"
+                          onChange={(e) => handleFileChange(currentRealm.id, e)}
+                          disabled={isUploadingLogo}
+                        />
+                        <button
+                          onClick={() => fileInputRef.current?.click()}
+                          disabled={isUploadingLogo}
+                          className="text-sm text-medieval-gold-300 hover:text-medieval-gold-200 px-3 py-1 border border-medieval-gold-600 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {isUploadingLogo ? "Uploading..." : "📷 Upload Logo"}
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -340,7 +469,9 @@ export default function RealmsPage() {
 
             {userRealms.length === 0 ? (
               <div className="text-center py-12 text-foreground">
-                <p className="text-lg mb-4">You haven't joined any realms yet.</p>
+                <p className="text-lg mb-4">
+                  You haven't joined any realms yet.
+                </p>
                 <p>Create a new realm or join one with a code!</p>
               </div>
             ) : (
@@ -367,29 +498,44 @@ export default function RealmsPage() {
                               </span>
                             )}
                           </div>
-                          {(realm.memberRole === "OWNER" || realm.memberRole === "ADMIN") && (
+                          {(realm.memberRole === "OWNER" ||
+                            realm.memberRole === "ADMIN") && (
                             <p className="text-sm text-foreground mb-1">
-                              Code: <span className="font-mono font-bold">{realm.code}</span>
+                              Code:{" "}
+                              <span className="font-mono font-bold">
+                                {realm.code}
+                              </span>
                               <span className="ml-2 text-xs bg-medieval-gold-600/20 text-medieval-gold-300 px-2 py-1 rounded border border-medieval-gold-600">
                                 Share this code to invite others
                               </span>
                             </p>
                           )}
                           <p className="text-sm text-foreground mb-1">
-                            Members: {realm.members.length + 1} {/* +1 for owner */}
+                            Members: {realm.members.length + 1}{" "}
+                            {/* +1 for owner */}
                           </p>
                           <p className="text-sm text-foreground">
-                            Role: <span className="capitalize">{realm.memberRole || "MEMBER"}</span>
+                            Role:{" "}
+                            <span className="capitalize">
+                              {realm.memberRole || "BASIC"}
+                            </span>
                           </p>
-                          {(realm.memberRole === "OWNER" || realm.memberRole === "ADMIN") && (
+                          {(realm.memberRole === "OWNER" ||
+                            realm.memberRole === "ADMIN") && (
                             <>
                               <div className="mt-2 p-2 bg-medieval-gold-900/20 border border-medieval-gold-600 rounded">
-                                <p className="text-xs text-medieval-gold-300 mb-1">Join Code (Admin/Owner):</p>
-                                <p className="font-mono font-bold text-medieval-gold-400 text-lg">{realm.code}</p>
+                                <p className="text-xs text-medieval-gold-300 mb-1">
+                                  Join Code (Admin/Owner):
+                                </p>
+                                <p className="font-mono font-bold text-medieval-gold-400 text-lg">
+                                  {realm.code}
+                                </p>
                                 <button
                                   onClick={() => {
                                     navigator.clipboard.writeText(realm.code);
-                                    setSuccess(`Code ${realm.code} copied to clipboard!`);
+                                    setSuccess(
+                                      `Code ${realm.code} copied to clipboard!`
+                                    );
                                     setTimeout(() => setSuccess(""), 2000);
                                   }}
                                   className="mt-2 text-xs text-medieval-gold-300 hover:text-medieval-gold-200 underline"
@@ -398,22 +544,40 @@ export default function RealmsPage() {
                                 </button>
                               </div>
                               <div className="mt-3 p-2 bg-slate-800/50 border border-slate-600 rounded">
-                                <p className="text-xs text-medieval-gold-300 mb-2 font-bold">Members:</p>
+                                <p className="text-xs text-medieval-gold-300 mb-2 font-bold">
+                                  Members:
+                                </p>
                                 <div className="space-y-2">
                                   <div className="flex items-center justify-between text-xs text-foreground">
                                     <span>{realm.owner.name || "Owner"}</span>
-                                    <span className="text-medieval-gold-300 font-bold">Owner</span>
+                                    <span className="text-medieval-gold-300 font-bold">
+                                      Owner
+                                    </span>
                                   </div>
                                   {realm.members.map((member) => (
-                                    <div key={member.id} className="flex items-center justify-between text-xs text-foreground">
-                                      <span>{member.user.name || "Member"}</span>
+                                    <div
+                                      key={member.id}
+                                      className="flex items-center justify-between text-xs text-foreground"
+                                    >
+                                      <span>
+                                        {member.user.name || "Member"}
+                                      </span>
                                       <div className="flex items-center gap-2">
-                                        <span className="capitalize text-slate-400">{member.role}</span>
+                                        <span className="capitalize text-slate-400">
+                                          {member.role}
+                                        </span>
                                         {member.user.id !== realm.ownerId && (
                                           <>
                                             {member.role !== "ADMIN" && (
                                               <button
-                                                onClick={() => handlePromoteToAdmin(realm.id, member.user.id, member.user.name || "this player")}
+                                                onClick={() =>
+                                                  handlePromoteToAdmin(
+                                                    realm.id,
+                                                    member.user.id,
+                                                    member.user.name ||
+                                                      "this player"
+                                                  )
+                                                }
                                                 className="text-medieval-gold-400 hover:text-medieval-gold-300 px-2 py-1 border border-medieval-gold-500 rounded text-xs"
                                                 title="Promote to Admin"
                                               >
@@ -421,7 +585,14 @@ export default function RealmsPage() {
                                               </button>
                                             )}
                                             <button
-                                              onClick={() => handleKickPlayer(realm.id, member.user.id, member.user.name || "this player")}
+                                              onClick={() =>
+                                                handleKickPlayer(
+                                                  realm.id,
+                                                  member.user.id,
+                                                  member.user.name ||
+                                                    "this player"
+                                                )
+                                              }
                                               className="text-red-400 hover:text-red-300 px-2 py-1 border border-red-500 rounded text-xs"
                                               title="Kick from realm"
                                             >
@@ -472,7 +643,10 @@ export default function RealmsPage() {
 
           {/* Back Button */}
           <div className="flex justify-center mt-8">
-            <Link href="/pages/dashboard" className="medieval-button-secondary group">
+            <Link
+              href="/pages/dashboard"
+              className="medieval-button-secondary group"
+            >
               <span className="flex items-center space-x-2">
                 <span>🏰</span>
                 <span>Return to Dashboard</span>
@@ -484,7 +658,7 @@ export default function RealmsPage() {
 
       {/* Create Realm Modal */}
       {showCreateModal && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
           onClick={(e) => {
             if (e.target === e.currentTarget) {
@@ -494,7 +668,10 @@ export default function RealmsPage() {
             }
           }}
         >
-          <div className="medieval-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="medieval-card max-w-md w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="p-6">
               <h2 className="font-medieval text-2xl text-medieval-gold-300 mb-4">
                 Create New Realm
@@ -510,7 +687,9 @@ export default function RealmsPage() {
                 onChange={(e) => setRealmName(e.target.value)}
                 placeholder="Enter realm name..."
                 className="w-full px-4 py-2 bg-slate-800 border border-medieval-gold-600 rounded text-foreground mb-4"
-                onKeyPress={(e) => e.key === "Enter" && !isCreating && handleCreateRealm()}
+                onKeyPress={(e) =>
+                  e.key === "Enter" && !isCreating && handleCreateRealm()
+                }
                 autoFocus
               />
               <div className="flex gap-4">
@@ -587,4 +766,3 @@ export default function RealmsPage() {
     </div>
   );
 }
-

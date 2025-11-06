@@ -252,11 +252,9 @@ export default {
           "50%": { backgroundPosition: "100% 50%" },
         },
         textGlow: {
-          "0%": { textShadow: "0 0 5px rgba(234, 179, 8, 0.5)" },
-          "100%": {
-            textShadow:
-              "0 0 20px rgba(234, 179, 8, 0.8), 0 0 30px rgba(234, 179, 8, 0.6)",
-          },
+          /* Text glow animation removed */
+          "0%": { textShadow: "none" },
+          "100%": { textShadow: "none" },
         },
       },
       backgroundImage: {
@@ -269,8 +267,8 @@ export default {
       boxShadow: {
         medieval:
           "0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
-        "glow-gold": "0 0 20px rgba(234, 179, 8, 0.5)",
-        "glow-silver": "0 0 20px rgba(192, 192, 192, 0.5)",
+        "glow-gold": "none",
+        "glow-silver": "none",
         "inner-glow": "inset 0 2px 4px 0 rgba(0, 0, 0, 0.2)",
       },
     },

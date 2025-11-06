@@ -6,6 +6,7 @@ interface Realm {
   id: string;
   name: string;
   code: string;
+  logo: string | null;
   ownerId: string;
   createdAt: string;
   updatedAt: string;
@@ -16,7 +17,7 @@ interface Realm {
   };
   members: Array<{
     id: string;
-    role: "OWNER" | "ADMIN" | "MEMBER";
+    role: "OWNER" | "ADMIN" | "BASIC";
     joinedAt: string;
     user: {
       id: string;
@@ -24,7 +25,7 @@ interface Realm {
       imageUrl: string | null;
     };
   }>;
-  memberRole?: "OWNER" | "ADMIN" | "MEMBER";
+  memberRole?: "OWNER" | "ADMIN" | "BASIC";
 }
 
 interface RealmContextType {

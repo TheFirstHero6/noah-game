@@ -105,25 +105,35 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b bg-[var(--theme-navbar-bg)] border-[var(--theme-border)]">
       <div className="flex items-center justify-between mx-auto max-w-7xl h-20 px-4 sm:px-6 lg:px-8">
         {/* Logo Section */}
-        <Link href="/" className="group flex items-center space-x-2 md:space-x-3 transition-all duration-300 hover:scale-105">
-          <div className="relative transition-transform duration-300 group-hover:rotate-6">
-            <Image
-              src="/logo.png"
-              alt="War of the Elector"
-              width={48}
-              height={48}
-              className="rounded-full border-2 border-[var(--theme-accent)] transition-all duration-300 group-hover:border-[var(--theme-gold)]"
-            />
+        <Link href="/" className="group flex items-center space-x-2 transition-all duration-300 hover:scale-105 flex-shrink-0">
+          <div className="relative transition-transform duration-300 group-hover:rotate-6 flex-shrink-0">
+            {currentRealm?.logo ? (
+              <Image
+                src={currentRealm.logo}
+                alt={`${currentRealm.name} logo`}
+                width={48}
+                height={48}
+                className="rounded-full border-2 border-[var(--theme-accent)] transition-all duration-300 group-hover:border-[var(--theme-gold)] object-cover"
+              />
+            ) : (
+              <Image
+                src="/logo.png"
+                alt="War of the Elector"
+                width={48}
+                height={48}
+                className="rounded-full border-2 border-[var(--theme-accent)] transition-all duration-300 group-hover:border-[var(--theme-gold)]"
+              />
+            )}
           </div>
-          <div className="hidden sm:block">
-            <h1 className="font-[Cinzel] text-sm md:text-lg lg:text-xl text-[var(--theme-gold)] tracking-wider uppercase transition-colors duration-300 group-hover:text-[var(--theme-gold)]/90">
+          <div className="hidden md:block">
+            <h1 className="font-[Cinzel] text-xs md:text-sm lg:text-base text-[var(--theme-gold)] tracking-wider uppercase transition-colors duration-300 group-hover:text-[var(--theme-gold)]/90 whitespace-nowrap">
               WAR OF THE ELECTOR
             </h1>
           </div>
         </Link>
 
         {/* Navigation Links */}
-        <div className="hidden lg:flex items-center gap-6">
+        <div className="hidden lg:flex items-center gap-3 flex-shrink-0">
           {navItems.map((item, index) => (
             <Link
               key={item.href}
@@ -137,23 +147,35 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Current Realm Indicator */}
-        {currentRealm && (
-          <div className="hidden lg:flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--theme-card-bg)]/50 border border-[var(--theme-border)]">
-            <span className="text-lg">🌍</span>
-            <div className="flex flex-col">
-              <span className="font-[Cinzel] text-xs text-[var(--theme-gold)] uppercase leading-tight">
+        {/* Right Side - Realm Indicator and Auth */}
+        <div className="flex items-center gap-4 flex-shrink-0">
+          {/* Current Realm Indicator */}
+          {currentRealm && (
+            <div className="hidden lg:flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--theme-card-bg)]/50 border border-[var(--theme-border)] max-w-[180px]">
+            {currentRealm.logo ? (
+              <Image
+                src={currentRealm.logo}
+                alt={`${currentRealm.name} logo`}
+                width={32}
+                height={32}
+                className="rounded-full border border-[var(--theme-border)] object-cover flex-shrink-0"
+              />
+            ) : (
+              <span className="text-lg flex-shrink-0">🌍</span>
+            )}
+            <div className="flex flex-col min-w-0">
+              <span className="font-[Cinzel] text-xs text-[var(--theme-gold)] uppercase leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
                 {currentRealm.name}
               </span>
-              <span className="text-[10px] text-[var(--theme-steel)] font-mono">
+              <span className="text-[10px] text-[var(--theme-steel)] font-mono whitespace-nowrap overflow-hidden text-ellipsis">
                 {currentRealm.code}
               </span>
             </div>
           </div>
-        )}
+          )}
 
-        {/* Auth Section */}
-        <div className="hidden lg:flex items-center space-x-3">
+          {/* Auth Section */}
+          <div className="hidden lg:flex items-center space-x-3">
           <SignedOut>
             <SignInButton>
               <Link
@@ -186,6 +208,7 @@ export default function Navbar() {
               </div>
             </div>
           </SignedIn>
+          </div>
         </div>
       </div>
 
@@ -209,12 +232,22 @@ export default function Navbar() {
               {/* Current Realm Indicator - Mobile */}
               {currentRealm && (
                 <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[var(--theme-card-bg)]/50 border border-[var(--theme-border)] mb-2">
-                  <span className="text-xl">🌍</span>
-                  <div className="flex flex-col">
-                    <span className="font-[Cinzel] text-sm text-[var(--theme-gold)] uppercase leading-tight">
+                  {currentRealm.logo ? (
+                    <Image
+                      src={currentRealm.logo}
+                      alt={`${currentRealm.name} logo`}
+                      width={40}
+                      height={40}
+                      className="rounded-full border border-[var(--theme-border)] object-cover flex-shrink-0"
+                    />
+                  ) : (
+                    <span className="text-xl flex-shrink-0">🌍</span>
+                  )}
+                  <div className="flex flex-col min-w-0 flex-1">
+                    <span className="font-[Cinzel] text-sm text-[var(--theme-gold)] uppercase leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
                       {currentRealm.name}
                     </span>
-                    <span className="text-xs text-[var(--theme-steel)] font-mono">
+                    <span className="text-xs text-[var(--theme-steel)] font-mono whitespace-nowrap overflow-hidden text-ellipsis">
                       {currentRealm.code}
                     </span>
                   </div>

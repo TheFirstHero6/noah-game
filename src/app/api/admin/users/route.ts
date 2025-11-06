@@ -35,7 +35,7 @@ export async function GET(request: Request) {
         id: realmId,
         OR: [
           { ownerId: user.id },
-          { members: { some: { userId: user.id, role: "ADMIN" } } },
+          { members: { some: { userId: user.id, role: { in: ["ADMIN", "OWNER"] } } } },
         ],
       },
     });
@@ -47,7 +47,7 @@ export async function GET(request: Request) {
       );
     }
 
-    // Get all users who are members of this realm
+    // Get all users who are members of this realm with their roles
     const realmMembers = await prisma.realmMember.findMany({
       where: { realmId },
       include: {
@@ -56,7 +56,6 @@ export async function GET(request: Request) {
             id: true,
             name: true,
             email: true,
-            role: true,
           },
         },
       },
@@ -69,18 +68,17 @@ export async function GET(request: Request) {
         id: true,
         name: true,
         email: true,
-        role: true,
       },
     });
 
-    // Combine owner and members, removing duplicates
+    // Combine owner and members with their realm roles
     const users = [];
     if (owner) {
-      users.push(owner);
+      users.push({ ...owner, role: "OWNER" });
     }
     realmMembers.forEach((member) => {
       if (member.user.id !== realm.ownerId) {
-        users.push(member.user);
+        users.push({ ...member.user, role: member.role });
       }
     });
 

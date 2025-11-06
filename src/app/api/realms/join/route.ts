@@ -84,7 +84,7 @@ export async function POST(request: Request) {
         data: {
           realmId: realm.id,
           userId: user.id,
-          role: "MEMBER",
+          role: "BASIC",
         },
       });
 
@@ -132,7 +132,7 @@ export async function POST(request: Request) {
       success: true,
       realm: {
         ...updatedRealm,
-        memberRole: "MEMBER",
+        memberRole: "BASIC",
       },
     });
   } catch (error) {

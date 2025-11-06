@@ -12,14 +12,18 @@ export async function POST() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get the current user to check if they're admin
+    // Get the current user
     const user = await prisma.user.findUnique({
       where: { clerkUserId: clerkUser.id },
     });
 
-    if (!user || user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
+
+    // Note: This is a system-level cleanup function. 
+    // Since we removed global admin, this function is now available to all users.
+    // If you want to restrict it, you could require realm admin for a specific realm.
 
     // Find all users with names containing "null"
     const usersWithNullNames = await prisma.user.findMany({

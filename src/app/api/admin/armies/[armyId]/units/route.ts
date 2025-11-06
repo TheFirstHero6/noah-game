@@ -2,20 +2,46 @@ import { currentUser } from "@clerk/nextjs/server";
 import prisma from "@/app/lib/db";
 import { NextResponse } from "next/server";
 
-async function requireAdmin() {
+async function requireRealmAdmin(realmId: string) {
   const clerkUser = await currentUser();
   if (!clerkUser) return { error: new Response("Unauthorized", { status: 401 }) };
   const user = await prisma.user.findUnique({ where: { clerkUserId: clerkUser.id } });
-  if (!user || user.role !== "ADMIN") return { error: new Response("Forbidden", { status: 403 }) };
-  return { admin: user } as const;
+  if (!user) return { error: new Response("User not found", { status: 404 }) };
+  
+  if (!realmId) {
+    return { error: new Response("realmId is required", { status: 400 }) };
+  }
+  
+  // Verify realm exists and user is admin/owner of this realm
+  const realm = await prisma.realm.findFirst({
+    where: {
+      id: realmId,
+      OR: [
+        { ownerId: user.id },
+        { members: { some: { userId: user.id, role: { in: ["ADMIN", "OWNER"] } } } },
+      ],
+    },
+  });
+  
+  if (!realm) {
+    return { error: new Response("Realm not found or you don't have admin access", { status: 403 }) };
+  }
+  
+  return { admin: user, realmId } as const;
 }
 
-// POST: add units bypassing resource/cap { unitType, quantity }
+// POST: add units bypassing resource/cap { unitType, quantity, realmId }
 export async function POST(request: Request, context: { params: Promise<{ armyId: string }> }) {
   try {
-    const gate = await requireAdmin();
-    if ("error" in gate) return gate.error;
     const { armyId } = await context.params;
+    const { realmId } = await request.json();
+    
+    if (!realmId) {
+      return NextResponse.json({ error: "realmId is required" }, { status: 400 });
+    }
+    
+    const gate = await requireRealmAdmin(realmId);
+    if ("error" in gate) return gate.error;
     if (!armyId || typeof armyId !== "string") {
       return NextResponse.json({ error: "Missing armyId in route" }, { status: 400 });
     }
@@ -32,12 +58,18 @@ export async function POST(request: Request, context: { params: Promise<{ armyId
   }
 }
 
-// DELETE: remove units bypassing checks { unitType, quantity }
+// DELETE: remove units bypassing checks { unitType, quantity, realmId }
 export async function DELETE(request: Request, context: { params: Promise<{ armyId: string }> }) {
   try {
-    const gate = await requireAdmin();
-    if ("error" in gate) return gate.error;
     const { armyId } = await context.params;
+    const { realmId } = await request.json();
+    
+    if (!realmId) {
+      return NextResponse.json({ error: "realmId is required" }, { status: 400 });
+    }
+    
+    const gate = await requireRealmAdmin(realmId);
+    if ("error" in gate) return gate.error;
     if (!armyId || typeof armyId !== "string") {
       return NextResponse.json({ error: "Missing armyId in route" }, { status: 400 });
     }

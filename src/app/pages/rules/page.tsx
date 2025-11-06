@@ -78,14 +78,13 @@ export default function RulesPage() {
             <div className="bg-[var(--theme-card-bg)] p-8 rounded-lg border border-[var(--theme-border)] mt-6">
               <p className="font-[Dancing_Script] text-[var(--theme-gold)]/80 text-lg leading-relaxed italic">
                 "I have poured many hours into the original game and many more
-                into this refined version of it, I really do hope that
-                everyone enjoys it. A special thanks to people who helped me
-                refine this 2nd edition of the game: Eli, for help with game
-                balancing; Ben, for help with balancing, map building, and
-                combat testing; Aidan, for taking a long time to make a well
-                done detailed map that also was balanced for spawn locations;
-                And finally to you the player for giving my dream project a
-                chance :)"
+                into this refined version of it, I really do hope that everyone
+                enjoys it. A special thanks to people who helped me refine this
+                2nd edition of the game: Eli, for help with game balancing; Ben,
+                for help with balancing, map building, and combat testing;
+                Aidan, for taking a long time to make a well done detailed map
+                that also was balanced for spawn locations; And finally to you
+                the player for giving my dream project a chance :)"
               </p>
               <p className="font-[Playfair_Display] text-gray-400 text-sm mt-4 text-right">
                 — Noah, From the Imperium Fragmentum (2nd Edition) Foreword
@@ -109,15 +108,15 @@ export default function RulesPage() {
             <div className="grid lg:grid-cols-2 gap-8">
               <div className="space-y-6">
                 <div className="bg-[var(--theme-card-bg)] p-6 rounded-lg border border-[var(--theme-border)] transition-all duration-300 hover:border-[var(--theme-accent)]">
-              <div className="flex items-center mb-4">
+                  <div className="flex items-center mb-4">
                     <span className="text-3xl mr-3 transition-transform duration-300 hover:scale-110">
                       💰
                     </span>
-                <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
+                    <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                       1. Collect Income (Automatic)
-                </h3>
-              </div>
-              <p className="font-[Playfair_Display] text-gray-200">
+                    </h3>
+                  </div>
+                  <p className="font-[Playfair_Display] text-gray-200">
                     Your cities generate income based on their tier level and
                     local wealth. Each turn, cities gain income according to
                     their tier level.{" "}
@@ -128,39 +127,39 @@ export default function RulesPage() {
                     This income is added to the city's total wealth. You can
                     then tax a percentage of the city's total wealth, which is
                     deducted from the city but added to your personal wealth.
-              </p>
-            </div>
+                  </p>
+                </div>
 
                 <div className="bg-[var(--theme-card-bg)] p-6 rounded-lg border border-[var(--theme-border)] transition-all duration-300 hover:border-[var(--theme-accent)]">
-              <div className="flex items-center mb-4">
+                  <div className="flex items-center mb-4">
                     <span className="text-3xl mr-3 transition-transform duration-300 hover:scale-110">
                       ⚔️
                     </span>
-                <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
+                    <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                       2. Pay Upkeep and Move Armies
-                </h3>
-              </div>
-              <p className="font-[Playfair_Display] text-gray-200">
+                    </h3>
+                  </div>
+                  <p className="font-[Playfair_Display] text-gray-200">
                     Keep your armies in check by paying their upkeep costs.
-              </p>
-            </div>
+                  </p>
+                </div>
 
                 <div className="bg-[var(--theme-card-bg)] p-6 rounded-lg border border-[var(--theme-border)] transition-all duration-300 hover:border-[var(--theme-accent)]">
-              <div className="flex items-center mb-4">
+                  <div className="flex items-center mb-4">
                     <span className="text-3xl mr-3 transition-transform duration-300 hover:scale-110">
                       📜
                     </span>
-                <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
+                    <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                       3. Receive Event
-                </h3>
-              </div>
-              <p className="font-[Playfair_Display] text-gray-200">
+                    </h3>
+                  </div>
+                  <p className="font-[Playfair_Display] text-gray-200">
                     An event triggers for all players, providing opportunities
                     for intrigue, diplomacy, and strategic decisions that can
                     affect your realm.
                   </p>
                 </div>
-            </div>
+              </div>
 
               <div className="space-y-6">
                 <div className="bg-[var(--theme-card-bg)] p-6 rounded-lg border border-[var(--theme-border)] transition-all duration-300 hover:border-[var(--theme-accent)]">
@@ -284,22 +283,22 @@ export default function RulesPage() {
 
               <div className="space-y-6">
                 <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30">
-              <div className="flex items-center mb-4">
-                <span className="text-3xl mr-3">💰</span>
-                <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
+                  <div className="flex items-center mb-4">
+                    <span className="text-3xl mr-3">💰</span>
+                    <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                       Economic System
-                </h3>
-              </div>
-              <p className="font-[Playfair_Display] text-gray-200">
+                    </h3>
+                  </div>
+                  <p className="font-[Playfair_Display] text-gray-200">
                     Balance taxation with city growth. Set tax rates in 5%
                     increments to extract wealth from your cities' total wealth.
                     Cities gain fixed income each turn regardless of taxation,
                     but high taxes will drain accumulated city wealth over time.
-              </p>
-            </div>
+                  </p>
+                </div>
 
                 <div className="bg-gradient-to-r from-background/30 to-background/30 p-6 rounded-lg border border-primary/30">
-              <div className="flex items-center mb-4">
+                  <div className="flex items-center mb-4">
                     <span className="text-3xl mr-3">🗺️</span>
                     <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                       Turn-Based Gameplay
@@ -359,7 +358,7 @@ export default function RulesPage() {
                     🌾
                   </span>
                   <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
-                    Crops
+                    Food
                   </h3>
                 </div>
                 <p className="font-[Playfair_Display] text-gray-200">
@@ -430,16 +429,16 @@ export default function RulesPage() {
                   <span className="text-3xl mr-3 transition-transform duration-300 hover:rotate-12">
                     ⚒️
                   </span>
-                <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
-                  Metal
-                </h3>
-              </div>
-              <p className="font-[Playfair_Display] text-gray-200">
+                  <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
+                    Metal
+                  </h3>
+                </div>
+                <p className="font-[Playfair_Display] text-gray-200">
                   The forge of industry and warfare. Essential for weapons,
                   armor, and advanced tools. Mined from metal deposits and
                   processed in forges.
-              </p>
-            </div>
+                </p>
+              </div>
 
               <div
                 className={`bg-gradient-to-br from-background/50 to-background/30 p-6 rounded-lg border border-primary/30 transition-all duration-300 cursor-pointer transform hover:scale-105 hover:shadow-lg ${
@@ -450,15 +449,15 @@ export default function RulesPage() {
                 onMouseEnter={() => setHoveredResource("produce")}
                 onMouseLeave={() => setHoveredResource(null)}
               >
-              <div className="flex items-center mb-4">
+                <div className="flex items-center mb-4">
                   <span className="text-3xl mr-3 transition-transform duration-300 hover:rotate-12">
                     🐄
                   </span>
-                <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
+                  <h3 className="font-[Cinzel] text-xl text-[var(--theme-gold)] uppercase">
                     Produce
-                </h3>
-              </div>
-              <p className="font-[Playfair_Display] text-gray-200">
+                  </h3>
+                </div>
+                <p className="font-[Playfair_Display] text-gray-200">
                   Livestock and animal products. Provides food, materials, and
                   trade goods. Raised in Pastures and managed through
                   agricultural expertise.
@@ -515,8 +514,8 @@ export default function RulesPage() {
                       <li className="medieval-text flex items-start">
                         <span className="text-medieval-gold-400 mr-2">•</span>
                         <span>
-                          <strong>Tax Rate:</strong> Set in 5% increments (5%,
-                          10%, 15%, etc.)
+                          <strong>Tax Rate:</strong> Set as a percent of the
+                          city's total wealth (1-100%)
                         </span>
                       </li>
                     </ul>
@@ -717,7 +716,7 @@ export default function RulesPage() {
                       <li className="medieval-text flex items-start">
                         <span className="text-medieval-gold-400 mr-2">•</span>
                         <span>
-                          Building limits per city will be implemented (TBD)
+                          There can be 4 buildings in a city, so choose wisely
                         </span>
                       </li>
                     </ul>
@@ -768,38 +767,38 @@ export default function RulesPage() {
                           Tax amount
                         </strong>
                       </p>
-                    <ul className="space-y-2">
-                      <li className="medieval-text flex items-start">
-                        <span className="text-medieval-gold-400 mr-2">•</span>
-                        <span>
-                          <strong>Tier 1:</strong> 10 income per turn
-                        </span>
-                      </li>
-                      <li className="medieval-text flex items-start">
-                        <span className="text-medieval-gold-400 mr-2">•</span>
-                        <span>
-                          <strong>Tier 2:</strong> 15 income per turn
-                        </span>
-                      </li>
-                      <li className="medieval-text flex items-start">
-                        <span className="text-medieval-gold-400 mr-2">•</span>
-                        <span>
+                      <ul className="space-y-2">
+                        <li className="medieval-text flex items-start">
+                          <span className="text-medieval-gold-400 mr-2">•</span>
+                          <span>
+                            <strong>Tier 1:</strong> 10 income per turn
+                          </span>
+                        </li>
+                        <li className="medieval-text flex items-start">
+                          <span className="text-medieval-gold-400 mr-2">•</span>
+                          <span>
+                            <strong>Tier 2:</strong> 15 income per turn
+                          </span>
+                        </li>
+                        <li className="medieval-text flex items-start">
+                          <span className="text-medieval-gold-400 mr-2">•</span>
+                          <span>
                             <strong>Tier 3:</strong> 40 income per turn
-                        </span>
-                      </li>
-                      <li className="medieval-text flex items-start">
-                        <span className="text-medieval-gold-400 mr-2">•</span>
-                        <span>
+                          </span>
+                        </li>
+                        <li className="medieval-text flex items-start">
+                          <span className="text-medieval-gold-400 mr-2">•</span>
+                          <span>
                             <strong>Tier 4:</strong> 55 income per turn
-                        </span>
-                      </li>
-                      <li className="medieval-text flex items-start">
-                        <span className="text-medieval-gold-400 mr-2">•</span>
-                        <span>
+                          </span>
+                        </li>
+                        <li className="medieval-text flex items-start">
+                          <span className="text-medieval-gold-400 mr-2">•</span>
+                          <span>
                             <strong>Tier 5:</strong> 70 income per turn
-                        </span>
-                      </li>
-                    </ul>
+                          </span>
+                        </li>
+                      </ul>
                     </div>
                   </div>
                 </div>
