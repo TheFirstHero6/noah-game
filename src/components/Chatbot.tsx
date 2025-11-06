@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/design-system';
 import { useRealm } from '@/contexts/RealmContext';
+import ReactMarkdown from 'react-markdown';
 // Removed useChat import - managing messages manually
 
 // Modern AI Chatbot with beautiful animations
@@ -420,9 +421,56 @@ export default function Chatbot() {
                             {m.role === 'user' ? '👤 You' : '🤖 Advisor'}
                           </span>
                         </div>
-                        <p className="text-sm leading-relaxed whitespace-pre-wrap font-[Playfair_Display]">
-                          {content || '(empty message)'}
-                        </p>
+                        {m.role === 'assistant' ? (
+                          <div className="text-sm leading-relaxed font-[Playfair_Display] prose prose-invert prose-sm max-w-none
+                            [&_h1]:text-lg [&_h1]:text-[var(--theme-gold)] [&_h1]:font-[Cinzel] [&_h1]:font-semibold [&_h1]:my-2
+                            [&_h2]:text-base [&_h2]:text-[var(--theme-gold)] [&_h2]:font-[Cinzel] [&_h2]:font-semibold [&_h2]:my-2
+                            [&_h3]:text-sm [&_h3]:text-[var(--theme-gold)] [&_h3]:font-[Cinzel] [&_h3]:font-semibold [&_h3]:my-2
+                            [&_p]:text-gray-100 [&_p]:my-2
+                            [&_strong]:text-[var(--theme-gold)] [&_strong]:font-semibold
+                            [&_em]:text-gray-300 [&_em]:italic
+                            [&_ul]:my-2 [&_ul]:ml-4 [&_ul]:list-disc [&_ul]:space-y-1
+                            [&_ol]:my-2 [&_ol]:ml-4 [&_ol]:list-decimal [&_ol]:space-y-1
+                            [&_li]:text-gray-200 [&_li]:my-1
+                            [&_code]:text-[var(--theme-gold)] [&_code]:bg-steel-900/50 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-xs [&_code]:font-mono
+                            [&_pre]:bg-steel-900/50 [&_pre]:border [&_pre]:border-[var(--theme-border)] [&_pre]:rounded-lg [&_pre]:p-3 [&_pre]:overflow-x-auto [&_pre]:my-2
+                            [&_blockquote]:border-l-4 [&_blockquote]:border-[var(--theme-gold)] [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-300 [&_blockquote]:my-2
+                            [&_a]:text-[var(--theme-gold)] [&_a]:underline hover:[&_a]:text-[var(--theme-gold-dark)]
+                            [&_hr]:border-[var(--theme-border)] [&_hr]:my-4">
+                            <ReactMarkdown
+                              components={{
+                                h1: ({node, ...props}) => <h1 className="text-lg text-[var(--theme-gold)] font-[Cinzel] font-semibold my-2" {...props} />,
+                                h2: ({node, ...props}) => <h2 className="text-base text-[var(--theme-gold)] font-[Cinzel] font-semibold my-2" {...props} />,
+                                h3: ({node, ...props}) => <h3 className="text-sm text-[var(--theme-gold)] font-[Cinzel] font-semibold my-2" {...props} />,
+                                p: ({node, ...props}) => <p className="text-gray-100 my-2" {...props} />,
+                                strong: ({node, ...props}) => <strong className="text-[var(--theme-gold)] font-semibold" {...props} />,
+                                em: ({node, ...props}) => <em className="text-gray-300 italic" {...props} />,
+                                ul: ({node, ...props}) => <ul className="my-2 ml-4 list-disc space-y-1" {...props} />,
+                                ol: ({node, ...props}) => <ol className="my-2 ml-4 list-decimal space-y-1" {...props} />,
+                                li: ({node, ...props}) => <li className="text-gray-200 my-1" {...props} />,
+                                code: ({node, className, children, ...props}: any) => {
+                                  const isInline = !className || !className.includes('language-');
+                                  return isInline ? (
+                                    <code className="text-[var(--theme-gold)] bg-steel-900/50 px-1.5 py-0.5 rounded text-xs font-mono" {...props}>{children}</code>
+                                  ) : (
+                                    <pre className="bg-steel-900/50 border border-[var(--theme-border)] rounded-lg p-3 overflow-x-auto my-2">
+                                      <code className="text-xs font-mono text-gray-100" {...props}>{children}</code>
+                                    </pre>
+                                  );
+                                },
+                                blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-[var(--theme-gold)] pl-4 italic text-gray-300 my-2" {...props} />,
+                                a: ({node, ...props}) => <a className="text-[var(--theme-gold)] underline hover:text-[var(--theme-gold-dark)]" {...props} />,
+                                hr: ({node, ...props}) => <hr className="border-[var(--theme-border)] my-4" {...props} />,
+                              }}
+                            >
+                              {content || '(empty message)'}
+                            </ReactMarkdown>
+                          </div>
+                        ) : (
+                          <p className="text-sm leading-relaxed whitespace-pre-wrap font-[Playfair_Display]">
+                            {content || '(empty message)'}
+                          </p>
+                        )}
                       </div>
                     </motion.div>
                   );
