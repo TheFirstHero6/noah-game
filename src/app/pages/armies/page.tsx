@@ -146,6 +146,7 @@ export default function ArmiesPage() {
     "Light Calvary": "/light cav.png",
     "Heavy Calvary": "/heavy cav.png",
     Dragoons: "/dragoons.png",
+    "Banner Guard": "/banner guard.png",
     "Light Artilery": "/light artillery.png",
     "Medium Artilery": "/medium artillery.png",
     "Heavy Artilery": "/Heavy artillery.png",
